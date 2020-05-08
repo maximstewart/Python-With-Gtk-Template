@@ -1,2 +1,5 @@
+"""
+    Gtk Bound Signal Module
+"""
 from .mixins import *
-from . import Signals
+from .Signals import Signals

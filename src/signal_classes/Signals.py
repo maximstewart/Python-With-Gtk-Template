@@ -4,6 +4,7 @@ import threading, subprocess, os
 # Gtk imports
 
 # Application imports
+from .mixins import *
 
 
 def threaded(fn):
@@ -13,7 +14,7 @@ def threaded(fn):
     return wrapper
 
 
-class CrossClassSignals:
+class Signals(DummyMixin):
     def __init__(self, settings):
         self.settings       = settings
         self.builder        = self.settings.returnBuilder()
