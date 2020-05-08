@@ -41,8 +41,8 @@ class Logger:
         log.addHandler(ch)
 
         if createFile:
-            folder = "core/logs"
-            file   = folder + "/twitter-bot.log"
+            folder = "logs"
+            file   = folder + "/application.log"
 
             if not os.path.exists(folder):
                 os.mkdir(folder)
