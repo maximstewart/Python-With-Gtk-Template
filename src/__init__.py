@@ -21,8 +21,12 @@ class Main:
 
         handlers = {}
         for c in classes:
-            methods = inspect.getmembers(c, predicate=inspect.ismethod)
-            handlers.update(methods)
+            methods = None
+            try:
+                methods = inspect.getmembers(c, predicate=inspect.ismethod)
+                handlers.update(methods)
+            except Exception as e:
+                pass
 
         builder.connect_signals(handlers)
         window = settings.createWindow()
