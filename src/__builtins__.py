@@ -8,6 +8,6 @@ class Builtins:
         print("Hello, user!")
 
 
-   # NOTE: There areto ways to add global items. like so.
+   # NOTE: There are two ways to add global items.
     builtins.hello_user = hello_user
     __builtins__.update({"hello_world": hello_world})
