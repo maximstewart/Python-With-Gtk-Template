@@ -19,6 +19,8 @@ class Signals(DummyMixin):
         self.settings       = settings
         self.builder        = self.settings.returnBuilder()
 
+        hello_world()  # A global method from the __builtins__ file that added it 
+
 
     def getClipboardData(self):
         proc    = subprocess.Popen(['xclip','-selection', 'clipboard', '-o'], stdout=subprocess.PIPE)
