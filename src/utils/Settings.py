@@ -103,12 +103,12 @@ class Settings:
     def get_home_path(self):      return self._USER_HOME
 
     # Filter returns
-    def get_office_filter(self):  return self.office_filter
-    def get_vids_filter(self):    return self.vids_filter
-    def get_text_filter(self):    return self.txt_filter
-    def get_music_filter(self):   return self.music_filter
-    def get_images_filter(self):  return self.images_filter
-    def get_pdf_filter(self):     return self.pdf_filter
+    def get_office_filter(self):  return self._office_filter
+    def get_vids_filter(self):    return self._vids_filter
+    def get_text_filter(self):    return self._txt_filter
+    def get_music_filter(self):   return self._music_filter
+    def get_images_filter(self):  return self._images_filter
+    def get_pdf_filter(self):     return self._pdf_filter
 
     def get_success_color(self):  return self._success_color
     def get_warning_color(self):  return self._warning_color
