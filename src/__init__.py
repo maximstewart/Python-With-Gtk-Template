@@ -31,7 +31,7 @@ class Main(Builtins):
         settings = Settings()
         settings.create_window()
 
-        controller = Controller(args, unknownargs, settings)
+        controller = Controller(settings, args, unknownargs)
         if not controller:
             raise Exception("Controller exited and doesn't exist...")
 

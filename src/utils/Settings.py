@@ -18,13 +18,13 @@ from . import Logger
 class Settings:
     def __init__(self):
         self._SCRIPT_PTH    = os.path.dirname(os.path.realpath(__file__))
-        self._USR_HOME      = os.path.expanduser('~')
-        self._CONFIG_PATH   = f"{self._USER_HOME}/.config/{app_name}"
-        self._GLADE_FILE    = f"{self.CONFIG_PATH}/Main_Window.glade"
-        self._CSS_FILE      = f"{self.CONFIG_PATH}/stylesheet.css"
-        self._DEFAULT_ICONS = f"{self.CONFIG_PATH}/icons"
-        self._WINDOW_ICON   = f"{self.DEFAULT_ICONS}/{app_name}.png"
-        self._USR_PATH      = "/usr/share/{app_name}"
+        self._USER_HOME     = os.path.expanduser('~')
+        self._CONFIG_PATH   = f"{self._USER_HOME}/.config/{app_name.lower()}"
+        self._GLADE_FILE    = f"{self._CONFIG_PATH}/Main_Window.glade"
+        self._CSS_FILE      = f"{self._CONFIG_PATH}/stylesheet.css"
+        self._DEFAULT_ICONS = f"{self._CONFIG_PATH}/icons"
+        self._WINDOW_ICON   = f"{self._DEFAULT_ICONS}/{app_name.lower()}.png"
+        self._USR_PATH      = f"/usr/share/{app_name.lower()}"
 
         self._logger        = Logger().get_logger()
         self._builder       = Gtk.Builder()
@@ -47,8 +47,8 @@ class Settings:
         if not os.path.exists(self._CSS_FILE):
             self._CSS_FILE     = f"{self._USR_PATH}/stylesheet.css"
         if not os.path.exists(self._WINDOW_ICON):
-            self._WINDOW_ICON  = f"{self._USR_PATH}/icons/{app_name}.png"
-        if not os.path.exists(self.DEFAULT_ICONS):
+            self._WINDOW_ICON  = f"{self._USR_PATH}/icons/{app_name.lower()}.png"
+        if not os.path.exists(self._DEFAULT_ICONS):
             self.DEFAULT_ICONS = f"{self._USR_PATH}/icons"
 
         self._builder.add_from_file(self._GLADE_FILE)
@@ -100,7 +100,7 @@ class Settings:
     def get_builder(self):        return self._builder
     def get_logger(self):         return self._logger
     def get_main_window(self):    return self._main_window
-    def get_home_path(self):      return self._USR_HOME
+    def get_home_path(self):      return self._USER_HOME
 
     # Filter returns
     def get_office_filter(self):  return self.office_filter

@@ -1,4 +1,5 @@
 # Python imports
+import signal
 
 # Lib imports
 from gi.repository import GLib
