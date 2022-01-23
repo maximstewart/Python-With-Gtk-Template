@@ -1,4 +1,4 @@
 class DummyMixin:
     """docstring for DummyMixin"""
-    def printHelloWorld(self):
-        print("Hello World!")
+    def print_hello_world(self):
+        print("Hello, World!")

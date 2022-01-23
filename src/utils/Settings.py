@@ -6,79 +6,110 @@ import gi, cairo
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 
-from gi.repository import Gtk as gtk
-from gi.repository import Gdk as gdk
+from gi.repository import Gtk
+from gi.repository import Gdk
 
 
 # Application imports
+from . import Logger
+
 
 
 class Settings:
     def __init__(self):
-        self.SCRIPT_PTH = os.path.dirname(os.path.realpath(__file__)) + "/"
-        self.builder = gtk.Builder()
-        self.builder.add_from_file(self.SCRIPT_PTH + "../resources/Main_Window.glade")
+        self._SCRIPT_PTH    = os.path.dirname(os.path.realpath(__file__))
+        self._USR_HOME      = os.path.expanduser('~')
+        self._CONFIG_PATH   = f"{self._USER_HOME}/.config/{app_name}"
+        self._GLADE_FILE    = f"{self.CONFIG_PATH}/Main_Window.glade"
+        self._CSS_FILE      = f"{self.CONFIG_PATH}/stylesheet.css"
+        self._DEFAULT_ICONS = f"{self.CONFIG_PATH}/icons"
+        self._WINDOW_ICON   = f"{self.DEFAULT_ICONS}/{app_name}.png"
+        self._USR_PATH      = "/usr/share/{app_name}"
 
-        # 'Filters'
-        self.office = ('.doc', '.docx', '.xls', '.xlsx', '.xlt', '.xltx', '.xlm',
-                                '.ppt', 'pptx', '.pps', '.ppsx', '.odt', '.rtf')
-        self.vids   = ('.mkv', '.avi', '.flv', '.mov', '.m4v', '.mpg', '.wmv',
-                                                    '.mpeg', '.mp4', '.webm')
-        self.txt    = ('.txt', '.text', '.sh', '.cfg', '.conf')
-        self.music  = ('.psf', '.mp3', '.ogg' , '.flac')
-        self.images = ('.png', '.jpg', '.jpeg', '.gif')
-        self.pdf    = ('.pdf')
+        self._logger        = Logger().get_logger()
+        self._builder       = Gtk.Builder()
+        self._main_window   = None
+
+        # '_filters'
+        self._office_filter = ('.doc', '.docx', '.xls', '.xlsx', '.xlt', '.xltx', '.xlm', '.ppt', 'pptx', '.pps', '.ppsx', '.odt', '.rtf')
+        self._vids_filter   = ('.mkv', '.avi', '.flv', '.mov', '.m4v', '.mpg', '.wmv', '.mpeg', '.mp4', '.webm')
+        self._txt_filter    = ('.txt', '.text', '.sh', '.cfg', '.conf')
+        self._music_filter  = ('.psf', '.mp3', '.ogg' , '.flac')
+        self._images_filter = ('.png', '.jpg', '.jpeg', '.gif')
+        self._pdf_filter    = ('.pdf')
+
+        self._success_color = "#88cc27"
+        self._warning_color = "#ffa800"
+        self._error_color   = "#ff0000"
+
+        if not os.path.exists(self._GLADE_FILE):
+            self._GLADE_FILE   = f"{self._USR_PATH}/Main_Window.glade"
+        if not os.path.exists(self._CSS_FILE):
+            self._CSS_FILE     = f"{self._USR_PATH}/stylesheet.css"
+        if not os.path.exists(self._WINDOW_ICON):
+            self._WINDOW_ICON  = f"{self._USR_PATH}/icons/{app_name}.png"
+        if not os.path.exists(self.DEFAULT_ICONS):
+            self.DEFAULT_ICONS = f"{self._USR_PATH}/icons"
+
+        self._builder.add_from_file(self._GLADE_FILE)
 
 
-    def createWindow(self):
+
+    def create_window(self):
         # Get window and connect signals
-        window = self.builder.get_object("Main_Window")
-        window.connect("delete-event", gtk.main_quit)
-        self.setWindowData(window, False)
-        return window
+        self._main_window = self._builder.get_object("Main_Window")
+        self.set_window_data()
 
-    def setWindowData(self, window, paintable):
-        screen = window.get_screen()
+    def set_window_data(self):
+        self._main_window.set_icon_from_file(self._WINDOW_ICON)
+        screen = self._main_window.get_screen()
         visual = screen.get_rgba_visual()
 
         if visual != None and screen.is_composited():
-            window.set_visual(visual)
+            self._main_window.set_visual(visual)
+            self._main_window.set_app_paintable(True)
+            self._main_window.connect("draw", self.draw_area)
 
         # bind css file
-        cssProvider  = gtk.CssProvider()
-        cssProvider.load_from_path(self.SCRIPT_PTH + '../resources/stylesheet.css')
-        screen       = gdk.Screen.get_default()
-        styleContext = gtk.StyleContext()
-        styleContext.add_provider_for_screen(screen, cssProvider, gtk.STYLE_PROVIDER_PRIORITY_USER)
+        cssProvider  = Gtk.CssProvider()
+        cssProvider.load_from_path(self._CSS_FILE)
+        screen       = Gdk.Screen.get_default()
+        styleContext = Gtk.StyleContext()
+        styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
-        window.set_app_paintable(paintable)
-        if paintable:
-            window.connect("draw", self.area_draw)
-
-    def getMonitorData(self):
-        screen = self.builder.get_object("Main_Window").get_screen()
+    def get_monitor_data(self):
+        screen = self._builder.get_object("Main_Window").get_screen()
         monitors = []
         for m in range(screen.get_n_monitors()):
             monitors.append(screen.get_monitor_geometry(m))
 
         for monitor in monitors:
-            print("{}x{}+{}+{}".format(monitor.width, monitor.height, monitor.x, monitor.y))
+            print("{}x{}|{}+{}".format(monitor.width, monitor.height, monitor.x, monitor.y))
 
         return monitors
 
-    def area_draw(self, widget, cr):
+    def draw_area(self, widget, cr):
         cr.set_source_rgba(0, 0, 0, 0.54)
         cr.set_operator(cairo.OPERATOR_SOURCE)
         cr.paint()
         cr.set_operator(cairo.OPERATOR_OVER)
 
 
-    def returnBuilder(self):             return self.builder
+
+
+    def get_builder(self):        return self._builder
+    def get_logger(self):         return self._logger
+    def get_main_window(self):    return self._main_window
+    def get_home_path(self):      return self._USR_HOME
 
     # Filter returns
-    def returnOfficeFilter(self):        return self.office
-    def returnVidsFilter(self):          return self.vids
-    def returnTextFilter(self):          return self.txt
-    def returnMusicFilter(self):         return self.music
-    def returnImagesFilter(self):        return self.images
-    def returnPdfFilter(self):           return self.pdf
+    def get_office_filter(self):  return self.office_filter
+    def get_vids_filter(self):    return self.vids_filter
+    def get_text_filter(self):    return self.txt_filter
+    def get_music_filter(self):   return self.music_filter
+    def get_images_filter(self):  return self.images_filter
+    def get_pdf_filter(self):     return self.pdf_filter
+
+    def get_success_color(self):  return self._success_color
+    def get_warning_color(self):  return self._warning_color
+    def get_error_color(self):    return self._error_color

@@ -2,14 +2,17 @@
 
 
 # Python imports
-import argparse
+import argparse, faulthandler, traceback
 from setproctitle import setproctitle
 
-# Gtk imports
-import gi, faulthandler, signal
+import tracemalloc
+tracemalloc.start()
+
+
+# Lib imports
+import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk as gtk
-from gi.repository import GLib
+from gi.repository import Gtk
 
 # Application imports
 from __init__ import Main
@@ -17,16 +20,20 @@ from __init__ import Main
 
 if __name__ == "__main__":
     try:
+        # import web_pdb
+        # web_pdb.set_trace()
+
         setproctitle('<replace this>')
-        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, gtk.main_quit)
         faulthandler.enable()  # For better debug info
         parser = argparse.ArgumentParser()
         # Add long and short arguments
         parser.add_argument("--file", "-f", default="default", help="JUST SOME FILE ARG.")
 
         # Read arguments (If any...)
-        args = parser.parse_args()
-        main = Main(args)
-        gtk.main()
+        args, unknownargs = parser.parse_known_args()
+
+        Main(args, unknownargs)
+        Gtk.main()
     except Exception as e:
-        print( repr(e) )
+        traceback.print_exc()
+        quit()
