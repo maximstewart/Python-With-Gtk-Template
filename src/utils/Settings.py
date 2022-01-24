@@ -26,7 +26,7 @@ class Settings:
         self._WINDOW_ICON   = f"{self._DEFAULT_ICONS}/{app_name.lower()}.png"
         self._USR_PATH      = f"/usr/share/{app_name.lower()}"
 
-        self._logger        = Logger().get_logger()
+        self._logger        = Logger(self._CONFIG_PATH).get_logger()
         self._builder       = Gtk.Builder()
         self._main_window   = None
 
@@ -41,6 +41,10 @@ class Settings:
         self._success_color = "#88cc27"
         self._warning_color = "#ffa800"
         self._error_color   = "#ff0000"
+
+        if not os.path.exists(self._GLADE_FILE):
+            os.mkdir(self._CONFIG_PATH)
+            self._logger       = Logger(self._CONFIG_PATH).get_logger()
 
         if not os.path.exists(self._GLADE_FILE):
             self._GLADE_FILE   = f"{self._USR_PATH}/Main_Window.glade"
