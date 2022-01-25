@@ -42,9 +42,9 @@ class Settings:
         self._warning_color = "#ffa800"
         self._error_color   = "#ff0000"
 
-        if not os.path.exists(self._GLADE_FILE):
+        if not os.path.exists(self._CONFIG_PATH):
             os.mkdir(self._CONFIG_PATH)
-            self._logger       = Logger(self._CONFIG_PATH).get_logger()
+            self._logger    = Logger(self._CONFIG_PATH).get_logger()
 
         if not os.path.exists(self._GLADE_FILE):
             self._GLADE_FILE   = f"{self._USR_PATH}/Main_Window.glade"

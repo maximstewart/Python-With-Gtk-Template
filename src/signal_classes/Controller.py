@@ -1,5 +1,5 @@
 # Python imports
-import threading, signal, inspect, os, time
+import threading, subprocess, time
 
 
 # Gtk imports

@@ -9,6 +9,11 @@ from gi.repository import GLib
 
 
 class Controller_Data:
+    def call_method(self, _method_name, data = None):
+        method_name = str(_method_name)
+        method      = getattr(self, method_name, lambda data: f"No valid key passed...\nkey={method_name}\nargs={data}")
+        return method(data) if data else method()
+
     def has_method(self, obj, name):
         return callable(getattr(obj, name, None))
 
