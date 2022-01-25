@@ -1,5 +1,5 @@
 # Python imports
-import signal
+import os, signal
 
 # Lib imports
 from gi.repository import GLib
@@ -9,6 +9,9 @@ from gi.repository import GLib
 
 
 class Controller_Data:
+    def clear_console(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
+
     def call_method(self, _method_name, data = None):
         method_name = str(_method_name)
         method      = getattr(self, method_name, lambda data: f"No valid key passed...\nkey={method_name}\nargs={data}")
