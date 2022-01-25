@@ -5,7 +5,7 @@ import os, logging
 
 
 class Logger:
-    def __init__(config_path):
+    def __init__(self, config_path):
         self._CONFIG_PATH = config_path
 
     def get_logger(self, loggerName = "NO_LOGGER_NAME_PASSED", createFile = True):
