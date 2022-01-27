@@ -26,9 +26,16 @@ class Settings:
         self._WINDOW_ICON   = f"{self._DEFAULT_ICONS}/{app_name.lower()}.png"
         self._USR_PATH      = f"/usr/share/{app_name.lower()}"
 
-        self._logger        = Logger(self._CONFIG_PATH).get_logger()
-        self._builder       = Gtk.Builder()
-        self._main_window   = None
+        if not os.path.exists(self._CONFIG_PATH):
+            os.mkdir(self._CONFIG_PATH)
+        if not os.path.exists(self._GLADE_FILE):
+            self._GLADE_FILE   = f"{self._USR_PATH}/Main_Window.glade"
+        if not os.path.exists(self._CSS_FILE):
+            self._CSS_FILE     = f"{self._USR_PATH}/stylesheet.css"
+        if not os.path.exists(self._WINDOW_ICON):
+            self._WINDOW_ICON  = f"{self._USR_PATH}/icons/{app_name.lower()}.png"
+        if not os.path.exists(self._DEFAULT_ICONS):
+            self.DEFAULT_ICONS = f"{self._USR_PATH}/icons"
 
         # '_filters'
         self._office_filter = ('.doc', '.docx', '.xls', '.xlsx', '.xlt', '.xltx', '.xlm', '.ppt', 'pptx', '.pps', '.ppsx', '.odt', '.rtf')
@@ -42,19 +49,9 @@ class Settings:
         self._warning_color = "#ffa800"
         self._error_color   = "#ff0000"
 
-        if not os.path.exists(self._CONFIG_PATH):
-            os.mkdir(self._CONFIG_PATH)
-            self._logger    = Logger(self._CONFIG_PATH).get_logger()
-
-        if not os.path.exists(self._GLADE_FILE):
-            self._GLADE_FILE   = f"{self._USR_PATH}/Main_Window.glade"
-        if not os.path.exists(self._CSS_FILE):
-            self._CSS_FILE     = f"{self._USR_PATH}/stylesheet.css"
-        if not os.path.exists(self._WINDOW_ICON):
-            self._WINDOW_ICON  = f"{self._USR_PATH}/icons/{app_name.lower()}.png"
-        if not os.path.exists(self._DEFAULT_ICONS):
-            self.DEFAULT_ICONS = f"{self._USR_PATH}/icons"
-
+        self._main_window   = None
+        self._logger        = Logger(self._CONFIG_PATH).get_logger()
+        self._builder       = Gtk.Builder()
         self._builder.add_from_file(self._GLADE_FILE)
 
 
