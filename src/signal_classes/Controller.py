@@ -43,10 +43,14 @@ class Controller(DummyMixin, Controller_Data):
                 try:
                     type, target, data = event
                     method = getattr(self.__class__, target)
-                    GLib.idle_add(method, (self, data,))
+                    GLib.idle_add(method, *(self, data,))
                 except Exception as e:
                     print(repr(e))
 
+
+
+    def handle_file_from_ipc(self, path):
+        print(f"Path From IPC: {path}")
 
 
     def get_clipboard_data(self):
