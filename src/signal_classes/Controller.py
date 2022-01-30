@@ -42,7 +42,7 @@ class Controller(DummyMixin, Controller_Data):
             if event:
                 try:
                     type, target, data = event
-                    method = getattr(self.__class__, type)
+                    method = getattr(self.__class__, target)
                     GLib.idle_add(method, (self, data,))
                 except Exception as e:
                     print(repr(e))
