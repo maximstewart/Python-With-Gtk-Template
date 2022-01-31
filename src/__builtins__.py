@@ -6,7 +6,7 @@ import builtins
 # Lib imports
 
 # Application imports
-from signal_classes import IPCServerMixin
+from controller import IPCServerMixin
 
 
 
