@@ -20,7 +20,7 @@ class Builtins(IPCServerMixin):
         #             data is the method parameters to give
         #       Where data may be any kind of data
         self._gui_events    = []
-        self._fm_events     = []
+        self._module_events = []
         self.is_ipc_alive   = False
         self.ipc_authkey    = b'app-ipc'
         self.ipc_address    = '127.0.0.1'
@@ -33,9 +33,9 @@ class Builtins(IPCServerMixin):
             return self._gui_events.pop(0)
         return None
 
-    def _pop_fm_event(self):
-        if len(self._fm_events) > 0:
-            return self._fm_events.pop(0)
+    def _pop_module_event(self):
+        if len(self._module_events) > 0:
+            return self._module_events.pop(0)
         return None
 
 
@@ -46,9 +46,9 @@ class Builtins(IPCServerMixin):
 
         raise Exception("Invald event format! Please do:  [type, target, data]")
 
-    def push_fm_event(self, event):
+    def push_module_event(self, event):
         if len(event) == 3:
-            self._fm_events.append(event)
+            self._module_events.append(event)
             return None
 
         raise Exception("Invald event format! Please do:  [type, target, data]")
@@ -56,14 +56,14 @@ class Builtins(IPCServerMixin):
     def read_gui_event(self):
         return self._gui_events[0]
 
-    def read_fm_event(self):
-        return self._fm_events[0]
+    def read_module_event(self):
+        return self._module_events[0]
 
     def consume_gui_event(self):
         return self._pop_gui_event()
 
-    def consume_fm_event(self):
-        return self._pop_fm_event()
+    def consume_module_event(self):
+        return self._pop_module_event()
 
 
 

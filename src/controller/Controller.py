@@ -42,10 +42,19 @@ class Controller(DummyMixin, Controller_Data):
             if event:
                 try:
                     type, target, data = event
-                    method = getattr(self.__class__, target)
-                    GLib.idle_add(method, *(self, data,))
+                    if not type:
+                        method = getattr(self.__class__, target)
+                        GLib.idle_add(method, *(self, *data,))
+                    else:
+                        method = getattr(self.__class__, "hadle_gui_event_and_call_back")
+                        GLib.idle_add(method, *(self, type, target, data))
                 except Exception as e:
                     print(repr(e))
+
+    def hadle_gui_event_and_call_back(self, type, target, parameters):
+        method = getattr(self.__class__, target)
+        data   = method(*(self, *parameters))
+        event_system.push_module_event([type, None, (data,)])
 
 
 
