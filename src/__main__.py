@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-
 # Python imports
 import argparse, faulthandler, traceback
 from setproctitle import setproctitle
@@ -15,10 +14,12 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
-from __init__ import Main
+from main import Main
 
 
 if __name__ == "__main__":
+    ''' Set process title, get arguments, and create GTK main thread. '''
+
     try:
         # import web_pdb
         # web_pdb.set_trace()

@@ -11,7 +11,8 @@ from gi.repository import Gdk
 
 
 # Application imports
-from . import Logger
+from .logger import Logger
+
 
 
 
@@ -20,6 +21,7 @@ class Settings:
         self._SCRIPT_PTH    = os.path.dirname(os.path.realpath(__file__))
         self._USER_HOME     = os.path.expanduser('~')
         self._CONFIG_PATH   = f"{self._USER_HOME}/.config/{app_name.lower()}"
+        self._PLUGINS_PATH  = f"{self._CONFIG_PATH}/plugins"
         self._GLADE_FILE    = f"{self._CONFIG_PATH}/Main_Window.glade"
         self._CSS_FILE      = f"{self._CONFIG_PATH}/stylesheet.css"
         self._DEFAULT_ICONS = f"{self._CONFIG_PATH}/icons"
@@ -28,6 +30,9 @@ class Settings:
 
         if not os.path.exists(self._CONFIG_PATH):
             os.mkdir(self._CONFIG_PATH)
+        if not os.path.exists(self._PLUGINS_PATH):
+            os.mkdir(self._PLUGINS_PATH)
+
         if not os.path.exists(self._GLADE_FILE):
             self._GLADE_FILE   = f"{self._USR_PATH}/Main_Window.glade"
         if not os.path.exists(self._CSS_FILE):
@@ -42,7 +47,7 @@ class Settings:
         self._vids_filter   = ('.mkv', '.avi', '.flv', '.mov', '.m4v', '.mpg', '.wmv', '.mpeg', '.mp4', '.webm')
         self._txt_filter    = ('.txt', '.text', '.sh', '.cfg', '.conf')
         self._music_filter  = ('.psf', '.mp3', '.ogg' , '.flac')
-        self._images_filter = ('.png', '.jpg', '.jpeg', '.gif')
+        self._images_filter = ('.png', '.jpg', '.jpeg', '.gif', '.ico', '.tga')
         self._pdf_filter    = ('.pdf')
 
         self._success_color = "#88cc27"
@@ -102,6 +107,7 @@ class Settings:
     def get_logger(self):         return self._logger
     def get_main_window(self):    return self._main_window
     def get_home_path(self):      return self._USER_HOME
+    def get_plugins_path(self):   return self._PLUGINS_PATH
 
     # Filter returns
     def get_office_filter(self):  return self._office_filter

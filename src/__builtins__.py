@@ -6,26 +6,24 @@ import builtins
 # Lib imports
 
 # Application imports
-from controller import IPCServerMixin
+from ipc_server import IPCServer
 
 
 
-class Builtins(IPCServerMixin):
-    """Docstring for __builtins__ extender"""
+class EventSystem(IPCServer):
+    """ Inheret IPCServerMixin. Create an pub/sub systems. """
 
     def __init__(self):
-        # NOTE: The format used is list of [type, target, data] Where:
+        super(EventSystem, self).__init__()
+
+        # NOTE: The format used is list of [type, target, (data,)] Where:
         #             type is useful context for control flow,
         #             target is the method to call,
         #             data is the method parameters to give
         #       Where data may be any kind of data
         self._gui_events    = []
         self._module_events = []
-        self.is_ipc_alive   = False
-        self.ipc_authkey    = b'app-ipc'
-        self.ipc_address    = '127.0.0.1'
-        self.ipc_port       = 8888
-        self.ipc_timeout    = 15.0
+
 
     # Makeshift fake "events" type system FIFO
     def _pop_gui_event(self):
@@ -44,14 +42,14 @@ class Builtins(IPCServerMixin):
             self._gui_events.append(event)
             return None
 
-        raise Exception("Invald event format! Please do:  [type, target, data]")
+        raise Exception("Invald event format! Please do:  [type, target, (data,)]")
 
     def push_module_event(self, event):
         if len(event) == 3:
             self._module_events.append(event)
             return None
 
-        raise Exception("Invald event format! Please do:  [type, target, data]")
+        raise Exception("Invald event format! Please do:  [type, target, (data,)]")
 
     def read_gui_event(self):
         return self._gui_events[0]
@@ -70,7 +68,7 @@ class Builtins(IPCServerMixin):
 # NOTE: Just reminding myself we can add to builtins two different ways...
 # __builtins__.update({"event_system": Builtins()})
 builtins.app_name          = "<change_me>"
-builtins.event_system      = Builtins()
+builtins.event_system      = EventSystem()
 builtins.event_sleep_time  = 0.2
 builtins.debug             = False
 builtins.trace_debug       = False
