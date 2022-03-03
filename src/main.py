@@ -17,8 +17,8 @@ class Main(EventSystem):
     def __init__(self, args, unknownargs):
         if not debug:
             event_system.create_ipc_server()
+            time.sleep(0.1)
 
-        time.sleep(0.2)
         if not trace_debug:
             if not event_system.is_ipc_alive:
                 if unknownargs:
