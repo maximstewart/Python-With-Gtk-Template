@@ -18,6 +18,8 @@ class Controller_Data:
         self.builder       = self.settings.get_builder()
         self.window        = self.settings.get_main_window()
         self.logger        = self.settings.get_logger()
+        self.keybindings   = self.settings.get_keybindings()
+
 
         self.home_path     = self.settings.get_home_path()
         self.success_color = self.settings.get_success_color()

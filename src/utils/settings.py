@@ -1,5 +1,5 @@
 # Python imports
-import os
+import os, json
 
 # Gtk imports
 import gi, cairo
@@ -12,7 +12,7 @@ from gi.repository import Gdk
 
 # Application imports
 from .logger import Logger
-
+from .keybindings import Keybindings
 
 
 
@@ -23,6 +23,7 @@ class Settings:
         self._CONFIG_PATH   = f"{self._USER_HOME}/.config/{app_name.lower()}"
         self._PLUGINS_PATH  = f"{self._CONFIG_PATH}/plugins"
         self._GLADE_FILE    = f"{self._CONFIG_PATH}/Main_Window.glade"
+        self._KEY_BINDINGS  = f"{self._CONFIG_PATH}/key-bindings.json"
         self._CSS_FILE      = f"{self._CONFIG_PATH}/stylesheet.css"
         self._DEFAULT_ICONS = f"{self._CONFIG_PATH}/icons"
         self._WINDOW_ICON   = f"{self._DEFAULT_ICONS}/{app_name.lower()}.png"
@@ -35,6 +36,8 @@ class Settings:
 
         if not os.path.exists(self._GLADE_FILE):
             self._GLADE_FILE   = f"{self._USR_PATH}/Main_Window.glade"
+        if not os.path.exists(self._KEY_BINDINGS):
+            self._KEY_BINDINGS  = f"{self._USR_SOLARFM}/key-bindings.json"
         if not os.path.exists(self._CSS_FILE):
             self._CSS_FILE     = f"{self._USR_PATH}/stylesheet.css"
         if not os.path.exists(self._WINDOW_ICON):
@@ -53,6 +56,11 @@ class Settings:
         self._success_color = "#88cc27"
         self._warning_color = "#ffa800"
         self._error_color   = "#ff0000"
+
+        self._keybindings = Keybindings()
+        with open(self._KEY_BINDINGS) as file:
+            keybindings = json.load(file)["keybindings"]
+            self._keybindings.configure(keybindings)
 
         self._main_window   = None
         self._logger        = Logger(self._CONFIG_PATH).get_logger()
@@ -105,6 +113,7 @@ class Settings:
 
     def get_builder(self):        return self._builder
     def get_logger(self):         return self._logger
+    def get_keybindings(self):    return self._keybindings
     def get_main_window(self):    return self._main_window
     def get_home_path(self):      return self._USER_HOME
     def get_plugins_path(self):   return self._PLUGINS_PATH

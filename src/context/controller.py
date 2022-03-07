@@ -5,7 +5,8 @@ import threading, subprocess, time
 # Gtk imports
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GLib
+gi.require_version('Gdk', '3.0')
+from gi.repository import Gtk, Gdk, GLib
 
 # Application imports
 from .mixins.dummy_mixin import DummyMixin
@@ -49,6 +50,27 @@ class Controller(DummyMixin, Controller_Data):
 
     def handle_file_from_ipc(self, path):
         print(f"Path From IPC: {path}")
+
+    def on_global_key_release_controller(self, widget, event):
+        """Handler for keyboard events"""
+        keyname = Gdk.keyval_name(event.keyval).lower()
+        if keyname.replace("_l", "").replace("_r", "") in ["control", "alt", "shift"]:
+            if "control" in keyname:
+                self.ctrl_down    = False
+            if "shift" in keyname:
+                self.shift_down   = False
+            if "alt" in keyname:
+                self.alt_down     = False
+
+
+        mapping = self.keybindings.lookup(event)
+        if mapping:
+            getattr(self, mapping)()
+            return True
+        else:
+            print(f"on_global_key_release_controller > key > {keyname}")
+            print(f"Add logic or remove this from: {self.__class__}")
+
 
 
     def get_clipboard_data(self):
