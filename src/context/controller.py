@@ -36,7 +36,7 @@ class Controller(DummyMixin, Controller_Data):
 
 
     @threaded
-    def gui_event_observer(self):
+    def gui_event_observer(self) -> None:
         while True:
             time.sleep(event_sleep_time)
             event = event_system.consume_gui_event()
@@ -48,10 +48,10 @@ class Controller(DummyMixin, Controller_Data):
                 except Exception as e:
                     print(repr(e))
 
-    def handle_file_from_ipc(self, path):
+    def handle_file_from_ipc(self, path: str) -> None:
         print(f"Path From IPC: {path}")
 
-    def on_global_key_release_controller(self, widget, event):
+    def on_global_key_release_controller(self, widget: type, event: type) -> None:
         """Handler for keyboard events"""
         keyname = Gdk.keyval_name(event.keyval).lower()
         if keyname.replace("_l", "").replace("_r", "") in ["control", "alt", "shift"]:
@@ -73,13 +73,13 @@ class Controller(DummyMixin, Controller_Data):
 
 
 
-    def get_clipboard_data(self):
+    def get_clipboard_data(self) -> str:
         proc    = subprocess.Popen(['xclip','-selection', 'clipboard', '-o'], stdout=subprocess.PIPE)
         retcode = proc.wait()
         data    = proc.stdout.read()
         return data.decode("utf-8").strip()
 
-    def set_clipboard_data(self, data):
+    def set_clipboard_data(self, data: type) -> None:
         proc = subprocess.Popen(['xclip','-selection','clipboard'], stdin=subprocess.PIPE)
         proc.stdin.write(data)
         proc.stdin.close()

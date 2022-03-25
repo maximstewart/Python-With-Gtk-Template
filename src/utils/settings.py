@@ -69,12 +69,12 @@ class Settings:
 
 
 
-    def create_window(self):
+    def create_window(self) -> None:
         # Get window and connect signals
         self._main_window = self._builder.get_object("Main_Window")
         self.set_window_data()
 
-    def set_window_data(self):
+    def set_window_data(self)  -> None:
         self._main_window.set_icon_from_file(self._WINDOW_ICON)
         screen = self._main_window.get_screen()
         visual = screen.get_rgba_visual()
@@ -91,13 +91,11 @@ class Settings:
         styleContext = Gtk.StyleContext()
         styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
-    def get_monitor_data(self):
+    def get_monitor_data(self) -> list:
         screen = self._builder.get_object("Main_Window").get_screen()
         monitors = []
         for m in range(screen.get_n_monitors()):
             monitors.append(screen.get_monitor_geometry(m))
-
-        for monitor in monitors:
             print("{}x{}|{}+{}".format(monitor.width, monitor.height, monitor.x, monitor.y))
 
         return monitors
@@ -110,22 +108,21 @@ class Settings:
 
 
 
-
-    def get_builder(self):        return self._builder
-    def get_logger(self):         return self._logger
-    def get_keybindings(self):    return self._keybindings
-    def get_main_window(self):    return self._main_window
-    def get_home_path(self):      return self._USER_HOME
-    def get_plugins_path(self):   return self._PLUGINS_PATH
+    def get_main_window(self)   -> Gtk.ApplicationWindow: return self._main_window
+    def get_builder(self)       -> Gtk.Builder:  return self._builder
+    def get_logger(self)        -> Logger:       return self._logger
+    def get_keybindings(self)   -> Keybindings:  return self._keybindings
+    def get_plugins_path(self)  -> str:          return self._PLUGINS_PATH
+    def get_home_path(self)     -> str:          return self._USER_HOME
 
     # Filter returns
-    def get_office_filter(self):  return self._office_filter
-    def get_vids_filter(self):    return self._vids_filter
-    def get_text_filter(self):    return self._txt_filter
-    def get_music_filter(self):   return self._music_filter
-    def get_images_filter(self):  return self._images_filter
-    def get_pdf_filter(self):     return self._pdf_filter
+    def get_office_filter(self) -> tuple: return self._office_filter
+    def get_vids_filter(self)   -> tuple: return self._vids_filter
+    def get_text_filter(self)   -> tuple: return self._txt_filter
+    def get_music_filter(self)  -> tuple: return self._music_filter
+    def get_images_filter(self) -> tuple: return self._images_filter
+    def get_pdf_filter(self)    -> tuple: return self._pdf_filter
 
-    def get_success_color(self):  return self._success_color
-    def get_warning_color(self):  return self._warning_color
-    def get_error_color(self):    return self._error_color
+    def get_success_color(self) -> str:   return self._success_color
+    def get_warning_color(self) -> str:   return self._warning_color
+    def get_error_color(self)   -> str:   return self._error_color

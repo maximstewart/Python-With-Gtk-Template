@@ -11,7 +11,7 @@ from plugins.plugins import Plugins
 class Controller_Data:
     ''' Controller_Data contains most of the state of the app at ay given time. It also has some support methods. '''
 
-    def setup_controller_data(self, _settings):
+    def setup_controller_data(self, _settings: type) -> None:
         self.plugins       = Plugins(_settings)
 
         self.settings      = _settings
@@ -30,11 +30,11 @@ class Controller_Data:
         GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, self.tear_down)
 
 
-    def clear_console(self):
+    def clear_console(self) -> None:
         ''' Clears the terminal screen. '''
         os.system('cls' if os.name == 'nt' else 'clear')
 
-    def call_method(self, _method_name, data = None):
+    def call_method(self, _method_name: str, data: type) -> type:
         '''
         Calls a method from scope of class.
 
@@ -51,11 +51,11 @@ class Controller_Data:
         method      = getattr(self, method_name, lambda data: f"No valid key passed...\nkey={method_name}\nargs={data}")
         return method(data) if data else method()
 
-    def has_method(self, obj, name):
+    def has_method(self, obj: type, name: type) -> type:
         ''' Checks if a given method exists. '''
         return callable(getattr(obj, name, None))
 
-    def clear_children(self, widget):
+    def clear_children(self, widget: type) -> None:
         ''' Clear children of a gtk widget. '''
         for child in widget.get_children():
             widget.remove(child)
