@@ -16,7 +16,7 @@ class Application(EventSystem):
 
     def __init__(self, args, unknownargs):
         if not debug:
-            event_system.create_ipc_server()
+            event_system.create_ipc_listener()
             time.sleep(0.1)
 
         if not trace_debug:
