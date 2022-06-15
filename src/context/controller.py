@@ -13,12 +13,19 @@ from .mixins.dummy_mixin import DummyMixin
 from .controller_data import Controller_Data
 
 
-
+# NOTE: Threads will not die with parent's destruction
 def threaded(fn):
     def wrapper(*args, **kwargs):
-        threading.Thread(target=fn, args=args, kwargs=kwargs).start()
-
+        threading.Thread(target=fn, args=args, kwargs=kwargs, daemon=False).start()
     return wrapper
+
+# NOTE: Insure threads die with parent's destruction
+def daemon_threaded(fn):
+    def wrapper(*args, **kwargs):
+        threading.Thread(target=fn, args=args, kwargs=kwargs, daemon=True).start()
+    return wrapper
+
+
 
 
 class Controller(DummyMixin, Controller_Data):
@@ -35,18 +42,27 @@ class Controller(DummyMixin, Controller_Data):
         Gtk.main_quit()
 
 
-    @threaded
-    def gui_event_observer(self) -> None:
+    @daemon_threaded
+    def gui_event_observer(self):
         while True:
             time.sleep(event_sleep_time)
             event = event_system.consume_gui_event()
             if event:
                 try:
-                    type, target, data = event
-                    method = getattr(self.__class__, target)
-                    GLib.idle_add(method, *(self, *data,))
+                    sender_id, method_target, parameters = event
+                    if sender_id:
+                        method = getattr(self.__class__, "handle_gui_event_and_return_message")
+                        GLib.idle_add(method, *(self, sender_id, method_target, parameters))
+                    else:
+                        method = getattr(self.__class__, method_target)
+                        GLib.idle_add(method, *(self, *parameters,))
                 except Exception as e:
                     print(repr(e))
+
+    def handle_gui_event_and_return_message(self, sender, method_target, parameters):
+        method = getattr(self.__class__, f"{method_target}")
+        data   = method(*(self, *parameters))
+        event_system.push_module_event([sender, None, data])
 
     def handle_file_from_ipc(self, path: str) -> None:
         print(f"Path From IPC: {path}")
