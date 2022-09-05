@@ -1,5 +1,5 @@
 # Python imports
-import threading, subprocess, time
+import subprocess, time
 
 
 # Gtk imports
@@ -13,19 +13,6 @@ from .mixins.dummy_mixin import DummyMixin
 from .controller_data import Controller_Data
 
 
-# NOTE: Threads will not die with parent's destruction
-def threaded(fn):
-    def wrapper(*args, **kwargs):
-        threading.Thread(target=fn, args=args, kwargs=kwargs, daemon=False).start()
-    return wrapper
-
-# NOTE: Insure threads die with parent's destruction
-def daemon_threaded(fn):
-    def wrapper(*args, **kwargs):
-        threading.Thread(target=fn, args=args, kwargs=kwargs, daemon=True).start()
-    return wrapper
-
-
 
 
 class Controller(DummyMixin, Controller_Data):
@@ -36,8 +23,6 @@ class Controller(DummyMixin, Controller_Data):
 
 
     def tear_down(self, widget=None, eve=None):
-        event_system.send_ipc_message("close server")
-
         time.sleep(event_sleep_time)
         Gtk.main_quit()
 

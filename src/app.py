@@ -4,30 +4,37 @@ import os, inspect, time
 # Lib imports
 
 # Application imports
+from __builtins__ import *
+from utils.ipc_server import IPCServer
 from utils.settings import Settings
 from context.controller import Controller
-from __builtins__ import EventSystem
 
 
+class App_Launch_Exception(Exception):
+    ...
+
+class Controller_Start_Exceptio(Exception):
+    ...
 
 
-class Application(EventSystem):
+class Application(IPCServer):
     ''' Create Settings and Controller classes. Bind signal to Builder. Inherit from Builtins to bind global methods and classes.'''
 
     def __init__(self, args, unknownargs):
-        if not debug:
-            event_system.create_ipc_listener()
-            time.sleep(0.1)
+        super(Application, self).__init__()
 
         if not trace_debug:
-            if not event_system.is_ipc_alive:
+            self.create_ipc_listener()
+            time.sleep(0.05)
+
+            if not self.is_ipc_alive:
                 if unknownargs:
                     for arg in unknownargs:
                         if os.path.isdir(arg):
                             message = f"FILE|{arg}"
-                            event_system.send_ipc_message(message)
+                            self.send_ipc_message(message)
 
-                raise Exception("IPC Server Exists: Will send data to it and close...")
+                raise App_Launch_Exception(f"IPC Server Exists: Will send path(s) to it and close...\nNote: If no fm exists, remove /tmp/{app_name}-ipc.sock")
 
 
         settings = Settings()
@@ -35,7 +42,7 @@ class Application(EventSystem):
 
         controller = Controller(settings, args, unknownargs)
         if not controller:
-            raise Exception("Controller exited and doesn't exist...")
+            raise Controller_Start_Exceptio("Controller exited and doesn't exist...")
 
         # Gets the methods from the classes and sets to handler.
         # Then, builder from settings will connect to any signals it needs.
