@@ -24,7 +24,7 @@ if __name__ == "__main__":
     ''' Set process title, get arguments, and create GTK main thread. '''
 
     try:
-        setproctitle('<change_me>')
+        setproctitle(f'{app_name}')
         faulthandler.enable()  # For better debug info
 
         parser = argparse.ArgumentParser()
