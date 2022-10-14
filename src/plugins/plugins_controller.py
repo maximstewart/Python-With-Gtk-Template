@@ -17,17 +17,15 @@ class InvalidPluginException(Exception):
     ...
 
 
-class Plugins:
-    """Plugins controller"""
+class PluginsController:
+    """PluginsController controller"""
 
-    def __init__(self, settings: type):
+    def __init__(self):
         path                      = os.path.dirname(os.path.realpath(__file__))
         sys.path.insert(0, path)  # NOTE: I think I'm not using this correctly...
 
-        self._settings            = settings
-        self._builder             = self._settings.get_builder()
-        self._plugins_path        = self._settings.get_plugins_path()
-        self._keybindings         = self._settings.get_keybindings()
+        self._builder             = settings.get_builder()
+        self._plugins_path        = settings.get_plugins_path()
 
         self._plugins_dir_watcher = None
         self._plugin_collection   = []
@@ -72,23 +70,41 @@ class Plugins:
 
     def load_plugin_module(self, path, folder, target):
         os.chdir(path)
-        spec   = importlib.util.spec_from_file_location(folder, target, submodule_search_locations=path)
+
+        locations = []
+        self.collect_search_locations(path, locations)
+
+        spec   = importlib.util.spec_from_file_location(folder, target, submodule_search_locations = locations)
         module = importlib.util.module_from_spec(spec)
         sys.modules[folder] = module
         spec.loader.exec_module(module)
 
         return module
 
+    def collect_search_locations(self, path, locations):
+        locations.append(path)
+        for file in os.listdir(path):
+            _path = os.path.join(path, file)
+            if os.path.isdir(_path):
+                self.collect_search_locations(_path, locations)
 
     def execute_plugin(self, module: type, plugin: Plugin, loading_data: []):
         plugin.reference = module.Plugin()
         keys             = loading_data.keys()
 
-        if "pass_fm_events" in keys:
+        if "ui_target" in keys:
+            loading_data["ui_target"].add( plugin.reference.generate_reference_ui_element() )
+            loading_data["ui_target"].show_all()
+
+        if "pass_ui_objects" in keys:
+            plugin.reference.set_ui_object_collection( loading_data["pass_ui_objects"] )
+
+        if "pass_events" in keys:
             plugin.reference.set_fm_event_system(event_system)
+            plugin.reference.subscribe_to_events()
 
         if "bind_keys" in keys:
-            self._keybindings.append_bindings( loading_data["bind_keys"] )
+            keybindings.append_bindings( loading_data["bind_keys"] )
 
         plugin.reference.run()
         self._plugin_collection.append(plugin)

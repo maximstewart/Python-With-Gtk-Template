@@ -52,9 +52,9 @@ class ManifestProcessor:
         requests     = self._plugin.requests
         keys         = requests.keys()
 
-        if "pass_fm_events" in keys:
-            if requests["pass_fm_events"] in ["true"]:
-                loading_data["pass_fm_events"] = True
+        if "pass_events" in keys:
+            if requests["pass_events"] in ["true"]:
+                loading_data["pass_events"] = True
 
         if "bind_keys" in keys:
             if isinstance(requests["bind_keys"], list):
