@@ -10,7 +10,7 @@ from multiprocessing.connection import Listener, Client
 
 
 class IPCServer:
-    """ Create a listener so that other SolarFM instances send requests back to existing instance. """
+    """ Create a listener so that other {app_name} instances send requests back to existing instance. """
     def __init__(self, ipc_address: str = '127.0.0.1', conn_type: str = "socket"):
         self.is_ipc_alive     = False
         self._ipc_port        = 4848
@@ -35,11 +35,10 @@ class IPCServer:
         event_system.subscribe("post_file_to_ipc", self.send_ipc_message)
 
 
-    @daemon_threaded
     def create_ipc_listener(self) -> None:
         if self._conn_type == "socket":
-            if os.path.exists(self._ipc_address):
-                return
+            if os.path.exists(self._ipc_address) and settings.is_dirty_start():
+                os.unlink(self._ipc_address)
 
             listener = Listener(address=self._ipc_address, family="AF_UNIX", authkey=self._ipc_authkey)
         elif "unsecured" not in self._conn_type:
@@ -49,17 +48,21 @@ class IPCServer:
 
 
         self.is_ipc_alive = True
+        self._run_ipc_loop(listener)
+
+    @daemon_threaded
+    def _run_ipc_loop(self, listener) -> None:
         while True:
             conn       = listener.accept()
             start_time = time.perf_counter()
-            self.handle_message(conn, start_time)
+            self.handle_ipc_message(conn, start_time)
 
         listener.close()
 
-    def handle_message(self, conn, start_time) -> None:
+    def handle_ipc_message(self, conn, start_time) -> None:
         while True:
             msg = conn.recv()
-            if debug:
+            if settings.is_debug():
                 print(msg)
 
             if "FILE|" in msg:
