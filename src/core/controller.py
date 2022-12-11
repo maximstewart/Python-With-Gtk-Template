@@ -82,6 +82,6 @@ class Controller(DummyMixin, ControllerData):
 
     def set_clipboard_data(self, data: type) -> None:
         proc = subprocess.Popen(['xclip','-selection','clipboard'], stdin=subprocess.PIPE)
-        proc.stdin.write(data)
+        proc.stdin.write(data.encode("utf-8"))
         proc.stdin.close()
         retcode = proc.wait()

@@ -1,11 +1,16 @@
 # Python imports
-import os, sys, importlib, traceback
-from os.path import join, isdir
+import os
+import sys
+import portlib
+import traceback
+from os.path import join
+from os.path import isdir
 
 # Lib imports
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk
+from gi.repository import Gio
 
 # Application imports
 from .manifest import Plugin, ManifestProcessor

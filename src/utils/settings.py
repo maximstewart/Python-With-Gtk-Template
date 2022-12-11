@@ -114,16 +114,16 @@ class Settings:
         self._builder.connect_signals(handlers)
 
 
-    def get_builder(self)          -> any:  return self._builder
     def set_builder(self, builder) -> any:  self._builder = builder
+    def get_builder(self)          -> any:  return self._builder
     def get_glade_file(self)       -> str:  return self._GLADE_FILE
 
-    def get_logger(self)        -> Logger:       return self._logger
-    def get_plugins_path(self)  -> str:          return self._PLUGINS_PATH
-    def get_icon_theme(self)    -> str:          return self._ICON_THEME
-    def get_css_file(self)      -> str:          return self._CSS_FILE
-    def get_window_icon(self)   -> str:          return self._WINDOW_ICON
-    def get_home_path(self)     -> str:          return self._USER_HOME
+    def get_logger(self)        -> Logger:  return self._logger
+    def get_plugins_path(self)  -> str:     return self._PLUGINS_PATH
+    def get_icon_theme(self)    -> str:     return self._ICON_THEME
+    def get_css_file(self)      -> str:     return self._CSS_FILE
+    def get_window_icon(self)   -> str:     return self._WINDOW_ICON
+    def get_home_path(self)     -> str:     return self._USER_HOME
 
     # Filter returns
     def get_office_filter(self) -> tuple: return self._office_filter
@@ -139,7 +139,7 @@ class Settings:
 
     def is_trace_debug(self)    -> str:   return self._trace_debug
     def is_debug(self)          -> str:   return self._debug
-    def is_dirty_start(self)    -> bool: return self._dirty_start
+    def is_dirty_start(self)    -> bool:  return self._dirty_start
     def clear_pid(self): self._clean_pid()
 
     def set_trace_debug(self, trace_debug):

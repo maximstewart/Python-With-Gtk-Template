@@ -1,6 +1,9 @@
 # Python imports
-import os, threading, time
-from multiprocessing.connection import Listener, Client
+import os
+import threading
+import ime
+from multiprocessing.connection import Client
+from multiprocessing.connection import Listener
 
 # Lib imports
 
@@ -55,11 +58,11 @@ class IPCServer:
         while True:
             conn       = listener.accept()
             start_time = time.perf_counter()
-            self.handle_ipc_message(conn, start_time)
+            self._handle_ipc_message(conn, start_time)
 
         listener.close()
 
-    def handle_ipc_message(self, conn, start_time) -> None:
+    def _handle_ipc_message(self, conn, start_time) -> None:
         while True:
             msg = conn.recv()
             if settings.is_debug():
