@@ -18,6 +18,12 @@ class EventSystem:
     def subscribe(self, event_type, fn):
         self.subscribers[event_type].append(fn)
 
+    def unsubscribe(self, event_type, fn):
+        self.subscribers[event_type].remove(fn)
+
+    def unsubscribe_all(self, event_type):
+        self.subscribers.pop(event_type, None)
+
     def emit(self, event_type, data = None):
         if event_type in self.subscribers:
             for fn in self.subscribers[event_type]:
@@ -28,3 +34,15 @@ class EventSystem:
                         fn(data)
                 else:
                     fn()
+
+    def emit_and_await(self, event_type, data = None):
+        """ NOTE: Should be used when signal has only one listener and vis-a-vis """
+        if event_type in self.subscribers:
+            for fn in self.subscribers[event_type]:
+                if data:
+                    if hasattr(data, '__iter__') and not type(data) is str:
+                        return fn(*data)
+                    else:
+                        return fn(data)
+                else:
+                    return fn()
