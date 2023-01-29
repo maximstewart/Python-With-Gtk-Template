@@ -1,5 +1,8 @@
 # Python imports
-import os, threading, subprocess, time
+import os
+import threading
+import subprocess
+import time
 
 # Lib imports
 import gi
@@ -8,6 +11,8 @@ from gi.repository import Gtk
 
 # Application imports
 from plugins.plugin_base import PluginBase
+
+
 
 
 # NOTE: Threads WILL NOT die with parent's destruction.

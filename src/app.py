@@ -10,6 +10,7 @@ from core.window import Window
 
 
 
+
 class AppLaunchException(Exception):
     ...
 

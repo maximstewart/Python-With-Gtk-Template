@@ -1,8 +1,6 @@
-import builtins
-import threading
-
 # Python imports
 import builtins
+import threading
 
 # Lib imports
 
@@ -11,6 +9,7 @@ from utils.event_system import EventSystem
 from utils.endpoint_registry import EndpointRegistry
 from utils.keybindings import Keybindings
 from utils.settings import Settings
+
 
 
 

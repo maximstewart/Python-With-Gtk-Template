@@ -1,12 +1,10 @@
 # Python imports
 import subprocess
 
-# Gtk imports
+# Lib imports
 import gi
-
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GLib
@@ -15,6 +13,7 @@ from gi.repository import GLib
 from .mixins.dummy_mixin import DummyMixin
 from .controller_data import ControllerData
 from .core_widget import CoreWidget
+
 
 
 

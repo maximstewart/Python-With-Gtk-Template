@@ -3,7 +3,7 @@ import os
 import json
 import inspect
 
-# Gtk imports
+# Lib imports
 
 # Application imports
 from .logger import Logger
