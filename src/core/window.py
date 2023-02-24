@@ -15,6 +15,10 @@ from gi.repository import GLib
 from core.controller import Controller
 
 
+class ControllerStartExceptiom(Exception):
+    ...
+
+
 
 
 class Window(Gtk.ApplicationWindow):
@@ -23,12 +27,17 @@ class Window(Gtk.ApplicationWindow):
     def __init__(self, args, unknownargs):
         super(Window, self).__init__()
 
+        self._controller = None
+
         self._set_window_data()
         self._setup_styling()
         self._setup_signals()
+        self._subscribe_to_events()
+
+        settings.set_main_window(self)
         self._load_widgets(args, unknownargs)
 
-        self.show_all()
+        self.show()
 
 
     def _setup_styling(self):
@@ -42,9 +51,16 @@ class Window(Gtk.ApplicationWindow):
         self.connect("delete-event", self._tear_down)
         GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, self._tear_down)
 
+    def _subscribe_to_events(self):
+        event_system.subscribe("tear_down", self._tear_down)
+
     def _load_widgets(self, args, unknownargs):
-        controller = Controller(args, unknownargs)
-        self.add( controller.get_core_widget() )
+        self._controller = Controller(args, unknownargs)
+
+        if not self._controller:
+            raise ControllerStartException("Controller exited and doesn't exist...")
+
+        self.add( self._controller.get_core_widget() )
 
     def _set_window_data(self) -> None:
         screen = self.get_screen()

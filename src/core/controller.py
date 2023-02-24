@@ -1,5 +1,4 @@
 # Python imports
-import subprocess
 
 # Lib imports
 import gi
@@ -26,6 +25,8 @@ class Controller(DummyMixin, ControllerData):
         self.setup_controller_data()
         self.print_hello_world() # A mixin method from the DummyMixin file
 
+        logger.info(f"Made it past {self.__class__} loading...")
+
 
     def _setup_styling(self):
         ...
@@ -43,6 +44,8 @@ class Controller(DummyMixin, ControllerData):
     def load_glade_file(self):
         self.builder     = Gtk.Builder()
         self.builder.add_from_file(settings.get_glade_file())
+        self.builder.expose_object("main_window", self.window)
+
         settings.set_builder(self.builder)
         self.core_widget = CoreWidget()
 
@@ -71,16 +74,3 @@ class Controller(DummyMixin, ControllerData):
         else:
             print(f"on_global_key_release_controller > key > {keyname}")
             print(f"Add logic or remove this from: {self.__class__}")
-
-
-    def get_clipboard_data(self) -> str:
-        proc    = subprocess.Popen(['xclip','-selection', 'clipboard', '-o'], stdout=subprocess.PIPE)
-        retcode = proc.wait()
-        data    = proc.stdout.read()
-        return data.decode("utf-8").strip()
-
-    def set_clipboard_data(self, data: type) -> None:
-        proc = subprocess.Popen(['xclip','-selection','clipboard'], stdin=subprocess.PIPE)
-        proc.stdin.write(data.encode("utf-8"))
-        proc.stdin.close()
-        retcode = proc.wait()

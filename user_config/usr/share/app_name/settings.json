@@ -1,5 +1,5 @@
 {
-    "settings": {
+    "config": {
         "base_of_home": "",
         "hide_hidden_files": "true",
         "thumbnailer_path": "ffmpegthumbnailer",
@@ -27,5 +27,14 @@
         "music":  [".psf", ".mp3", ".ogg", ".flac", ".m4a"],
         "pdf":    [".pdf"]
 
+   },
+   "theming":{
+       "success_color":"#88cc27",
+       "warning_color":"#ffa800",
+       "error_color":"#ff0000"
+   },
+   "debugging": {
+       "ch_log_lvl": 10,
+       "fh_log_lvl": 20
    }
 }

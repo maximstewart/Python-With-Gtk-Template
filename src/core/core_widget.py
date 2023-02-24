@@ -14,6 +14,8 @@ class CoreWidget(Gtk.Box):
     def __init__(self):
         super(CoreWidget, self).__init__()
 
+        self._builder = settings.get_builder()
+
         self._setup_styling()
         self._setup_signals()
         self._load_widgets()
@@ -28,10 +30,15 @@ class CoreWidget(Gtk.Box):
         ...
 
     def _load_widgets(self):
-        button = Gtk.Button(label="Click Me!")
+        glade_box = self._builder.get_object("glade_box")
+        button    = Gtk.Button(label="Click Me!")
+
         button.connect("clicked", self._hello_world)
 
         self.add(button)
+        self.add(glade_box)
+
+
 
     def _hello_world(self, widget=None, eve=None):
         print("Hello, World!")

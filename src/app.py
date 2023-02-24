@@ -1,6 +1,5 @@
 # Python imports
 import os
-import time
 
 # Lib imports
 
@@ -9,13 +8,9 @@ from utils.ipc_server import IPCServer
 from core.window import Window
 
 
-
-
 class AppLaunchException(Exception):
     ...
 
-class ControllerStartExceptiom(Exception):
-    ...
 
 
 class Application(IPCServer):

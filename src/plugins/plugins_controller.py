@@ -1,7 +1,7 @@
 # Python imports
 import os
 import sys
-import portlib
+import importlib
 import traceback
 from os.path import join
 from os.path import isdir
@@ -13,7 +13,8 @@ from gi.repository import Gtk
 from gi.repository import Gio
 
 # Application imports
-from .manifest import Plugin, ManifestProcessor
+from .manifest import Plugin
+from .manifest import ManifestProcessor
 
 
 

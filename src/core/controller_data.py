@@ -1,5 +1,6 @@
 # Python imports
 import os
+import subprocess
 
 # Lib imports
 
@@ -13,7 +14,7 @@ class ControllerData:
     ''' ControllerData contains most of the state of the app at ay given time. It also has some support methods. '''
 
     def setup_controller_data(self) -> None:
-        self.logger        = settings.get_logger()
+        self.window        = settings.get_main_window()
         self.builder       = None
         self.core_widget   = None
 
@@ -50,3 +51,15 @@ class ControllerData:
         ''' Clear children of a gtk widget. '''
         for child in widget.get_children():
             widget.remove(child)
+
+    def get_clipboard_data(self) -> str:
+        proc    = subprocess.Popen(['xclip','-selection', 'clipboard', '-o'], stdout=subprocess.PIPE)
+        retcode = proc.wait()
+        data    = proc.stdout.read()
+        return data.decode("utf-8").strip()
+
+    def set_clipboard_data(self, data: type) -> None:
+        proc = subprocess.Popen(['xclip','-selection','clipboard'], stdin=subprocess.PIPE)
+        proc.stdin.write(data.encode("utf-8"))
+        proc.stdin.close()
+        retcode = proc.wait()
