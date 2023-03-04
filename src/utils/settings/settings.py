@@ -44,7 +44,7 @@ class Settings(StartCheckMixin):
                 raise
 
         if not os.path.exists(self._DEFAULT_ICONS):
-            self.DEFAULT_ICONS = f"{self._USR_PATH}/icons"
+            self._DEFAULT_ICONS = f"{self._USR_PATH}/icons"
             if not os.path.exists(self._DEFAULT_ICONS):
                 raise MissingConfigError("Unable to find the application icons directory.")
         if not os.path.exists(self._GLADE_FILE):
