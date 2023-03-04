@@ -9,6 +9,10 @@ import inspect
 from .start_check_mixin import StartCheckMixin
 
 
+class MissingConfigError(Exception):
+    pass
+
+
 
 class Settings(StartCheckMixin):
     def __init__(self):
@@ -41,14 +45,24 @@ class Settings(StartCheckMixin):
 
         if not os.path.exists(self._DEFAULT_ICONS):
             self.DEFAULT_ICONS = f"{self._USR_PATH}/icons"
+            if not os.path.exists(self._DEFAULT_ICONS):
+                raise MissingConfigError("Unable to find the application icons directory.")
         if not os.path.exists(self._GLADE_FILE):
             self._GLADE_FILE   = f"{self._USR_PATH}/Main_Window.glade"
+            if not os.path.exists(self._GLADE_FILE):
+                raise MissingConfigError("Unable to find the application Glade file.")
         if not os.path.exists(self._KEY_BINDINGS_FILE):
             self._KEY_BINDINGS_FILE = f"{self._USR_PATH}/key-bindings.json"
+            if not os.path.exists(self._KEY_BINDINGS_FILE):
+                raise MissingConfigError("Unable to find the application Keybindings file.")
         if not os.path.exists(self._CSS_FILE):
             self._CSS_FILE     = f"{self._USR_PATH}/stylesheet.css"
+            if not os.path.exists(self._CSS_FILE):
+                raise MissingConfigError("Unable to find the application Stylesheet file.")
         if not os.path.exists(self._WINDOW_ICON):
             self._WINDOW_ICON  = f"{self._USR_PATH}/icons/{app_name.lower()}.png"
+            if not os.path.exists(self._WINDOW_ICON):
+                raise MissingConfigError("Unable to find the application icon.")
 
 
         with open(self._KEY_BINDINGS_FILE) as file:

@@ -52,14 +52,14 @@ class ControllerData:
         for child in widget.get_children():
             widget.remove(child)
 
-    def get_clipboard_data(self) -> str:
+    def get_clipboard_data(self, encoding="utf-8") -> str:
         proc    = subprocess.Popen(['xclip','-selection', 'clipboard', '-o'], stdout=subprocess.PIPE)
         retcode = proc.wait()
         data    = proc.stdout.read()
-        return data.decode("utf-8").strip()
+        return data.decode(encoding).strip()
 
-    def set_clipboard_data(self, data: type) -> None:
+    def set_clipboard_data(self, data: type, encoding="utf-8") -> None:
         proc = subprocess.Popen(['xclip','-selection','clipboard'], stdin=subprocess.PIPE)
-        proc.stdin.write(data.encode("utf-8"))
+        proc.stdin.write(data.encode(encoding))
         proc.stdin.close()
         retcode = proc.wait()
