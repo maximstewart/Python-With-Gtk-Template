@@ -70,6 +70,8 @@ class Settings(StartCheckMixin):
             keybindings.configure(bindings)
 
         self._main_window   = None
+        self._main_window_w = 800
+        self._main_window_h = 600
         self._builder       = None
 
         self._trace_debug   = False
@@ -106,6 +108,8 @@ class Settings(StartCheckMixin):
         return monitors
 
     def get_main_window(self)      -> any:   return self._main_window
+    def get_main_window_width(self) -> Gtk.ApplicationWindow:  return self._main_window_w
+    def get_main_window_height(self) -> Gtk.ApplicationWindow: return self._main_window_h
     def get_builder(self)          -> any:   return self._builder
     def get_glade_file(self)       -> str:   return self._GLADE_FILE
 

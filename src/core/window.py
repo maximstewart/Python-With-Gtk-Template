@@ -41,7 +41,8 @@ class Window(Gtk.ApplicationWindow):
 
 
     def _setup_styling(self):
-        self.set_default_size(1670, 830)
+        self.set_default_size(settings.get_main_window_width(),
+                                settings.get_main_window_height())
         self.set_title(f"{app_name}")
         self.set_icon_from_file( settings.get_window_icon() )
         self.set_gravity(5)  # 5 = CENTER
@@ -55,8 +56,11 @@ class Window(Gtk.ApplicationWindow):
         event_system.subscribe("tear_down", self._tear_down)
 
     def _load_widgets(self, args, unknownargs):
-        self._controller = Controller(args, unknownargs)
+        if settings.is_debug():
+            self.set_interactive_debugging(True)
 
+
+        self._controller = Controller(args, unknownargs)
         if not self._controller:
             raise ControllerStartException("Controller exited and doesn't exist...")
 
