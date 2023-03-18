@@ -19,11 +19,12 @@ from .core_widget import CoreWidget
 
 class Controller(DummyMixin, SignalsMixins, ControllerData):
     def __init__(self, args, unknownargs):
+        self.setup_controller_data()
+
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
 
-        self.setup_controller_data()
         self.print_hello_world() # A mixin method from the DummyMixin file
 
         logger.info(f"Made it past {self.__class__} loading...")
@@ -33,7 +34,9 @@ class Controller(DummyMixin, SignalsMixins, ControllerData):
         ...
 
     def _setup_signals(self):
-        ...
+        self.window.connect("focus-out-event", self.unset_keys_and_data)
+        self.window.connect("key-press-event", self.on_global_key_press_controller)
+        self.window.connect("key-release-event", self.on_global_key_release_controller)
 
 
     def _subscribe_to_events(self):
