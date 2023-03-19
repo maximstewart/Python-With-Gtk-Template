@@ -5,7 +5,7 @@
         "open_terminal"          : "F4",
         "refresh_tab"            : ["F5", "<Control>r"],
         "delete_files"           : "Delete",
-        "tggl_top_main_menubar"  : "Alt",
+        "tggl_top_main_menubar"  : "Alt_L",
         "trash_files"            : "<Shift><Control>t",
         "tear_down"              : "<Control>q",
         "go_up"                  : "<Control>Up",

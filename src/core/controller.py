@@ -38,9 +38,9 @@ class Controller(DummyMixin, SignalsMixins, ControllerData):
         self.window.connect("key-press-event", self.on_global_key_press_controller)
         self.window.connect("key-release-event", self.on_global_key_release_controller)
 
-
     def _subscribe_to_events(self):
         event_system.subscribe("handle_file_from_ipc", self.handle_file_from_ipc)
+        event_system.subscribe("tggl_top_main_menubar", self._tggl_top_main_menubar)
 
     def load_glade_file(self):
         self.builder     = Gtk.Builder()
@@ -54,3 +54,6 @@ class Controller(DummyMixin, SignalsMixins, ControllerData):
 
     def get_core_widget(self):
         return self.core_widget
+
+    def _tggl_top_main_menubar(self):
+        print("_tggl_top_main_menubar > stub...")
