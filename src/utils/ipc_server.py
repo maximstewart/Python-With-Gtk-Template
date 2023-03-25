@@ -55,10 +55,14 @@ class IPCServer:
 
     @daemon_threaded
     def _run_ipc_loop(self, listener) -> None:
+        # NOTE: Not thread safe if using with Gtk. Need to import GLib and use idle_add
         while True:
-            conn       = listener.accept()
-            start_time = time.perf_counter()
-            self._handle_ipc_message(conn, start_time)
+            try:
+                conn       = listener.accept()
+                start_time = time.perf_counter()
+                self._handle_ipc_message(conn, start_time)
+            except Exception as e:
+                ...
 
         listener.close()
 
