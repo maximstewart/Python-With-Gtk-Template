@@ -8,11 +8,11 @@ from multiprocessing.connection import Listener
 # Lib imports
 
 # Application imports
+from .singleton import Singleton
 
 
 
-
-class IPCServer:
+class IPCServer(Singleton):
     """ Create a listener so that other {app_name} instances send requests back to existing instance. """
     def __init__(self, ipc_address: str = '127.0.0.1', conn_type: str = "socket"):
         self.is_ipc_alive     = False
@@ -76,6 +76,11 @@ class IPCServer:
                 file = msg.split("FILE|")[1].strip()
                 if file:
                     event_system.emit("handle_file_from_ipc", file)
+
+            if "DIR|" in msg:
+                file = msg.split("DIR|")[1].strip()
+                if file:
+                    event_system.emit("handle_dir_from_ipc", file)
 
                 conn.close()
                 break

@@ -22,7 +22,7 @@ class ControllerStartExceptiom(Exception):
 
 
 class Window(Gtk.ApplicationWindow):
-    """docstring for Window."""
+    """ docstring for Window. """
 
     def __init__(self, args, unknownargs):
         super(Window, self).__init__()

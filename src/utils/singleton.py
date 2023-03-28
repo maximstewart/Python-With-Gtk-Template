@@ -5,6 +5,7 @@
 # Application imports
 
 
+
 class SingletonError(Exception):
     pass
 

@@ -14,7 +14,7 @@ class AppLaunchException(Exception):
 
 
 class Application(IPCServer):
-    ''' Create Settings and Controller classes. Bind signal to Builder. Inherit from Builtins to bind global methods and classes.'''
+    """ docstring for Application. """
 
     def __init__(self, args, unknownargs):
         super(Application, self).__init__()
@@ -26,7 +26,7 @@ class Application(IPCServer):
 
             if not self.is_ipc_alive:
                 for arg in unknownargs + [args.new_tab,]:
-                    if os.path.isdir(arg):
+                    if os.path.isfile(arg):
                         message = f"FILE|{arg}"
                         self.send_ipc_message(message)
 

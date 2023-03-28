@@ -27,6 +27,18 @@ class Controller(DummyMixin, SignalsMixins, ControllerData):
 
         self.print_hello_world() # A mixin method from the DummyMixin file
 
+        if args.no_plugins == "false":
+            self.plugins.launch_plugins()
+
+        for arg in unknownargs + [args.new_tab,]:
+            if os.path.isfile(arg):
+                message = f"FILE|{arg}"
+                event_system.emit("post_file_to_ipc", message)
+
+            if os.path.isdir(arg):
+                message = f"DIR|{arg}"
+                event_system.emit("post_file_to_ipc", message)
+
         logger.info(f"Made it past {self.__class__} loading...")
 
 
@@ -40,6 +52,7 @@ class Controller(DummyMixin, SignalsMixins, ControllerData):
 
     def _subscribe_to_events(self):
         event_system.subscribe("handle_file_from_ipc", self.handle_file_from_ipc)
+        event_system.subscribe("handle_dir_from_ipc", self.handle_dir_from_ipc)
         event_system.subscribe("tggl_top_main_menubar", self._tggl_top_main_menubar)
 
     def load_glade_file(self):

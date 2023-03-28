@@ -14,4 +14,7 @@ class IPCSignalsMixin:
         print(message)
 
     def handle_file_from_ipc(self, path: str) -> None:
-        print(f"Path From IPC: {path}")
+        print(f"File From IPC: {path}")
+
+    def handle_dir_from_ipc(self, path: str) -> None:
+        print(f"Dir From IPC: {path}")
