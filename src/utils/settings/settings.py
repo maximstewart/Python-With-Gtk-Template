@@ -6,6 +6,7 @@ import inspect
 # Lib imports
 
 # Application imports
+from ..singleton import Singleton
 from .start_check_mixin import StartCheckMixin
 
 
@@ -14,7 +15,7 @@ class MissingConfigError(Exception):
 
 
 
-class Settings(StartCheckMixin):
+class Settings(StartCheckMixin, Singleton):
     def __init__(self):
         self._SCRIPT_PTH        = os.path.dirname(os.path.realpath(__file__))
         self._USER_HOME         = os.path.expanduser('~')

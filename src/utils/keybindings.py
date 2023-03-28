@@ -7,7 +7,7 @@ gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
 
 # Application imports
-
+from .singleton import Singleton
 
 
 
@@ -19,7 +19,7 @@ class KeymapError(Exception):
     """ Custom exception for errors in keybinding configurations """
 
 MODIFIER = re.compile('<([^<]+)>')
-class Keybindings:
+class Keybindings(Singleton):
     """ Class to handle loading and lookup of Terminator keybindings """
 
     modifiers = {
