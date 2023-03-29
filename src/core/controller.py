@@ -1,4 +1,5 @@
 # Python imports
+import os
 
 # Lib imports
 import gi
@@ -12,7 +13,7 @@ from gi.repository import GLib
 from .mixins.signals_mixins import SignalsMixins
 from .mixins.dummy_mixin import DummyMixin
 from .controller_data import ControllerData
-from .core_widget import CoreWidget
+from .widgets.core_widget import CoreWidget
 
 
 
