@@ -13,8 +13,7 @@ from gi.repository import GLib
 from .mixins.signals_mixins import SignalsMixins
 from .mixins.dummy_mixin import DummyMixin
 from .controller_data import ControllerData
-from .widgets.core_widget import CoreWidget
-
+from .containers.core_widget import CoreWidget
 
 
 
