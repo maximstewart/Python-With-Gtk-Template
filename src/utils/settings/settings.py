@@ -1,7 +1,9 @@
 # Python imports
 import os
+import io
 import json
 import inspect
+import zipfile
 
 # Lib imports
 
@@ -19,10 +21,10 @@ class Settings(StartCheckMixin, Singleton):
     def __init__(self):
         self._SCRIPT_PTH        = os.path.dirname(os.path.realpath(__file__))
         self._USER_HOME         = os.path.expanduser('~')
-        self._USR_PATH          = f"/usr/share/{app_name.lower()}"
-
-        self._USR_CONFIG_FILE   = f"{self._USR_PATH}/settings.json"
         self._HOME_CONFIG_PATH  = f"{self._USER_HOME}/.config/{app_name.lower()}"
+        self._USR_PATH          = f"/usr/share/{app_name.lower()}"
+        self._USR_CONFIG_FILE   = f"{self._USR_PATH}/settings.json"
+
         self._PLUGINS_PATH      = f"{self._HOME_CONFIG_PATH}/plugins"
         self._DEFAULT_ICONS     = f"{self._HOME_CONFIG_PATH}/icons"
         self._CONFIG_FILE       = f"{self._HOME_CONFIG_PATH}/settings.json"
@@ -30,9 +32,14 @@ class Settings(StartCheckMixin, Singleton):
         self._CSS_FILE          = f"{self._HOME_CONFIG_PATH}/stylesheet.css"
         self._KEY_BINDINGS_FILE = f"{self._HOME_CONFIG_PATH}/key-bindings.json"
         self._PID_FILE          = f"{self._HOME_CONFIG_PATH}/{app_name.lower()}.pid"
-        self._WINDOW_ICON       = f"{self._DEFAULT_ICONS}/{app_name.lower()}.png"
         self._UI_WIDEGTS_PATH   = f"{self._HOME_CONFIG_PATH}/ui_widgets"
         self._CONTEXT_MENU      = f"{self._HOME_CONFIG_PATH}/contexct_menu.json"
+        self._WINDOW_ICON       = f"{self._DEFAULT_ICONS}/{app_name.lower()}.png"
+
+
+        # with zipfile.ZipFile("files.zip", mode="r", allowZip64=True) as zf:
+        #     with io.TextIOWrapper(zf.open("text1.txt"), encoding="utf-8") as f:
+
 
         if not os.path.exists(self._HOME_CONFIG_PATH):
             os.mkdir(self._HOME_CONFIG_PATH)

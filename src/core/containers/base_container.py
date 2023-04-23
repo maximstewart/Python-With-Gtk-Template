@@ -10,9 +10,9 @@ from gi.repository import Gtk
 
 
 
-class CoreWidget(Gtk.Box):
+class BaseContainer(Gtk.Box):
     def __init__(self):
-        super(CoreWidget, self).__init__()
+        super(BaseContainer, self).__init__()
 
         self._builder = settings.get_builder()
 
