@@ -15,7 +15,8 @@
         "text_app": "leafpad",
         "file_manager_app": "solarfm",
         "terminal_app": "terminator",
-        "remux_folder_max_disk_usage": "8589934592"
+        "remux_folder_max_disk_usage": "8589934592",
+        "make_transparent": 0
     },
     "filters": {
         "meshs":  [".blend", ".dae", ".fbx", ".gltf", ".obj", ".stl"],

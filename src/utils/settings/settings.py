@@ -36,6 +36,18 @@ class Settings(StartCheckMixin, Singleton):
         self._CONTEXT_MENU      = f"{self._HOME_CONFIG_PATH}/contexct_menu.json"
         self._WINDOW_ICON       = f"{self._DEFAULT_ICONS}/{app_name.lower()}.png"
 
+        # self._USR_CONFIG_FILE   = f"{self._USR_PATH}/settings.json"
+        # self._PLUGINS_PATH      = f"plugins"
+        # self._CONFIG_FILE       = f"settings.json"
+        # self._GLADE_FILE        = f"Main_Window.glade"
+        # self._CSS_FILE          = f"stylesheet.css"
+        # self._KEY_BINDINGS_FILE = f"key-bindings.json"
+        # self._PID_FILE          = f"{app_name.lower()}.pid"
+        # self._WINDOW_ICON       = f"{app_name.lower()}.png"
+        # self._UI_WIDEGTS_PATH   = f"ui_widgets"
+        # self._CONTEXT_MENU      = f"contexct_menu.json"
+        # self._DEFAULT_ICONS     = f"icons"
+
 
         # with zipfile.ZipFile("files.zip", mode="r", allowZip64=True) as zf:
         #     with io.TextIOWrapper(zf.open("text1.txt"), encoding="utf-8") as f:
@@ -147,6 +159,7 @@ class Settings(StartCheckMixin, Singleton):
     def get_home_config_path(self) -> str:   return self._HOME_CONFIG_PATH
     def get_window_icon(self)      -> str:   return self._WINDOW_ICON
     def get_home_path(self)        -> str:   return self._USER_HOME
+    def make_transparent(self)     -> int:   return self._config["make_transparent"]
 
     # Filter returns
     def get_office_filter(self)    -> tuple: return tuple(self._settings["filters"]["office"])

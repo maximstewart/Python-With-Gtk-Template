@@ -70,7 +70,7 @@ class Window(Gtk.ApplicationWindow):
         screen = self.get_screen()
         visual = screen.get_rgba_visual()
 
-        if visual != None and screen.is_composited():
+        if visual and screen.is_composited() and settings.make_transparent() == 0:
             self.set_visual(visual)
             self.set_app_paintable(True)
             self.connect("draw", self._area_draw)

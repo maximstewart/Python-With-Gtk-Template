@@ -24,7 +24,7 @@ class BaseContainer(Gtk.Box):
 
 
     def _setup_styling(self):
-        self.set_orientation(1)
+        self.set_orientation(Gtk.Orientation.VERTICAL)
 
     def _setup_signals(self):
         ...
