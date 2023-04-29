@@ -39,6 +39,9 @@ class Window(Gtk.ApplicationWindow):
 
         self.show()
 
+        # NOTE: Need to set size after show b/c get_allocation methods are initially incorrect if done beforehand...
+        self._set_size_constraints()
+
 
     def _setup_styling(self):
         self.set_default_size(settings.get_main_window_width(),
@@ -65,6 +68,12 @@ class Window(Gtk.ApplicationWindow):
             raise ControllerStartException("Controller exited and doesn't exist...")
 
         self.add( self._controller.get_base_container() )
+
+    def _set_size_constraints(self):
+        self.set_default_size(settings.get_main_window_width(),
+                                settings.get_main_window_height())
+        self.set_size_request(settings.get_main_window_min_width(),
+                                settings.get_main_window_min_height())
 
     def _set_window_data(self) -> None:
         screen = self.get_screen()

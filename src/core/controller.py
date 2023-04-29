@@ -56,7 +56,7 @@ class Controller(DummyMixin, SignalsMixins, ControllerData):
         event_system.subscribe("tggl_top_main_menubar", self._tggl_top_main_menubar)
 
     def _tggl_top_main_menubar(self):
-        print("_tggl_top_main_menubar > stub...")
+        logger.debug("_tggl_top_main_menubar > stub...")
 
     def setup_builder_and_container(self):
         self.builder     = Gtk.Builder()

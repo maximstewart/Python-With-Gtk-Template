@@ -9,7 +9,6 @@ from gi.repository import Gtk
 
 
 
-
 class BaseContainer(Gtk.Box):
     def __init__(self):
         super(BaseContainer, self).__init__()
@@ -41,4 +40,4 @@ class BaseContainer(Gtk.Box):
 
 
     def _hello_world(self, widget=None, eve=None):
-        print("Hello, World!")
+        logger.debug("Hello, World!")

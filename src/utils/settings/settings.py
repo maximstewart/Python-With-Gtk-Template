@@ -105,15 +105,18 @@ class Settings(StartCheckMixin, Singleton):
             print( f"Settings: {self._CONTEXT_MENU}\n\t\t{repr(e)}" )
 
 
-        self._main_window   = None
-        self._main_window_w = 800
-        self._main_window_h = 600
-        self._builder       = None
-        self.PAINT_BG_COLOR = (0, 0, 0, 0.54)
+        self._main_window    = None
+        self._main_window_w  = 800
+        self._main_window_h  = 600
+        self._main_window_mw = 720
+        self._main_window_mh = 480
 
-        self._trace_debug   = False
-        self._debug         = False
-        self._dirty_start   = False
+        self._builder        = None
+        self.PAINT_BG_COLOR  = (0, 0, 0, 0.54)
+
+        self._trace_debug    = False
+        self._debug          = False
+        self._dirty_start    = False
 
         self.load_settings()
 
@@ -147,6 +150,8 @@ class Settings(StartCheckMixin, Singleton):
     def get_main_window(self)        -> any: return self._main_window
     def get_main_window_width(self)  -> any: return self._main_window_w
     def get_main_window_height(self) -> any: return self._main_window_h
+    def get_main_window_min_width(self)  -> any: return self._main_window_mw
+    def get_main_window_min_height(self) -> any: return self._main_window_mh
     def get_builder(self)            -> any: return self._builder
     def get_paint_bg_color(self)     -> any: return self.PAINT_BG_COLOR
     def get_glade_file(self)         -> str: return self._GLADE_FILE

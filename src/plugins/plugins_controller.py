@@ -53,7 +53,7 @@ class PluginsController:
             self.reload_plugins(file)
 
     def load_plugins(self, file: str = None) -> None:
-        print(f"Loading plugins...")
+        logger.debug(f"Loading plugins...")
         parent_path = os.getcwd()
 
         for path, folder in [[join(self._plugins_path, item), item] if os.path.isdir(join(self._plugins_path, item)) else None for item in os.listdir(self._plugins_path)]:
@@ -68,8 +68,7 @@ class PluginsController:
                 module               = self.load_plugin_module(path, folder, target)
                 self.execute_plugin(module, plugin, loading_data)
             except Exception as e:
-                print(f"Malformed Plugin: Not loading -->: '{folder}' !")
-                traceback.print_exc()
+                logger.debug(f"Malformed Plugin: Not loading -->: '{folder}' !\n{traceback.print_exc()}")
 
         os.chdir(parent_path)
 
@@ -116,4 +115,4 @@ class PluginsController:
         self._plugin_collection.append(plugin)
 
     def reload_plugins(self, file: str = None) -> None:
-        print(f"Reloading plugins... stub.")
+        logger.debug(f"Reloading plugins... stub.")
