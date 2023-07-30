@@ -4,10 +4,7 @@ import os
 # Lib imports
 import gi
 gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
 from gi.repository import Gtk
-from gi.repository import Gdk
-from gi.repository import GLib
 
 # Application imports
 from .mixins.signals_mixins import SignalsMixins
@@ -60,13 +57,13 @@ class Controller(DummyMixin, SignalsMixins, ControllerData):
 
     def setup_builder_and_container(self):
         self.builder     = Gtk.Builder()
-        self.builder.add_from_file(settings.get_glade_file())
+        self.builder.add_from_file(settings_manager.get_glade_file())
         self.builder.expose_object("main_window", self.window)
 
-        settings.set_builder(self.builder)
+        settings_manager.set_builder(self.builder)
         self.base_container = BaseContainer()
 
-        settings.register_signals_to_builder([self, self.base_container])
+        settings_manager.register_signals_to_builder([self, self.base_container])
 
     def get_base_container(self):
         return self.base_container

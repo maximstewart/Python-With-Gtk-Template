@@ -4,12 +4,15 @@ import io
 import json
 import inspect
 import zipfile
+from dataclasses import asdict
 
 # Lib imports
 
 # Application imports
 from ..singleton import Singleton
 from .start_check_mixin import StartCheckMixin
+from .options.settings import Settings
+
 
 
 class MissingConfigError(Exception):
@@ -17,7 +20,7 @@ class MissingConfigError(Exception):
 
 
 
-class Settings(StartCheckMixin, Singleton):
+class SettingsManager(StartCheckMixin, Singleton):
     def __init__(self):
         self._SCRIPT_PTH        = os.path.dirname(os.path.realpath(__file__))
         self._USER_HOME         = os.path.expanduser('~')
@@ -105,18 +108,14 @@ class Settings(StartCheckMixin, Singleton):
             print( f"Settings: {self._CONTEXT_MENU}\n\t\t{repr(e)}" )
 
 
-        self._main_window    = None
-        self._main_window_w  = 800
-        self._main_window_h  = 600
-        self._main_window_mw = 720
-        self._main_window_mh = 480
+        self.settings: Settings = None
+        self._main_window       = None
+        self._builder           = None
+        self.PAINT_BG_COLOR     = (0, 0, 0, 0.54)
 
-        self._builder        = None
-        self.PAINT_BG_COLOR  = (0, 0, 0, 0.54)
-
-        self._trace_debug    = False
-        self._debug          = False
-        self._dirty_start    = False
+        self._trace_debug       = False
+        self._debug             = False
+        self._dirty_start       = False
 
         self.load_settings()
 
@@ -148,10 +147,6 @@ class Settings(StartCheckMixin, Singleton):
         return monitors
 
     def get_main_window(self)        -> any: return self._main_window
-    def get_main_window_width(self)  -> any: return self._main_window_w
-    def get_main_window_height(self) -> any: return self._main_window_h
-    def get_main_window_min_width(self)  -> any: return self._main_window_mw
-    def get_main_window_min_height(self) -> any: return self._main_window_mh
     def get_builder(self)            -> any: return self._builder
     def get_paint_bg_color(self)     -> any: return self.PAINT_BG_COLOR
     def get_glade_file(self)         -> str: return self._GLADE_FILE
@@ -164,25 +159,16 @@ class Settings(StartCheckMixin, Singleton):
     def get_home_config_path(self) -> str:   return self._HOME_CONFIG_PATH
     def get_window_icon(self)      -> str:   return self._WINDOW_ICON
     def get_home_path(self)        -> str:   return self._USER_HOME
-    def make_transparent(self)     -> int:   return self._config["make_transparent"]
-
-    # Filter returns
-    def get_office_filter(self)    -> tuple: return tuple(self._settings["filters"]["office"])
-    def get_vids_filter(self)      -> tuple: return tuple(self._settings["filters"]["videos"])
-    def get_text_filter(self)      -> tuple: return tuple(self._settings["filters"]["text"])
-    def get_music_filter(self)     -> tuple: return tuple(self._settings["filters"]["music"])
-    def get_images_filter(self)    -> tuple: return tuple(self._settings["filters"]["images"])
-    def get_pdf_filter(self)       -> tuple: return tuple(self._settings["filters"]["pdf"])
-
-    def get_success_color(self)    -> str:   return self._theming["success_color"]
-    def get_warning_color(self)    -> str:   return self._theming["warning_color"]
-    def get_error_color(self)      -> str:   return self._theming["error_color"]
 
     def is_trace_debug(self)       -> str:   return self._trace_debug
     def is_debug(self)             -> str:   return self._debug
 
-    def get_ch_log_lvl(self)       -> str:   return self._settings["debugging"]["ch_log_lvl"]
-    def get_fh_log_lvl(self)       -> str:   return self._settings["debugging"]["fh_log_lvl"]
+    def set_main_window_x(self, x = 0):  self.settings.config.window_x  = x
+    def set_main_window_y(self, y = 0):  self.settings.config.window_y  = y
+    def set_main_window_width(self, width = 800):   self.settings.config.window_width  = width
+    def set_main_window_height(self, height = 600): self.settings.config.window_height = height
+    def set_main_window_min_width(self, width = 720):   self.settings.config.window_min_width  = width
+    def set_main_window_min_height(self, height = 480): self.settings.config.window_min_height = height
 
     def set_trace_debug(self, trace_debug):
         self._trace_debug = trace_debug
@@ -192,11 +178,10 @@ class Settings(StartCheckMixin, Singleton):
 
 
     def load_settings(self):
-        with open(self._CONFIG_FILE) as f:
-            self._settings = json.load(f)
-            self._config   = self._settings["config"]
-            self._theming  = self._settings["theming"]
+        with open(self._CONFIG_FILE) as file:
+            data          = json.load(file)
+            self.settings = Settings(**data)
 
     def save_settings(self):
         with open(self._CONFIG_FILE, 'w') as outfile:
-            json.dump(self._settings, outfile, separators=(',', ':'), indent=4)
+            json.dump(asdict(self.settings), outfile, separators=(',', ':'), indent=4)

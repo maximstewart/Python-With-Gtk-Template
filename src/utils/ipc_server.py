@@ -40,7 +40,7 @@ class IPCServer(Singleton):
 
     def create_ipc_listener(self) -> None:
         if self._conn_type == "socket":
-            if os.path.exists(self._ipc_address) and settings.is_dirty_start():
+            if os.path.exists(self._ipc_address) and settings_manager.is_dirty_start():
                 os.unlink(self._ipc_address)
 
             listener = Listener(address=self._ipc_address, family="AF_UNIX", authkey=self._ipc_authkey)
@@ -69,7 +69,7 @@ class IPCServer(Singleton):
     def _handle_ipc_message(self, conn, start_time) -> None:
         while True:
             msg = conn.recv()
-            if settings.is_debug():
+            if settings_manager.is_debug():
                 print(msg)
 
             if "FILE|" in msg:
