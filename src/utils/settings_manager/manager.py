@@ -4,7 +4,6 @@ import io
 import json
 import inspect
 import zipfile
-from dataclasses import asdict
 
 # Lib imports
 
@@ -184,4 +183,4 @@ class SettingsManager(StartCheckMixin, Singleton):
 
     def save_settings(self):
         with open(self._CONFIG_FILE, 'w') as outfile:
-            json.dump(asdict(self.settings), outfile, separators=(',', ':'), indent=4)
+            json.dump(self.settings.as_dict(), outfile, separators=(',', ':'), indent=4)
