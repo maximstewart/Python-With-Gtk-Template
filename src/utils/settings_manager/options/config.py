@@ -33,3 +33,7 @@ class Config:
     main_window_min_height: int      = 480
     main_window_width: int           = 800
     main_window_height: int          = 600
+    application_dirs: list           = field(default_factory=lambda: [
+        "/usr/share/applications",
+        f"{settings_manager.get_home_path()}/.local/share/applications"
+    ])

@@ -12,6 +12,9 @@ from utils.logger import Logger
 from utils.settings_manager.manager import SettingsManager
 
 
+class BuiltinsException(Exception):
+    ...
+
 
 # NOTE: Threads WILL NOT die with parent's destruction.
 def threaded_wrapper(fn):
@@ -34,6 +37,9 @@ builtins.keybindings       = Keybindings()
 builtins.event_system      = EventSystem()
 builtins.endpoint_registry = EndpointRegistry()
 builtins.settings_manager  = SettingsManager()
+
+settings_manager.load_settings()
+
 builtins.settings          = settings_manager.settings
 builtins.logger            = Logger(settings_manager.get_home_config_path(), \
                                     _ch_log_lvl=settings.debugging.ch_log_lvl, \
@@ -42,3 +48,10 @@ builtins.logger            = Logger(settings_manager.get_home_config_path(), \
 builtins.threaded          = threaded_wrapper
 builtins.daemon_threaded   = daemon_threaded_wrapper
 builtins.event_sleep_time  = 0.05
+
+
+try:
+    from utils.models import _db
+    builtins.db = _db
+except ModuleNotFoundError as e:
+    logger.debug("Warning: Likely Flask SQLAlchemy not installed...")
