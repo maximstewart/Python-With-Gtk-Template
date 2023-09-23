@@ -2,9 +2,10 @@
 A template project for Python with Gtk applications.
 
 ### Requirements
-* PyGObject
-* setproctitle
-* pyxdg
+* PyGObject (Gtk introspection library)
+* pyxdg (Desktop ".desktop" file parser)
+* setproctitle (Define process title to search and kill more easily)
+* sqlmodel (SQL databases and is powered by Pydantic and SQLAlchemy)
 
 ### Note
 There are a "\<change_me\>" strings and files that need to be set according to your app's name located at:

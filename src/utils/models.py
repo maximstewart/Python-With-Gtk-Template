@@ -1,23 +1,25 @@
 # Python imports
+from typing import Optional
 
 # Lib imports
-from flask_sqlalchemy import SQLAlchemy
+from sqlmodel import Field, Session, SQLModel, create_engine
 
-# Apoplication imports
-
-
-_db = SQLAlchemy()
+# Application imports
 
 
-class User(_db.Model):
-    email       = _db.Column(_db.Text())
-    username    = _db.Column(_db.Text())
-    password    = _db.Column(_db.Text())
-    id          = _db.Column(_db.Integer, primary_key=True,
-                            unique=True, autoincrement=True)
 
-    def __repr__(self):
-        return f"'{self.email}', '{self.username}', '{self.password}', '{self.id}'"
+class User(SQLModel, table = True):
+    id: Optional[int] = Field(default = None, primary_key = True)
+    name: str
+    password: str
+    email: Optional[str] = None
 
 
-_db.create_all()
+# NOTE: for sake of example we create an admin user with no password set.
+user   = User(name = "Admin", password = "", email = "admin@domain.com")
+engine = create_engine("sqlite:///database.db")
+SQLModel.metadata.create_all(engine)
+
+with Session(engine) as session:
+    session.add(user)
+    session.commit()

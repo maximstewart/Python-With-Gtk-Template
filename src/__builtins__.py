@@ -5,6 +5,7 @@ import threading
 # Lib imports
 
 # Application imports
+from utils.models import engine
 from utils.event_system import EventSystem
 from utils.endpoint_registry import EndpointRegistry
 from utils.keybindings import Keybindings
@@ -33,6 +34,8 @@ def daemon_threaded_wrapper(fn):
 # NOTE: Just reminding myself we can add to builtins two different ways...
 # __builtins__.update({"event_system": Builtins()})
 builtins.app_name          = "<change_me>"
+builtins.db                = engine
+
 builtins.keybindings       = Keybindings()
 builtins.event_system      = EventSystem()
 builtins.endpoint_registry = EndpointRegistry()
@@ -48,10 +51,3 @@ builtins.logger            = Logger(settings_manager.get_home_config_path(), \
 builtins.threaded          = threaded_wrapper
 builtins.daemon_threaded   = daemon_threaded_wrapper
 builtins.event_sleep_time  = 0.05
-
-
-try:
-    from utils.models import _db
-    builtins.db = _db
-except ModuleNotFoundError as e:
-    logger.debug("Warning: Likely Flask SQLAlchemy not installed...")
