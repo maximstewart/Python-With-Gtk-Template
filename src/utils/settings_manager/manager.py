@@ -106,7 +106,7 @@ class SettingsManager(StartCheckMixin, Singleton):
         self.settings: Settings = None
         self._main_window       = None
         self._builder           = None
-        self.PAINT_BG_COLOR     = (0, 0, 0, 0.54)
+        self.PAINT_BG_COLOR     = (0, 0, 0, 0.0)
 
         self._trace_debug       = False
         self._debug             = False
@@ -161,12 +161,12 @@ class SettingsManager(StartCheckMixin, Singleton):
         method      = getattr(target_class, method_name, lambda data: f"No valid key passed...\nkey={method_name}\nargs={data}")
         return method(data) if data else method()
 
-    def set_main_window_x(self, x = 0):  self.settings.config.window_x  = x
-    def set_main_window_y(self, y = 0):  self.settings.config.window_y  = y
-    def set_main_window_width(self, width = 800):   self.settings.config.window_width  = width
-    def set_main_window_height(self, height = 600): self.settings.config.window_height = height
-    def set_main_window_min_width(self, width = 720):   self.settings.config.window_min_width  = width
-    def set_main_window_min_height(self, height = 480): self.settings.config.window_min_height = height
+    def set_main_window_x(self, x = 0):  self.settings.config.main_window_x  = x
+    def set_main_window_y(self, y = 0):  self.settings.config.main_window_y  = y
+    def set_main_window_width(self, width = 800):   self.settings.config.main_window_width  = width
+    def set_main_window_height(self, height = 600): self.settings.config.main_window_height = height
+    def set_main_window_min_width(self, width = 720):   self.settings.config.main_window_min_width  = width
+    def set_main_window_min_height(self, height = 480): self.settings.config.main_window_min_height = height
 
     def set_trace_debug(self, trace_debug):
         self._trace_debug = trace_debug

@@ -1,6 +1,6 @@
-/* Set fm to have transparent window */
 * {
     /* background: rgba(0, 0, 0, 0.14); */
+    background: rgba(39, 43, 52, 0.24);
     color: rgba(255, 255, 255, 1);
     border: 2px solid rgba(0, 0, 0, 0.0);
 }
