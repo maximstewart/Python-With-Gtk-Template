@@ -53,7 +53,7 @@ class PluginsController:
             self.reload_plugins(file)
 
     def load_plugins(self, file: str = None) -> None:
-        logger.debug(f"Loading plugins...")
+        logger.info(f"Loading plugins...")
         parent_path = os.getcwd()
 
         for path, folder in [[join(self._plugins_path, item), item] if os.path.isdir(join(self._plugins_path, item)) else None for item in os.listdir(self._plugins_path)]:
@@ -68,7 +68,8 @@ class PluginsController:
                 module               = self.load_plugin_module(path, folder, target)
                 self.execute_plugin(module, plugin, loading_data)
             except Exception as e:
-                logger.debug(f"Malformed Plugin: Not loading -->: '{folder}' !\n{traceback.print_exc()}")
+                logger.info(f"Malformed Plugin: Not loading -->: '{folder}' !")
+                logger.debug("Trace: ", traceback.print_exc())
 
         os.chdir(parent_path)
 
@@ -99,13 +100,13 @@ class PluginsController:
 
         if "ui_target" in keys:
             loading_data["ui_target"].add( plugin.reference.generate_reference_ui_element() )
-            loading_data["ui_target"].show_all()
+            loading_data["ui_target"].show()
 
         if "pass_ui_objects" in keys:
             plugin.reference.set_ui_object_collection( loading_data["pass_ui_objects"] )
 
         if "pass_events" in keys:
-            plugin.reference.set_fm_event_system(event_system)
+            plugin.reference.set_event_system(event_system)
             plugin.reference.subscribe_to_events()
 
         if "bind_keys" in keys:
@@ -115,4 +116,4 @@ class PluginsController:
         self._plugin_collection.append(plugin)
 
     def reload_plugins(self, file: str = None) -> None:
-        logger.debug(f"Reloading plugins... stub.")
+        logger.info(f"Reloading plugins... stub.")
