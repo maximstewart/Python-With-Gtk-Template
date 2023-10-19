@@ -1,6 +1,7 @@
 # Python imports
 import builtins
 import threading
+import sys
 
 # Lib imports
 
@@ -11,10 +12,6 @@ from utils.endpoint_registry import EndpointRegistry
 from utils.keybindings import Keybindings
 from utils.logger import Logger
 from utils.settings_manager.manager import SettingsManager
-
-
-class BuiltinsException(Exception):
-    ...
 
 
 
@@ -51,4 +48,14 @@ builtins.logger            = Logger(settings_manager.get_home_config_path(), \
 
 builtins.threaded          = threaded_wrapper
 builtins.daemon_threaded   = daemon_threaded_wrapper
-builtins.event_sleep_time  = 0.05
+
+
+
+def custom_except_hook(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+
+sys.excepthook = custom_except_hook

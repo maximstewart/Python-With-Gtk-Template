@@ -48,6 +48,7 @@ class Controller(DummyMixin, SignalsMixins, ControllerData):
         self.window.connect("key-release-event", self.on_global_key_release_controller)
 
     def _subscribe_to_events(self):
+        event_system.subscribe("shutting_down", lambda: print("Shutting down..."))
         event_system.subscribe("handle_file_from_ipc", self.handle_file_from_ipc)
         event_system.subscribe("handle_dir_from_ipc", self.handle_dir_from_ipc)
         event_system.subscribe("tggl_top_main_menubar", self._tggl_top_main_menubar)
