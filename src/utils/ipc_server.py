@@ -62,15 +62,14 @@ class IPCServer(Singleton):
                 start_time = time.perf_counter()
                 self._handle_ipc_message(conn, start_time)
             except Exception as e:
-                ...
+                logger.debug( repr(e) )
 
         listener.close()
 
     def _handle_ipc_message(self, conn, start_time) -> None:
         while True:
             msg = conn.recv()
-            if settings_manager.is_debug():
-                print(msg)
+            logger.debug(msg)
 
             if "FILE|" in msg:
                 file = msg.split("FILE|")[1].strip()
@@ -109,6 +108,25 @@ class IPCServer(Singleton):
             conn.send(message)
             conn.close()
         except ConnectionRefusedError as e:
-            print("Connection refused...")
+            logger.error("Connection refused...")
         except Exception as e:
-            print(repr(e))
+            logger.error( repr(e) )
+
+
+    def send_test_ipc_message(self, message: str = "Empty Data...") -> None:
+        try:
+            if self._conn_type == "socket":
+                conn = Client(address=self._ipc_address, family="AF_UNIX", authkey=self._ipc_authkey)
+            elif "unsecured" not in self._conn_type:
+                conn = Client((self._ipc_address, self._ipc_port), authkey=self._ipc_authkey)
+            else:
+                conn = Client((self._ipc_address, self._ipc_port))
+
+            conn.send(message)
+            conn.close()
+        except ConnectionRefusedError as e:
+            if self._conn_type == "socket":
+                logger.error("IPC Socket no longer valid.... Removing.")
+                os.unlink(self._ipc_address)
+        except Exception as e:
+            logger.error( repr(e) )
