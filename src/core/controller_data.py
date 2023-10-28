@@ -1,6 +1,7 @@
 # Python imports
 import os
 import subprocess
+from shutil import which
 
 # Lib imports
 
@@ -24,6 +25,8 @@ class ControllerData:
         self.setup_builder_and_container()
         self.plugins     = PluginsController()
 
+    def get_base_container(self):
+        return self.base_container
 
     def clear_console(self) -> None:
         ''' Clears the terminal screen. '''
@@ -55,14 +58,26 @@ class ControllerData:
         for child in widget.get_children():
             widget.remove(child)
 
-    def get_clipboard_data(self, encoding="utf-8") -> str:
-        proc    = subprocess.Popen(['xclip','-selection', 'clipboard', '-o'], stdout=subprocess.PIPE)
+    def get_clipboard_data(self, encoding = "utf-8") -> str:
+        if which("xclip"):
+            command = ['xclip','-selection','clipboard']
+        else:
+            logger.info('xclip not found...')
+            return
+
+        proc    = subprocess.Popen(['xclip','-selection', 'clipboard', '-o'], stdout = subprocess.PIPE)
         retcode = proc.wait()
         data    = proc.stdout.read()
         return data.decode(encoding).strip()
 
-    def set_clipboard_data(self, data: type, encoding="utf-8") -> None:
-        proc = subprocess.Popen(['xclip','-selection','clipboard'], stdin=subprocess.PIPE)
+    def set_clipboard_data(self, data: type, encoding = "utf-8") -> None:
+        if which("xclip"):
+            command = ['xclip','-selection','clipboard']
+        else:
+            logger.info('xclip not found...')
+            return
+
+        proc = subprocess.Popen(command, stdin = subprocess.PIPE)
         proc.stdin.write(data.encode(encoding))
         proc.stdin.close()
         retcode = proc.wait()

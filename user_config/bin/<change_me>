@@ -11,17 +11,21 @@ function main() {
     call_path=`pwd`
     path=""
 
+    # NOTE: Remove if you want to pass file(s) besides directories...
     if [[ ! "${1::1}" == /* ]]; then
         path="${call_path}/${1}"
     else
         path="${1}"
     fi
 
-    # NOTE: Remove if you want to pass file(s) besides directories...
     if [ ! -d "${path}" ]; then
         echo "<change_me>: Path given not a directory..."
         exit 1
     fi
+    # End NOTE: Remove if you want to pass file(s) besides directories...    
+
+    # Collect abs paths and stuff in 'files' array
+    mapfile -t files < <(readlink -f "$@")
 
     cd "/opt/"
     python /opt/<change_me>.zip "$@"

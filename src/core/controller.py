@@ -65,6 +65,3 @@ class Controller(DummyMixin, SignalsMixins, ControllerData):
         self.base_container = BaseContainer()
 
         settings_manager.register_signals_to_builder([self, self.base_container])
-
-    def get_base_container(self):
-        return self.base_container
