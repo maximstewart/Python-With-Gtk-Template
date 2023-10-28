@@ -25,7 +25,13 @@ function main() {
     # End NOTE: Remove if you want to pass file(s) besides directories...    
 
     # Collect abs paths and stuff in 'files' array
-    mapfile -t files < <(readlink -f "$@")
+    files=()
+    for f in "$@"; do
+        target=$(readlink -f "${f}")
+        i="${#files[@]}"
+        size=$(($i + 1))
+        files[$size]="${target}"
+    done
 
     cd "/opt/"
     python /opt/<change_me>.zip "$@"
