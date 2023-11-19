@@ -14,10 +14,10 @@ class DB:
     def __init__(self):
         super(DB, self).__init__()
         
+        self.engine = None
+
         self.create_engine()
 
-        # NOTE: for sake of example we create an admin user with no password set.
-        self.add_user_entry(name = "Admin", password = "", email = "admin@domain.com")
 
     def create_engine(self):
         db_path     = f"sqlite:///{settings_manager.get_home_config_path()}/database.db"
@@ -34,5 +34,9 @@ class DB:
     def add_user_entry(self, name = None, password = None, email = None):
         if not name or not password or not email: return
 
-        user   = User(name, password, email)
+        user = User()
+        user.name     = name
+        user.password = password
+        user.email    = email
+
         self._add_entry(user)
