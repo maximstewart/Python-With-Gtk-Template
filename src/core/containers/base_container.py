@@ -6,9 +6,8 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
-from .left_container import LeftContainer
-from .center_container import CenterContainer
-from .right_container import RightContainer
+from .header_container import HeaderContainer
+from .body_container import BodyContainer
 
 
 
@@ -38,9 +37,8 @@ class BaseContainer(Gtk.Box):
         event_system.subscribe("remove_transparency", self._remove_transparency)
 
     def _load_widgets(self):
-        self.add(LeftContainer())
-        self.add(CenterContainer())
-        self.add(RightContainer())
+        self.add(HeaderContainer())
+        self.add(BodyContainer())
 
     def _update_transparency(self):
         self.ctx.add_class(f"mw_transparency_{settings.theming.transparency}")
