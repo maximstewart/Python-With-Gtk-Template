@@ -20,10 +20,18 @@ class KeyboardSignalsMixin:
     """ KeyboardSignalsMixin keyboard hooks controller. """
 
     # TODO: Need to set methods that use this to somehow check the keybindings state instead.
-    def unset_keys_and_data(self, widget=None, eve=None):
+    def unset_keys_and_data(self, widget = None, eve = None):
         self.ctrl_down    = False
         self.shift_down   = False
         self.alt_down     = False
+
+    def unmap_special_keys(self, keyname):
+        if "control" in keyname:
+            self.ctrl_down    = False
+        if "shift" in keyname:
+            self.shift_down   = False
+        if "alt" in keyname:
+            self.alt_down     = False
 
     def on_global_key_press_controller(self, eve, user_data):
         keyname = Gdk.keyval_name(user_data.keyval).lower()
@@ -46,15 +54,8 @@ class KeyboardSignalsMixin:
 
         if keyname.replace("_l", "").replace("_r", "") in ["control", "alt", "shift"]:
             should_return = self.was_midified_key and (self.ctrl_down or self.shift_down or self.alt_down)
+            self.unmap_special_keys(keyname)
 
-            if "control" in keyname:
-                self.ctrl_down    = False
-            if "shift" in keyname:
-                self.shift_down   = False
-            if "alt" in keyname:
-                self.alt_down     = False
-
-            # NOTE: In effect a filter after releasing a modifier and we have a modifier mapped
             if should_return:
                 self.was_midified_key = False
                 return
@@ -65,30 +66,33 @@ class KeyboardSignalsMixin:
         logger.debug(f"on_global_key_release_controller > mapping > {mapping}")
 
         if mapping:
-            # See if in controller scope
-            try:
-                getattr(self, mapping)()
-                return True
-            except Exception:
-                # Must be plugins scope, event call, OR we forgot to add method to controller scope
-                if "||" in mapping:
-                    sender, eve_type = mapping.split("||")
-                else:
-                    sender = ""
-                    eve_type = mapping
-
-                self.handle_key_event_system(sender, eve_type)
+            self.handle_mapped_key_event(mapping)
         else:
-            logger.debug(f"on_global_key_release_controller > key > {keyname}")
+            self.handle_as_key_event_scope(mapping)
 
-            if self.ctrl_down:
-                if not keyname in ["1", "kp_1", "2", "kp_2", "3", "kp_3", "4", "kp_4"]:
-                    self.handle_key_event_system(None, mapping)
-                else:
-                    ...
+    def handle_mapped_key_event(self, mapping):
+        try:
+            self.handle_as_controller_scope()
+        except Exception:
+            self.handle_as_plugin_scope(mapping)
+
+    def handle_as_controller_scope(self, mapping):
+        getattr(self, mapping)()
+
+    def handle_as_plugin_scope(self, mapping):
+        if "||" in mapping:
+            sender, eve_type = mapping.split("||")
+        else:
+            sender = ""
+            eve_type = mapping
+
+        self.handle_as_key_event_system(sender, eve_type)
+
+    def handle_as_key_event_scope(self, mapping):
+        logger.debug(f"on_global_key_release_controller > key > {keyname}")
+
+        if self.ctrl_down and not keyname in ["1", "kp_1", "2", "kp_2", "3", "kp_3", "4", "kp_4"]:
+            self.handle_key_event_system(None, mapping)
 
     def handle_key_event_system(self, sender, eve_type):
         event_system.emit(eve_type)
-
-    def keyboard_close_tab(self):
-        ...

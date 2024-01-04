@@ -14,9 +14,9 @@ from gi.repository import GLib
 from core.controller import Controller
 
 
+
 class ControllerStartExceptiom(Exception):
     ...
-
 
 
 
@@ -119,3 +119,6 @@ class Window(Gtk.ApplicationWindow):
 
         settings_manager.clear_pid()
         Gtk.main_quit()
+
+    def main(self):
+        Gtk.main()
