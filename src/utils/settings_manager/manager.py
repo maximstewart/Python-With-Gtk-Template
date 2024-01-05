@@ -13,6 +13,7 @@ from os import mkdir
 # Application imports
 from ..singleton import Singleton
 from .start_check_mixin import StartCheckMixin
+from .markdown_template_mixin import MarkdownTemplateMixin
 from .options.settings import Settings
 
 
@@ -22,7 +23,7 @@ class MissingConfigError(Exception):
 
 
 
-class SettingsManager(StartCheckMixin, Singleton):
+class SettingsManager(StartCheckMixin, MarkdownTemplateMixin, Singleton):
     def __init__(self):
         self._SCRIPT_PTH        = path.dirname(path.realpath(__file__))
         self._USER_HOME         = path.expanduser('~')
@@ -30,6 +31,7 @@ class SettingsManager(StartCheckMixin, Singleton):
         self._USR_PATH          = f"/usr/share/{app_name.lower()}"
         self._USR_CONFIG_FILE   = f"{self._USR_PATH}/settings.json"
 
+        self._CONTEXT_PATH      = f"{self._HOME_CONFIG_PATH}/context_path"
         self._PLUGINS_PATH      = f"{self._HOME_CONFIG_PATH}/plugins"
         self._DEFAULT_ICONS     = f"{self._HOME_CONFIG_PATH}/icons"
         self._CONFIG_FILE       = f"{self._HOME_CONFIG_PATH}/settings.json"
@@ -146,6 +148,7 @@ class SettingsManager(StartCheckMixin, Singleton):
     def get_ui_widgets_path(self)    -> str: return self._UI_WIDEGTS_PATH
     def get_context_menu_data(self)  -> str: return self._context_menu_data
 
+    def get_context_path(self)     -> str:   return self._CONTEXT_PATH
     def get_plugins_path(self)     -> str:   return self._PLUGINS_PATH
     def get_icon_theme(self)       -> str:   return self._ICON_THEME
     def get_css_file(self)         -> str:   return self._CSS_FILE

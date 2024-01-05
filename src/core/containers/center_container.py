@@ -6,6 +6,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
+from ..widgets.webkit_ui import WebkitUI
 
 
 
@@ -41,6 +42,7 @@ class CenterContainer(Gtk.Box):
 
         self.add(button)
         self.add(glade_box)
+        self.add( WebkitUI() )
 
     def _hello_world(self, widget = None, eve = None):
         logger.debug("Hello, World!")
