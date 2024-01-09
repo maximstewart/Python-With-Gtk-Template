@@ -12,9 +12,17 @@ import inspect
 
 class StartCheckMixin:
     def is_dirty_start(self) -> bool: return self._dirty_start
-    def clear_pid(self): self._clean_pid()
+
+    def clear_pid(self):
+        if not self.is_trace_debug():
+            self._clean_pid()
 
     def do_dirty_start_check(self):
+        if self.is_trace_debug():
+            pid = os.getpid()
+            self._print_pid(pid)
+            return
+
         if not os.path.exists(self._PID_FILE):
             self._write_new_pid()
         else:
@@ -31,7 +39,7 @@ class StartCheckMixin:
         try:
             os.kill(pid, 0)
         except OSError:
-            print(f"{app_name} is starting dirty...")
+            print(f"{app_name} PID exists but is not up; starting dirty...")
             self._dirty_start = True
             self._write_new_pid()
             return
@@ -41,6 +49,9 @@ class StartCheckMixin:
     def _write_new_pid(self):
         pid = os.getpid()
         self._write_pid(pid)
+        self._print_pid(pid)
+
+    def _print_pid(self, pid):
         print(f"{app_name} PID:  {pid}")
 
     def _clean_pid(self):
