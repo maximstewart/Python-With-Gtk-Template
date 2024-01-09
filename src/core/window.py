@@ -29,12 +29,12 @@ class Window(Gtk.ApplicationWindow):
 
         self._controller = None
 
-        self._set_window_data()
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
         self._load_widgets(args, unknownargs)
 
+        self._set_window_data()
         self._set_size_constraints()
         self.show()
 
@@ -108,7 +108,7 @@ class Window(Gtk.ApplicationWindow):
     def _tear_down(self, widget = None, eve = None):
         event_system.emit("shutting_down")
 
-        size = self.get_default_size()
+        size = self.get_size()
         pos  = self.get_position()
 
         settings_manager.set_main_window_width(size.width)
