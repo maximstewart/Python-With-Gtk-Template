@@ -28,6 +28,7 @@ class Application:
         self.setup_debug_hook()
         Window(args, unknownargs).main()
 
+
     def load_ipc(self, args, unknownargs):
         ipc_server = IPCServer()
         self.ipc_realization_check(ipc_server)
