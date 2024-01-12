@@ -15,17 +15,18 @@ from gi.repository import Gio
 class DnDMixin:
 
     def _setup_dnd(self):
-        # flags   = Gtk.DestDefaults.ALL
+        flags   = Gtk.DestDefaults.ALL
 
         PLAIN_TEXT_TARGET_TYPE = 70
         URI_TARGET_TYPE        = 80
 
-        text_target        = Gtk.TargetEntry.new('text/plain', Gtk.TargetFlags(0), PLAIN_TEXT_TARGET_TYPE)
-        uri_target         = Gtk.TargetEntry.new('text/uri-list', Gtk.TargetFlags(0), URI_TARGET_TYPE)
+        text_target = Gtk.TargetEntry.new('text/plain', Gtk.TargetFlags(0), PLAIN_TEXT_TARGET_TYPE)
+        uri_target  = Gtk.TargetEntry.new('text/uri-list', Gtk.TargetFlags(0), URI_TARGET_TYPE)
 
-        targets            = [ text_target, uri_target ]
+        # targets     = [ text_target, uri_target ]
+        targets     = [ uri_target ]
 
-        # action  = Gdk.DragAction.COPY
+        action      = Gdk.DragAction.COPY
 
         self.drag_dest_set_target_list(targets)
         # self.drag_dest_set(flags, targets, action)
@@ -40,11 +41,12 @@ class DnDMixin:
     def _on_drag_motion(self, widget, drag_context, x, y, time):
         Gdk.drag_status(drag_context, drag_context.get_actions(), time)
 
-        return True
+        return False
 
     def _on_drag_set(self, widget, drag_context, data, info, time):
         self.drag_get_data(drag_context, drag_context.list_targets()[-1], time)
-        return True
+
+        return False
 
     def _on_drag_data_received(self, widget, drag_context, x, y, data, info, time):
         if info == 70: return
@@ -66,5 +68,3 @@ class DnDMixin:
                 files.append(gfile)
 
             event_system.emit('set_pre_drop_dnd', (files,))
-            drag_context.finish(True, False, time)
-
