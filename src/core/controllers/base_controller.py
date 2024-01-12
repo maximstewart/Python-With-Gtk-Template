@@ -7,14 +7,14 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
-from .mixins.signals_mixins import SignalsMixins
-from .mixins.dummy_mixin import DummyMixin
-from .controller_data import ControllerData
-from .containers.base_container import BaseContainer
+from ..mixins.signals_mixins import SignalsMixins
+from ..mixins.dummy_mixin import DummyMixin
+from .base_controller_data import BaseControllerData
+from ..containers.base_container import BaseContainer
 
 
 
-class Controller(DummyMixin, SignalsMixins, ControllerData):
+class BaseController(DummyMixin, SignalsMixins, BaseControllerData):
     def __init__(self, args, unknownargs):
         self.setup_controller_data()
 
