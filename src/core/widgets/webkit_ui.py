@@ -31,26 +31,43 @@ class WebkitUI(WebKit2.WebView):
         self.set_background_color( Gdk.RGBA(0, 0, 0, 0.0) )
 
     def _subscribe_to_events(self):
-        # event_system.subscribe("handle_file_from_ipc", self.handle_file_from_ipc)
-        ...
+        event_system.subscribe(f"ui_message", self.ui_message)
     
     def _load_settings(self):
         self.set_settings( WebkitUISettings() )
 
     def _load_view(self):
         path = settings_manager.get_context_path()
-        data = settings_manager.wrap_html_to_body("")
+        data = None
+
+        with open(f"{path}/index.html", "r") as f:
+            data = f.read()
+
         self.load_html(content = data, base_uri = f"file://{path}/")
+
+    # def _load_view(self):
+    #     path = settings_manager.get_context_path()
+    #     data = settings_manager.wrap_html_to_body("")
+    #     self.load_html(content = data, base_uri = f"file://{path}/")
 
     def _setup_content_manager(self):
         content_manager = self.get_user_content_manager()
-        content_manager.register_script_message_handler("backend")
         content_manager.connect("script-message-received", self._process_js_message)
+        content_manager.register_script_message_handler("backend")
 
     def _process_js_message(self, user_content_manager, js_result):
         js_value = js_result.get_js_value()
-        print(js_value.to_string())
-        # self._web_view.run_javascript("do_stuff()", None, None)
+        message  = js_value.to_string()
+
+        try:
+            event = Event( **json.loads(message) )
+            # event_system.emit("handle_bridge_event", (event,))
+        except Exception as e:
+            logger.info(e)
+
+    def ui_message(self, message, mtype):
+        command = f"displayMessage('{message}', '{mtype}', '3')"
+        self.run_javascript(command, None, None)
 
 
 class WebkitUISettings(WebKit2.Settings):
@@ -63,20 +80,25 @@ class WebkitUISettings(WebKit2.Settings):
     # Note: Highly insecure setup but most "app" like setup I could think of.
     #       Audit heavily any scripts/links ran/clicked under this setup! 
     def _set_default_settings(self):
-        self.set_enable_offline_web_application_cache(False)
-        self.enable_html5_local_storage(False)
-        self.enable_html5_database(False)
-        self.enable_xss_auditor(False)
-        self.set_enable_hyperlink_auditing(False)
-        self.set_enable_tabs_to_links(False)
-        self.enable_fullscreen(False)
-        self.set_print_backgrounds(False)
-        self.enable_webaudio(False)
-        self.set_enable_page_cache(False)
-
-        self.enable_accelerated_2d_canvas(True)
+        self.set_enable_xss_auditor(True)
+        self.set_enable_hyperlink_auditing(True)
+        # self.set_enable_xss_auditor(False)
+        # self.set_enable_hyperlink_auditing(False)
         self.set_allow_file_access_from_file_urls(True)
         self.set_allow_universal_access_from_file_urls(True)
-        self.set_enable_webrtc(True)
 
-        sdelf.set_user_agent(f"{app_name}")
+        self.set_enable_page_cache(False)
+        self.set_enable_offline_web_application_cache(False)
+        self.set_enable_html5_local_storage(False)
+        self.set_enable_html5_database(False)
+
+        self.set_enable_fullscreen(False)
+        self.set_print_backgrounds(False)
+        self.set_enable_tabs_to_links(False)
+        self.set_enable_developer_extras(True)
+        self.set_enable_webrtc(True)
+        self.set_enable_webaudio(True)
+        self.set_enable_accelerated_2d_canvas(True)
+
+        self.set_user_agent(f"{app_name}")
+

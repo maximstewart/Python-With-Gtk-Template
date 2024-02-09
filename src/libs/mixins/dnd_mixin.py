@@ -28,14 +28,14 @@ class DnDMixin:
 
         action      = Gdk.DragAction.COPY
 
-        self.drag_dest_set_target_list(targets)
-        # self.drag_dest_set(flags, targets, action)
+        # self.drag_dest_set_target_list(targets)
+        self.drag_dest_set(flags, targets, action)
 
         self._setup_dnd_signals()
 
     def _setup_dnd_signals(self):
-        self.connect("drag-motion",        self._on_drag_motion)
-        self.connect('drag-drop',          self._on_drag_set)
+        # self.connect("drag-motion",        self._on_drag_motion)
+        # self.connect('drag-drop',          self._on_drag_set)
         self.connect("drag-data-received", self._on_drag_data_received)
 
     def _on_drag_motion(self, widget, drag_context, x, y, time):

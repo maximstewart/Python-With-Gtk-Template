@@ -1,8 +1,6 @@
 # Python imports
-import signal
-import io
-import json
 import inspect
+import json
 import zipfile
 
 from os import path
@@ -13,7 +11,6 @@ from os import mkdir
 # Application imports
 from ..singleton import Singleton
 from .start_check_mixin import StartCheckMixin
-from .markdown_template_mixin import MarkdownTemplateMixin
 from .options.settings import Settings
 
 
@@ -23,7 +20,7 @@ class MissingConfigError(Exception):
 
 
 
-class SettingsManager(StartCheckMixin, MarkdownTemplateMixin, Singleton):
+class SettingsManager(StartCheckMixin, Singleton):
     def __init__(self):
         self._SCRIPT_PTH        = path.dirname(path.realpath(__file__))
         self._USER_HOME         = path.expanduser('~')

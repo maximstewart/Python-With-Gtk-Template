@@ -9,8 +9,11 @@ from gi.repository import Gtk
 # Application imports
 from ..mixins.signals_mixins import SignalsMixins
 from ..mixins.dummy_mixin import DummyMixin
-from .base_controller_data import BaseControllerData
+
 from ..containers.base_container import BaseContainer
+
+from .base_controller_data import BaseControllerData
+from .bridge_controller import BridgeController
 
 
 
@@ -21,6 +24,7 @@ class BaseController(DummyMixin, SignalsMixins, BaseControllerData):
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
+        self._load_controllers()
 
         self.print_hello_world() # A mixin method from the DummyMixin file
 
@@ -52,6 +56,9 @@ class BaseController(DummyMixin, SignalsMixins, BaseControllerData):
         event_system.subscribe("handle_file_from_ipc", self.handle_file_from_ipc)
         event_system.subscribe("handle_dir_from_ipc", self.handle_dir_from_ipc)
         event_system.subscribe("tggl_top_main_menubar", self._tggl_top_main_menubar)
+
+    def _load_controllers(self):
+        BridgeController()
 
     def _tggl_top_main_menubar(self):
         logger.debug("_tggl_top_main_menubar > stub...")
