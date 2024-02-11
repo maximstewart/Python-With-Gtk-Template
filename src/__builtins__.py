@@ -6,7 +6,7 @@ import sys
 # Lib imports
 
 # Application imports
-from libs.db import DB
+# from libs.db import DB
 from libs.event_system import EventSystem
 from libs.endpoint_registry import EndpointRegistry
 from libs.keybindings import Keybindings
@@ -41,7 +41,7 @@ builtins.keybindings       = Keybindings()
 builtins.event_system      = EventSystem()
 builtins.endpoint_registry = EndpointRegistry()
 builtins.settings_manager  = SettingsManager()
-builtins.db                = DB()
+# builtins.db                = DB()
 
 settings_manager.load_settings()
 

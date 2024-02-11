@@ -7,8 +7,8 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
-from ..mixins.signals_mixins import SignalsMixins
-from ..mixins.dummy_mixin import DummyMixin
+from libs.mixins.ipc_signals_mixin import IPCSignalsMixin
+from libs.mixins.keyboard_signals_mixin import KeyboardSignalsMixin
 
 from ..containers.base_container import BaseContainer
 
@@ -17,7 +17,7 @@ from .bridge_controller import BridgeController
 
 
 
-class BaseController(DummyMixin, SignalsMixins, BaseControllerData):
+class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
     def __init__(self, args, unknownargs):
         self.setup_controller_data()
 
@@ -25,8 +25,6 @@ class BaseController(DummyMixin, SignalsMixins, BaseControllerData):
         self._setup_signals()
         self._subscribe_to_events()
         self._load_controllers()
-
-        self.print_hello_world() # A mixin method from the DummyMixin file
 
         if args.no_plugins == "false":
             self.plugins.launch_plugins()
