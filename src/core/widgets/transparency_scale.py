@@ -26,7 +26,7 @@ class TransparencyScale(Gtk.Scale):
         self.set_digits(0)
         self.set_value_pos(Gtk.PositionType.RIGHT)
         self.add_mark(50.0, Gtk.PositionType.TOP, "50%")
-
+        self.set_hexpand(True)
 
     def _setup_signals(self):
         self.connect("value-changed", self._update_transparency)

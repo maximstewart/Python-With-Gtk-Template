@@ -11,12 +11,12 @@ from gi.repository import Gdk
 from gi.repository import GLib
 
 # Application imports
-from core.controller import Controller
+from core.controllers.base_controller import BaseController
+
 
 
 class ControllerStartExceptiom(Exception):
     ...
-
 
 
 
@@ -29,13 +29,14 @@ class Window(Gtk.ApplicationWindow):
 
         self._controller = None
 
-        self._set_window_data()
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
         self._load_widgets(args, unknownargs)
 
+        self._set_window_data()
         self._set_size_constraints()
+
         self.show()
 
 
@@ -50,8 +51,11 @@ class Window(Gtk.ApplicationWindow):
         ctx.add_class(f"mw_transparency_{settings.theming.transparency}")
 
     def _setup_signals(self):
-        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, self._tear_down)
+        self.connect("focus-in-event", self._on_focus_in_event)
+        self.connect("focus-out-event", self._on_focus_out_event)
+
         self.connect("delete-event", self._tear_down)
+        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, self._tear_down)
 
     def _subscribe_to_events(self):
         event_system.subscribe("tear_down", self._tear_down)
@@ -61,9 +65,9 @@ class Window(Gtk.ApplicationWindow):
         if settings_manager.is_debug():
             self.set_interactive_debugging(True)
 
-        self._controller = Controller(args, unknownargs)
+        self._controller = BaseController(args, unknownargs)
         if not self._controller:
-            raise ControllerStartException("Controller exited and doesn't exist...")
+            raise ControllerStartException("BaseController exited and doesn't exist...")
 
         self.add( self._controller.get_base_container() )
 
@@ -101,6 +105,13 @@ class Window(Gtk.ApplicationWindow):
         cr.paint()
         cr.set_operator(cairo.OPERATOR_OVER)
 
+
+    def _on_focus_in_event(self, widget, event):
+        event_system.emit("pause_dnd_signals")
+
+    def _on_focus_out_event(self, widget, event):
+        event_system.emit("listen_dnd_signals")
+
     def _load_interactive_debug(self):
         self.set_interactive_debugging(True)
 
@@ -108,7 +119,7 @@ class Window(Gtk.ApplicationWindow):
     def _tear_down(self, widget = None, eve = None):
         event_system.emit("shutting_down")
 
-        size = self.get_default_size()
+        size = self.get_size()
         pos  = self.get_position()
 
         settings_manager.set_main_window_width(size.width)
@@ -119,3 +130,6 @@ class Window(Gtk.ApplicationWindow):
 
         settings_manager.clear_pid()
         Gtk.main_quit()
+
+    def main(self):
+        Gtk.main()

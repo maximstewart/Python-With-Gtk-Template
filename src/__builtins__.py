@@ -6,25 +6,29 @@ import sys
 # Lib imports
 
 # Application imports
-from utils.models import engine
-from utils.event_system import EventSystem
-from utils.endpoint_registry import EndpointRegistry
-from utils.keybindings import Keybindings
-from utils.logger import Logger
-from utils.settings_manager.manager import SettingsManager
+# from libs.db import DB
+from libs.event_system import EventSystem
+from libs.endpoint_registry import EndpointRegistry
+from libs.keybindings import Keybindings
+from libs.logger import Logger
+from libs.settings_manager.manager import SettingsManager
 
 
 
 # NOTE: Threads WILL NOT die with parent's destruction.
 def threaded_wrapper(fn):
     def wrapper(*args, **kwargs):
-        threading.Thread(target=fn, args=args, kwargs=kwargs, daemon=False).start()
+        thread = threading.Thread(target = fn, args = args, kwargs = kwargs, daemon = False)
+        thread.start()
+        return thread
     return wrapper
 
 # NOTE: Threads WILL die with parent's destruction.
 def daemon_threaded_wrapper(fn):
     def wrapper(*args, **kwargs):
-        threading.Thread(target=fn, args=args, kwargs=kwargs, daemon=True).start()
+        thread = threading.Thread(target = fn, args = args, kwargs = kwargs, daemon = True)
+        thread.start()
+        return thread
     return wrapper
 
 
@@ -32,12 +36,12 @@ def daemon_threaded_wrapper(fn):
 # NOTE: Just reminding myself we can add to builtins two different ways...
 # __builtins__.update({"event_system": Builtins()})
 builtins.app_name          = "<change_me>"
-builtins.db                = engine
 
 builtins.keybindings       = Keybindings()
 builtins.event_system      = EventSystem()
 builtins.endpoint_registry = EndpointRegistry()
 builtins.settings_manager  = SettingsManager()
+# builtins.db                = DB()
 
 settings_manager.load_settings()
 

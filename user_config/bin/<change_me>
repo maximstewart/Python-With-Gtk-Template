@@ -22,7 +22,7 @@ function main() {
         echo "<change_me>: Path given not a directory..."
         exit 1
     fi
-    # End NOTE: Remove if you want to pass file(s) besides directories...    
+    # End NOTE: Remove if you want to pass file(s) besides directories...
 
     # Collect abs paths and stuff in 'files' array
     files=()

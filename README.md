@@ -8,6 +8,8 @@ A template project for Python with Gtk applications.
 * sqlmodel (SQL databases and is powered by Pydantic and SQLAlchemy)
 
 ### Note
+* Move respetive sub folder content under user_config to the same places in Linux. Though, user/share/<app name> can go to ~/.config folder if prefered.
+* In additiion, place the plugins folder in the same app folder you moved to /usr/share/<app name> or ~/.config/<app name> .
 There are a "\<change_me\>" strings and files that need to be set according to your app's name located at:
 * \_\_builtins\_\_.py
 * user_config/bin/app_name
