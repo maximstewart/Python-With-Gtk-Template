@@ -1,5 +1,4 @@
 # Python imports
-import os
 
 # Lib imports
 import gi
@@ -19,6 +18,8 @@ from .bridge_controller import BridgeController
 
 class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
     def __init__(self, args, unknownargs):
+        self.collect_files_dirs(args, unknownargs)
+
         self.setup_controller_data()
 
         self._setup_styling()
@@ -29,14 +30,8 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
         if args.no_plugins == "false":
             self.plugins.launch_plugins()
 
-        for arg in unknownargs + [args.new_tab,]:
-            if os.path.isfile(arg):
-                message = f"FILE|{arg}"
-                event_system.emit("post_file_to_ipc", message)
-
-            if os.path.isdir(arg):
-                message = f"DIR|{arg}"
-                event_system.emit("post_file_to_ipc", message)
+        for file in settings_manager.get_starting_files():
+            event_system.emit("post_file_to_ipc", file)
 
         logger.info(f"Made it past {self.__class__} loading...")
 

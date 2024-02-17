@@ -110,6 +110,8 @@ class SettingsManager(StartCheckMixin, Singleton):
         self._trace_debug       = False
         self._debug             = False
         self._dirty_start       = False
+        self._passed_in_file    = False
+        self._starting_files    = []
 
 
     def register_signals_to_builder(self, classes=None):
@@ -127,7 +129,6 @@ class SettingsManager(StartCheckMixin, Singleton):
 
     def set_main_window(self, window): self._main_window  = window
     def set_builder(self, builder) -> any:  self._builder = builder
-
 
     def get_monitor_data(self) -> list:
         screen = self._main_window.get_screen()
@@ -152,9 +153,11 @@ class SettingsManager(StartCheckMixin, Singleton):
     def get_home_config_path(self) -> str:   return self._HOME_CONFIG_PATH
     def get_window_icon(self)      -> str:   return self._WINDOW_ICON
     def get_home_path(self)        -> str:   return self._USER_HOME
+    def get_starting_files(self)   -> []:    return self._starting_files
 
     def is_trace_debug(self)       -> str:   return self._trace_debug
     def is_debug(self)             -> str:   return self._debug
+    def is_starting_with_file(self) -> bool: return self._passed_in_file
 
     def call_method(self, target_class = None, _method_name = None, data = None):
         method_name = str(_method_name)
@@ -167,6 +170,7 @@ class SettingsManager(StartCheckMixin, Singleton):
     def set_main_window_height(self, height = 600): self.settings.config.main_window_height = height
     def set_main_window_min_width(self, width = 720):   self.settings.config.main_window_min_width  = width
     def set_main_window_min_height(self, height = 480): self.settings.config.main_window_min_height = height
+    def set_starting_files(self, files: []) -> None:    self._starting_files = files
 
     def set_trace_debug(self, trace_debug):
         self._trace_debug = trace_debug
@@ -174,6 +178,8 @@ class SettingsManager(StartCheckMixin, Singleton):
     def set_debug(self, debug):
         self._debug = debug
 
+    def set_is_starting_with_file(self, is_passed_in_file: False):
+        self._passed_in_file = is_passed_in_file
 
     def load_settings(self):
         if not path.exists(self._CONFIG_FILE):

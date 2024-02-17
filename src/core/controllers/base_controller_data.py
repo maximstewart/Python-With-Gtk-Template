@@ -25,6 +25,20 @@ class BaseControllerData:
         self.setup_builder_and_container()
         self.plugins     = PluginsController()
 
+    def collect_files_dirs(self, args, unknownargs):
+        files = []
+        for arg in unknownargs + [args.new_tab,]:
+            if os.path.isdir( arg.replace("file://", "") ):
+                files.append( f"DIR|{arg.replace('file://', '')}" )
+
+            # NOTE: If passing line number with file split against :
+            if os.path.isfile( arg.replace("file://", "").split(":")[0] ):
+                files.append( f"FILE|{arg.replace('file://', '')}" )
+
+        if len(files) > 0:
+            settings_manager.set_is_starting_with_file(True)
+            settings_manager.set_starting_files(files)
+
     def get_base_container(self):
         return self.base_container
 
