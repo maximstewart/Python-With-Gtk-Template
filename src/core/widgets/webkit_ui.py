@@ -62,3 +62,6 @@ class WebkitUI(WebKit2.WebView):
         command = f"displayMessage('{message}', '{mtype}', '3')"
         self.run_javascript(command, None, None)
 
+    def run_javascript(self, script, cancellable, callback):
+        logger.debug(script)
+        super().run_javascript(script, cancellable, callback)
