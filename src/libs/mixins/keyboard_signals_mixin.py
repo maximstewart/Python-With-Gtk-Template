@@ -89,8 +89,6 @@ class KeyboardSignalsMixin:
         self.handle_as_key_event_system(sender, eve_type)
 
     def handle_as_key_event_scope(self, mapping):
-        logger.debug(f"on_global_key_release_controller > key > {keyname}")
-
         if self.ctrl_down and not keyname in ["1", "kp_1", "2", "kp_2", "3", "kp_3", "4", "kp_4"]:
             self.handle_key_event_system(None, mapping)
 
