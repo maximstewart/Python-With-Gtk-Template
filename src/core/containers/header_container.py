@@ -32,7 +32,7 @@ class HeaderContainer(Gtk.Box):
         ...
 
     def _subscribe_to_events(self):
-        ...
+        event_system.subscribe("tggl_top_main_menubar", self.tggl_top_main_menubar)
 
 
     def _load_widgets(self):
@@ -44,3 +44,6 @@ class HeaderContainer(Gtk.Box):
 
     def _interactive_debug(self, widget = None, eve = None):
         event_system.emit("load_interactive_debug")
+
+    def tggl_top_main_menubar(self):
+        self.hide() if self.is_visible() else self.show()

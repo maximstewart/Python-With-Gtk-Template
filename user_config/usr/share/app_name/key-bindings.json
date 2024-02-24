@@ -6,6 +6,7 @@
         "refresh_tab"            : ["F5", "<Control>r"],
         "delete_files"           : "Delete",
         "tggl_top_main_menubar"  : "Alt_L",
+        "tggl_top_main_menubar"  : "<Control>0",
         "trash_files"            : "<Shift><Control>t",
         "tear_down"              : "<Control>q",
         "go_up"                  : "<Control>Up",
