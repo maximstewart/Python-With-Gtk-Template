@@ -7,6 +7,7 @@ from shutil import which
 
 # Application imports
 from plugins.plugins_controller import PluginsController
+from ..builder_wrapper import BuilderWrapper
 
 
 
@@ -15,14 +16,15 @@ class BaseControllerData:
 
     def setup_controller_data(self) -> None:
         self.window      = settings_manager.get_main_window()
-        self.builder     = None
+        self.builder     = BuilderWrapper()
+
         self.base_container   = None
         self.was_midified_key = False
         self.ctrl_down   = False
         self.shift_down  = False
         self.alt_down    = False
 
-        self.setup_builder_and_container()
+        self._load_glade_file()
         self.plugins     = PluginsController()
 
     def collect_files_dirs(self, args, unknownargs):

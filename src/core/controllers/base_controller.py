@@ -56,8 +56,7 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
     def _tggl_top_main_menubar(self):
         logger.debug("_tggl_top_main_menubar > stub...")
 
-    def setup_builder_and_container(self):
-        self.builder     = Gtk.Builder()
+    def _load_glade_file(self):
         self.builder.add_from_file(settings_manager.get_glade_file())
         self.builder.expose_object("main_window", self.window)
 
@@ -65,3 +64,4 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
         self.base_container = BaseContainer()
 
         settings_manager.register_signals_to_builder([self, self.base_container])
+
