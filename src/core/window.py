@@ -58,8 +58,8 @@ class Window(Gtk.ApplicationWindow):
         GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, self._tear_down)
 
     def _subscribe_to_events(self):
-        event_system.subscribe("tear_down", self._tear_down)
-        event_system.subscribe("load_interactive_debug", self._load_interactive_debug)
+        event_system.subscribe("tear-down", self._tear_down)
+        event_system.subscribe("load-interactive-debug", self._load_interactive_debug)
 
     def _load_widgets(self, args, unknownargs):
         if settings_manager.is_debug():
@@ -107,17 +107,17 @@ class Window(Gtk.ApplicationWindow):
 
 
     def _on_focus_in_event(self, widget, event):
-        event_system.emit("pause_dnd_signals")
+        event_system.emit("pause-dnd-signals")
 
     def _on_focus_out_event(self, widget, event):
-        event_system.emit("listen_dnd_signals")
+        event_system.emit("listen-dnd-signals")
 
     def _load_interactive_debug(self):
         self.set_interactive_debugging(True)
 
 
     def _tear_down(self, widget = None, eve = None):
-        event_system.emit("shutting_down")
+        event_system.emit("shutting-down")
 
         size = self.get_size()
         pos  = self.get_position()

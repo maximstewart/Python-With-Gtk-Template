@@ -33,8 +33,8 @@ class BaseContainer(Gtk.Box):
         ...
 
     def _subscribe_to_events(self):
-        event_system.subscribe("update_transparency", self._update_transparency)
-        event_system.subscribe("remove_transparency", self._remove_transparency)
+        event_system.subscribe("update-transparency", self._update_transparency)
+        event_system.subscribe("remove-transparency", self._remove_transparency)
 
     def _load_widgets(self):
         self.add(HeaderContainer())

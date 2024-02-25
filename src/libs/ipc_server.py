@@ -35,7 +35,7 @@ class IPCServer(Singleton):
         self._subscribe_to_events()
 
     def _subscribe_to_events(self):
-        event_system.subscribe("post_file_to_ipc", self.send_ipc_message)
+        event_system.subscribe("post-file-to-ipc", self.send_ipc_message)
 
 
     def create_ipc_listener(self) -> None:
@@ -74,12 +74,12 @@ class IPCServer(Singleton):
             if "FILE|" in msg:
                 file = msg.split("FILE|")[1].strip()
                 if file:
-                    event_system.emit("handle_file_from_ipc", file)
+                    event_system.emit("handle-file-from-ipc", file)
 
             if "DIR|" in msg:
                 file = msg.split("DIR|")[1].strip()
                 if file:
-                    event_system.emit("handle_dir_from_ipc", file)
+                    event_system.emit("handle-dir-from-ipc", file)
 
                 conn.close()
                 break

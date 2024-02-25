@@ -11,7 +11,7 @@ from libs.event_system import EventSystem
 from libs.endpoint_registry import EndpointRegistry
 from libs.keybindings import Keybindings
 from libs.logger import Logger
-from libs.settings_manager.manager import SettingsManager
+from libs.settings.manager import SettingsManager
 
 
 

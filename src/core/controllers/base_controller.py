@@ -31,7 +31,7 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
             self.plugins.launch_plugins()
 
         for file in settings_manager.get_starting_files():
-            event_system.emit("post_file_to_ipc", file)
+            event_system.emit("post-file-to-ipc", file)
 
         logger.info(f"Made it past {self.__class__} loading...")
 
@@ -45,10 +45,10 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
         self.window.connect("key-release-event", self.on_global_key_release_controller)
 
     def _subscribe_to_events(self):
-        event_system.subscribe("shutting_down", lambda: print("Shutting down..."))
-        event_system.subscribe("handle_file_from_ipc", self.handle_file_from_ipc)
-        event_system.subscribe("handle_dir_from_ipc", self.handle_dir_from_ipc)
-        event_system.subscribe("tggl_top_main_menubar", self._tggl_top_main_menubar)
+        event_system.subscribe("shutting-down", lambda: print("Shutting down..."))
+        event_system.subscribe("handle-file-from-ipc", self.handle_file_from_ipc)
+        event_system.subscribe("handle-dir-from-ipc", self.handle_dir_from_ipc)
+        event_system.subscribe("tggl-top-main-menubar", self._tggl_top_main_menubar)
 
     def _load_controllers(self):
         BridgeController()

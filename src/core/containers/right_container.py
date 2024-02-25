@@ -28,7 +28,6 @@ class RightContainer(Gtk.Box):
         ...
 
     def _subscribe_to_events(self):
-        # event_system.subscribe("handle_file_from_ipc", self.handle_file_from_ipc)
         ...
 
     def _load_widgets(self):
