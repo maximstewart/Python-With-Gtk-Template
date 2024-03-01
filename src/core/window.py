@@ -41,7 +41,7 @@ class Window(Gtk.ApplicationWindow):
 
 
     def _setup_styling(self):
-        self.set_title(f"{app_name}")
+        self.set_title(f"{APP_NAME}")
         self.set_icon_from_file( settings_manager.get_window_icon() )
         self.set_gravity(5)  # 5 = CENTER
         self.set_position(1) # 1 = CENTER, 4 = CENTER_ALWAYS

@@ -18,7 +18,7 @@ from app import Application
 
 
 def main(args, unknownargs):
-    setproctitle(f'{app_name}')
+    setproctitle(f'{APP_NAME}')
 
     if args.debug == "true":
         settings_manager.set_debug(True)

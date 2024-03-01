@@ -39,7 +39,7 @@ class Application:
                     message = f"FILE|{arg}"
                     ipc_server.send_ipc_message(message)
 
-            raise AppLaunchException(f"{app_name} IPC Server Exists: Have sent path(s) to it and closing...")
+            raise AppLaunchException(f"{APP_NAME} IPC Server Exists: Have sent path(s) to it and closing...")
 
     def ipc_realization_check(self, ipc_server):
         try:

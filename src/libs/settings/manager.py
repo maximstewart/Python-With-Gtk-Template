@@ -24,8 +24,8 @@ class SettingsManager(StartCheckMixin, Singleton):
     def __init__(self):
         self._SCRIPT_PTH        = path.dirname(path.realpath(__file__))
         self._USER_HOME         = path.expanduser('~')
-        self._HOME_CONFIG_PATH  = f"{self._USER_HOME}/.config/{app_name.lower()}"
-        self._USR_PATH          = f"/usr/share/{app_name.lower()}"
+        self._HOME_CONFIG_PATH  = f"{self._USER_HOME}/.config/{APP_NAME.lower()}"
+        self._USR_PATH          = f"/usr/share/{APP_NAME.lower()}"
         self._USR_CONFIG_FILE   = f"{self._USR_PATH}/settings.json"
 
         self._CONTEXT_PATH      = f"{self._HOME_CONFIG_PATH}/context_path"
@@ -35,10 +35,10 @@ class SettingsManager(StartCheckMixin, Singleton):
         self._GLADE_FILE        = f"{self._HOME_CONFIG_PATH}/Main_Window.glade"
         self._CSS_FILE          = f"{self._HOME_CONFIG_PATH}/stylesheet.css"
         self._KEY_BINDINGS_FILE = f"{self._HOME_CONFIG_PATH}/key-bindings.json"
-        self._PID_FILE          = f"{self._HOME_CONFIG_PATH}/{app_name.lower()}.pid"
+        self._PID_FILE          = f"{self._HOME_CONFIG_PATH}/{APP_NAME.lower()}.pid"
         self._UI_WIDEGTS_PATH   = f"{self._HOME_CONFIG_PATH}/ui_widgets"
         self._CONTEXT_MENU      = f"{self._HOME_CONFIG_PATH}/contexct_menu.json"
-        self._WINDOW_ICON       = f"{self._DEFAULT_ICONS}/{app_name.lower()}.png"
+        self._WINDOW_ICON       = f"{self._DEFAULT_ICONS}/{APP_NAME.lower()}.png"
 
         # self._USR_CONFIG_FILE   = f"{self._USR_PATH}/settings.json"
         # self._PLUGINS_PATH      = f"plugins"
@@ -46,8 +46,8 @@ class SettingsManager(StartCheckMixin, Singleton):
         # self._GLADE_FILE        = f"Main_Window.glade"
         # self._CSS_FILE          = f"stylesheet.css"
         # self._KEY_BINDINGS_FILE = f"key-bindings.json"
-        # self._PID_FILE          = f"{app_name.lower()}.pid"
-        # self._WINDOW_ICON       = f"{app_name.lower()}.png"
+        # self._PID_FILE          = f"{APP_NAME.lower()}.pid"
+        # self._WINDOW_ICON       = f"{APP_NAME.lower()}.png"
         # self._UI_WIDEGTS_PATH   = f"ui_widgets"
         # self._CONTEXT_MENU      = f"contexct_menu.json"
         # self._DEFAULT_ICONS     = f"icons"
@@ -79,7 +79,7 @@ class SettingsManager(StartCheckMixin, Singleton):
             if not path.exists(self._CSS_FILE):
                 raise MissingConfigError("Unable to find the application Stylesheet file.")
         if not path.exists(self._WINDOW_ICON):
-            self._WINDOW_ICON  = f"{self._USR_PATH}/icons/{app_name.lower()}.png"
+            self._WINDOW_ICON  = f"{self._USR_PATH}/icons/{APP_NAME.lower()}.png"
             if not path.exists(self._WINDOW_ICON):
                 raise MissingConfigError("Unable to find the application icon.")
         if not path.exists(self._UI_WIDEGTS_PATH):
@@ -164,10 +164,10 @@ class SettingsManager(StartCheckMixin, Singleton):
         method      = getattr(target_class, method_name, lambda data: f"No valid key passed...\nkey={method_name}\nargs={data}")
         return method(data) if data else method()
 
-    def set_main_window_x(self, x = 0):  self.settings.config.main_window_x  = x
-    def set_main_window_y(self, y = 0):  self.settings.config.main_window_y  = y
-    def set_main_window_width(self, width = 800):   self.settings.config.main_window_width  = width
-    def set_main_window_height(self, height = 600): self.settings.config.main_window_height = height
+    def set_main_window_x(self, x = 0):                 self.settings.config.main_window_x  = x
+    def set_main_window_y(self, y = 0):                 self.settings.config.main_window_y  = y
+    def set_main_window_width(self, width = 800):       self.settings.config.main_window_width  = width
+    def set_main_window_height(self, height = 600):     self.settings.config.main_window_height = height
     def set_main_window_min_width(self, width = 720):   self.settings.config.main_window_min_width  = width
     def set_main_window_min_height(self, height = 480): self.settings.config.main_window_min_height = height
     def set_starting_files(self, files: []) -> None:    self._starting_files = files

@@ -39,4 +39,4 @@ class WebkitUISettings(WebKit2.Settings):
         self.set_enable_webaudio(True)
         self.set_enable_accelerated_2d_canvas(True)
 
-        self.set_user_agent(f"{app_name}")
+        self.set_user_agent(f"{APP_NAME}")

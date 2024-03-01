@@ -35,7 +35,7 @@ def daemon_threaded_wrapper(fn):
 
 # NOTE: Just reminding myself we can add to builtins two different ways...
 # __builtins__.update({"event_system": Builtins()})
-builtins.app_name          = "<change_me>"
+builtins.APP_NAME          = "<change_me>"
 
 builtins.keybindings       = Keybindings()
 builtins.event_system      = EventSystem()
