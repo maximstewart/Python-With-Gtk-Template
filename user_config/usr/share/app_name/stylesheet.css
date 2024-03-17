@@ -1,3 +1,16 @@
+/* ----  Make most desired things base transparent  ---- */
+popover,
+popover > *,
+scrolledwindow > *,
+textview > *,
+.main-window > .base-container > .body-container,
+.main-window > .base-container > .body-container > .left-container,
+.main-window > .base-container > .body-container > .center-container,
+.main-window > .base-container > .body-container > .right-container {
+    background: rgba(0, 0, 0, 0.0);
+    color: rgba(255, 255, 255, 1);
+}
+
 .base-container {
     margin: 10px;
 }
@@ -128,3 +141,4 @@ XfdesktopIconView.view:active {
 .mw_transparency_97 { background: rgba(39, 43, 52, 0.97);  }
 .mw_transparency_98 { background: rgba(39, 43, 52, 0.98);  }
 .mw_transparency_99 { background: rgba(39, 43, 52, 0.99);  }
+.mw_transparency_100 { background: rgba(39, 43, 52, 1.00); }

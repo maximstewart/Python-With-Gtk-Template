@@ -37,7 +37,7 @@ class TransparencyScale(Gtk.Scale):
     def _load_widgets(self):
         adjust = self.get_adjustment()
         adjust.set_lower(0)
-        adjust.set_upper(99)
+        adjust.set_upper(100)
         adjust.set_value(settings.theming.transparency)
         adjust.set_step_increment(1.0)
 

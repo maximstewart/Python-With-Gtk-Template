@@ -6,7 +6,8 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
-from ..widgets.transparency_scale import TransparencyScale
+from ..widgets.controls.open_files_button import OpenFilesButton
+from ..widgets.controls.transparency_scale import TransparencyScale
 
 
 
@@ -36,10 +37,11 @@ class HeaderContainer(Gtk.Box):
 
 
     def _load_widgets(self):
-        button    = Gtk.Button(label = "Interactive Debug")
+        button = Gtk.Button(label = "Interactive Debug")
         button.connect("clicked", self._interactive_debug)
 
-        self.add(TransparencyScale())
+        self.add( OpenFilesButton() )
+        self.add( TransparencyScale() )
         self.add(button)
 
     def _interactive_debug(self, widget = None, eve = None):
