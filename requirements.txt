@@ -1,4 +1,5 @@
 PyGObject
+pygobject-stubs
 pyxdg
 setproctitle
 sqlmodel

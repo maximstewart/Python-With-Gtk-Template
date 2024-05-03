@@ -3,6 +3,7 @@ A template project for Python with Gtk applications.
 
 ### Requirements
 * PyGObject (Gtk introspection library)
+* pygobject-stubs (For actually getting pylsp or python-language-server to auto complete in LSPs. Do if GTK3 --no-cache-dir --config-settings=config=Gtk3,Gdk3,Soup2)
 * pyxdg (Desktop ".desktop" file parser)
 * setproctitle (Define process title to search and kill more easily)
 * sqlmodel (SQL databases and is powered by Pydantic and SQLAlchemy)
