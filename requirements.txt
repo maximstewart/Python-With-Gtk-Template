@@ -1,5 +1,5 @@
 PyGObject
-pygobject-stubs
+pygobject-stubs --no-cache-dir --config-settings=config=Gtk3,Gdk3,Soup2
 pyxdg
 setproctitle
 sqlmodel
