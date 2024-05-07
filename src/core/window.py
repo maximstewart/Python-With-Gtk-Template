@@ -11,6 +11,7 @@ from gi.repository import Gdk
 from gi.repository import GLib
 
 # Application imports
+from libs.status_icon import StatusIcon
 from core.controllers.base_controller import BaseController
 
 
@@ -27,7 +28,8 @@ class Window(Gtk.ApplicationWindow):
         super(Window, self).__init__()
         settings_manager.set_main_window(self)
 
-        self._controller = None
+        self._status_icon = None
+        self._controller  = None
 
         self._setup_styling()
         self._setup_signals()
@@ -65,7 +67,8 @@ class Window(Gtk.ApplicationWindow):
         if settings_manager.is_debug():
             self.set_interactive_debugging(True)
 
-        self._controller = BaseController(args, unknownargs)
+        self._controller  = BaseController(args, unknownargs)
+        self._status_icon = StatusIcon()
         if not self._controller:
             raise ControllerStartException("BaseController exited and doesn't exist...")
 

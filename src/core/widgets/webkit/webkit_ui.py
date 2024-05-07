@@ -13,7 +13,6 @@ from libs.settings.other.webkit_ui_settings import WebkitUISettings
 from libs.dto.event import Event
 
 
-
 class WebkitUI(WebKit2.WebView):
     def __init__(self):
         super(WebkitUI, self).__init__()
