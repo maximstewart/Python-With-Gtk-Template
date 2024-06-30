@@ -28,7 +28,10 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
         self._load_controllers()
 
         if args.no_plugins == "false":
-            self.plugins.launch_plugins()
+            self.plugins_controller.pre_launch_plugins()
+
+        if args.no_plugins == "false":
+            self.plugins_controller.post_launch_plugins()
 
         for file in settings_manager.get_starting_files():
             event_system.emit("post-file-to-ipc", file)
