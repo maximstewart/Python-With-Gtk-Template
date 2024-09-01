@@ -23,7 +23,7 @@ class BodyContainer(Gtk.Box):
         self._subscribe_to_events()
         self._load_widgets()
 
-        self.show_all()
+        self.show()
 
 
     def _setup_styling(self):

@@ -21,6 +21,8 @@ class CenterContainer(Gtk.Box):
         self._subscribe_to_events()
         self._load_widgets()
 
+        self.show()
+
 
     def _setup_styling(self):
         self.set_orientation(Gtk.Orientation.VERTICAL)
@@ -38,6 +40,9 @@ class CenterContainer(Gtk.Box):
         button   = Gtk.Button(label = "Click Me!")
 
         button.connect("clicked", self._hello_world)
+
+        button.show()
+        glade_box.show()
 
         self.add(button)
         self.add(glade_box)

@@ -48,4 +48,4 @@ class HeaderContainer(Gtk.Box):
         event_system.emit("load-interactive-debug")
 
     def tggl_top_main_menubar(self):
-        self.hide() if self.is_visible() else self.show()
+        self.hide() if self.is_visible() else self.show_all()

@@ -18,6 +18,8 @@ class LeftContainer(Gtk.Box):
         self._subscribe_to_events()
         self._load_widgets()
 
+        self.show()
+
 
     def _setup_styling(self):
         self.set_orientation(Gtk.Orientation.VERTICAL)
