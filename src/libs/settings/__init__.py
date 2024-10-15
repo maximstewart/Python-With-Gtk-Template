@@ -1,4 +1,4 @@
 """
-    Settings module
+    Settings Package
 """
 from .manager import SettingsManager

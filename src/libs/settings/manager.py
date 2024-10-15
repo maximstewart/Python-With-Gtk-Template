@@ -114,13 +114,13 @@ class SettingsManager(StartCheckMixin, Singleton):
         self._starting_files    = []
 
 
-    def register_signals_to_builder(self, classes=None):
+    def register_signals_to_builder(self, classes = None):
         handlers = {}
 
         for c in classes:
             methods = None
             try:
-                methods = inspect.getmembers(c, predicate=inspect.ismethod)
+                methods = inspect.getmembers(c, predicate = inspect.ismethod)
                 handlers.update(methods)
             except Exception as e:
                 ...
@@ -153,7 +153,7 @@ class SettingsManager(StartCheckMixin, Singleton):
     def get_home_config_path(self) -> str:   return self._HOME_CONFIG_PATH
     def get_window_icon(self)      -> str:   return self._WINDOW_ICON
     def get_home_path(self)        -> str:   return self._USER_HOME
-    def get_starting_files(self)   -> []:    return self._starting_files
+    def get_starting_files(self)   -> list:  return self._starting_files
 
     def is_trace_debug(self)       -> str:   return self._trace_debug
     def is_debug(self)             -> str:   return self._debug
@@ -170,7 +170,7 @@ class SettingsManager(StartCheckMixin, Singleton):
     def set_main_window_height(self, height = 600):     self.settings.config.main_window_height = height
     def set_main_window_min_width(self, width = 720):   self.settings.config.main_window_min_width  = width
     def set_main_window_min_height(self, height = 480): self.settings.config.main_window_min_height = height
-    def set_starting_files(self, files: []) -> None:    self._starting_files = files
+    def set_starting_files(self, files: list) -> None:    self._starting_files = files
 
     def set_trace_debug(self, trace_debug):
         self._trace_debug = trace_debug
@@ -178,7 +178,7 @@ class SettingsManager(StartCheckMixin, Singleton):
     def set_debug(self, debug):
         self._debug = debug
 
-    def set_is_starting_with_file(self, is_passed_in_file: False):
+    def set_is_starting_with_file(self, is_passed_in_file: bool = False):
         self._passed_in_file = is_passed_in_file
 
     def load_settings(self):

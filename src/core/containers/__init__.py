@@ -1,3 +1,3 @@
 """
-    Containers Module
+    Containers Package
 """

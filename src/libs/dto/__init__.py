@@ -1,5 +1,5 @@
 """
-    Dasta Class module
+    Dasta Class Package
 """
 
 from .event import Event

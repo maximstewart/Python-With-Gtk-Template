@@ -1,3 +1,3 @@
 """
-    Widgets.Controls Module
+    Widgets.Controls Package
 """

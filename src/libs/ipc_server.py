@@ -56,7 +56,7 @@ class IPCServer(Singleton):
     @daemon_threaded
     def _run_ipc_loop(self, listener) -> None:
         # NOTE: Not thread safe if using with Gtk. Need to import GLib and use idle_add
-        while True:
+        while self.is_ipc_alive:
             try:
                 conn       = listener.accept()
                 start_time = time.perf_counter()
@@ -67,7 +67,7 @@ class IPCServer(Singleton):
         listener.close()
 
     def _handle_ipc_message(self, conn, start_time) -> None:
-        while True:
+        while self.is_ipc_alive:
             msg = conn.recv()
             logger.debug(msg)
 
@@ -75,6 +75,9 @@ class IPCServer(Singleton):
                 file = msg.split("FILE|")[1].strip()
                 if file:
                     event_system.emit("handle-file-from-ipc", file)
+
+                conn.close()
+                break
 
             if "DIR|" in msg:
                 file = msg.split("DIR|")[1].strip()

@@ -1,3 +1,3 @@
 """
-    Utils/Mixins module
+    Libs.Mixins Package
 """

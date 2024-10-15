@@ -1,5 +1,5 @@
 """
-    DB module
+    DB Package
 """
 
 from .models import User

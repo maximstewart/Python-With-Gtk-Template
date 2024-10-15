@@ -69,3 +69,7 @@ class ManifestProcessor:
                 loading_data["bind_keys"] = requests["bind_keys"]
 
         return self._plugin, loading_data
+
+    def is_pre_launch(self):
+        return self._plugin.pre_launch
+
