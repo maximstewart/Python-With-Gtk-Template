@@ -37,6 +37,8 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
             event_system.emit("post-file-to-ipc", file)
 
         logger.info(f"Made it past {self.__class__} loading...")
+        settings_manager.set_end_load_time()
+        settings_manager.log_load_time()
 
 
     def _setup_styling(self):
@@ -67,4 +69,3 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
         self.base_container = BaseContainer()
 
         settings_manager.register_signals_to_builder([self, self.base_container])
-

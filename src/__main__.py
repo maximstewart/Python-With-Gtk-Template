@@ -19,6 +19,7 @@ from app import Application
 
 def main(args, unknownargs):
     setproctitle(f'{APP_NAME}')
+    settings_manager.set_start_load_time()
 
     if args.debug == "true":
         settings_manager.set_debug(True)
