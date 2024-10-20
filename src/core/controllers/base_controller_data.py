@@ -28,8 +28,11 @@ class BaseControllerData:
         self._load_glade_file()
 
 
-    def collect_files_dirs(self, args, unknownargs):
-        files = []
+    def collect_files_dirs(self):
+        args, \
+        unknownargs = settings_manager.get_starting_args()
+        files       = []
+
         for arg in unknownargs + [args.new_tab,]:
             if os.path.isdir( arg.replace("file://", "") ):
                 files.append( f"DIR|{arg.replace('file://', '')}" )

@@ -156,14 +156,8 @@ class SettingsManager(StartCheckMixin, Singleton):
     def get_home_path(self)        -> str:   return self._USER_HOME
     def get_starting_files(self)   -> list:  return self._starting_files
 
-    def is_trace_debug(self)       -> str:   return self._trace_debug
-    def is_debug(self)             -> str:   return self._debug
-    def is_starting_with_file(self) -> bool: return self._passed_in_file
-
-    def call_method(self, target_class: any = None, _method_name: str = "", data: any = None):
-        method_name = str(_method_name)
-        method      = getattr(target_class, method_name, lambda data: f"No valid key passed...\nkey={method_name}\nargs={data}")
-        return method(data) if data else method()
+    def get_starting_args(self):
+        return self.args, self.unknownargs
 
     def set_main_window_x(self, x: int = 0):                 self.settings.config.main_window_x  = x
     def set_main_window_y(self, y: int = 0):                 self.settings.config.main_window_y  = y
@@ -172,10 +166,12 @@ class SettingsManager(StartCheckMixin, Singleton):
     def set_main_window_min_width(self, width: int = 720):   self.settings.config.main_window_min_width  = width
     def set_main_window_min_height(self, height: int = 480): self.settings.config.main_window_min_height = height
     def set_starting_files(self, files: list):               self._starting_files = files
-
     def set_start_load_time(self): self._start_load_time = time.perf_counter()
     def set_end_load_time(self):   self._end_load_time   = time.perf_counter()
-    def log_load_time(self):       logger.info( f"Load Time: {self._end_load_time - self._start_load_time}" )
+
+    def set_starting_args(self, args, unknownargs):
+        self.args = args
+        self.unknownargs = unknownargs
 
     def set_trace_debug(self, trace_debug: bool):
         self._trace_debug = trace_debug
@@ -185,6 +181,17 @@ class SettingsManager(StartCheckMixin, Singleton):
 
     def set_is_starting_with_file(self, is_passed_in_file: bool = False):
         self._passed_in_file = is_passed_in_file
+
+    def is_trace_debug(self)       -> str:   return self._trace_debug
+    def is_debug(self)             -> str:   return self._debug
+    def is_starting_with_file(self) -> bool: return self._passed_in_file
+
+    def log_load_time(self):       logger.info( f"Load Time: {self._end_load_time - self._start_load_time}" )
+
+    def call_method(self, target_class: any = None, _method_name: str = "", data: any = None):
+        method_name = str(_method_name)
+        method      = getattr(target_class, method_name, lambda data: f"No valid key passed...\nkey={method_name}\nargs={data}")
+        return method(data) if data else method()
 
     def load_settings(self):
         if not path.exists(self._CONFIG_FILE):

@@ -19,18 +19,20 @@ class AppLaunchException(Exception):
 class Application:
     """ docstring for Application. """
 
-    def __init__(self, args, unknownargs):
+    def __init__(self):
         super(Application, self).__init__()
 
         if not settings_manager.is_trace_debug():
-            self.load_ipc(args, unknownargs)
+            self.load_ipc()
 
         self.setup_debug_hook()
-        Window(args, unknownargs).main()
+        Window().main()
 
 
-    def load_ipc(self, args, unknownargs):
-        ipc_server = IPCServer()
+    def load_ipc(self):
+        args, unknownargs = settings_manager.get_starting_args()
+        ipc_server        = IPCServer()
+
         self.ipc_realization_check(ipc_server)
 
         if not ipc_server.is_ipc_alive:

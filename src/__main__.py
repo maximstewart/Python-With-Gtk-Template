@@ -17,7 +17,7 @@ from app import Application
 
 
 
-def main(args, unknownargs):
+def main():
     setproctitle(f'{APP_NAME}')
     settings_manager.set_start_load_time()
 
@@ -28,7 +28,7 @@ def main(args, unknownargs):
         settings_manager.set_trace_debug(True)
 
     settings_manager.do_dirty_start_check()
-    Application(args, unknownargs)
+    Application()
 
 
 
@@ -37,19 +37,20 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     # Add long and short arguments
-    parser.add_argument("--debug", "-d", default="false", help="Do extra console messaging.")
-    parser.add_argument("--trace-debug", "-td", default="false", help="Disable saves, ignore IPC lock, do extra console messaging.")
-    parser.add_argument("--no-plugins", "-np", default="false", help="Do not load plugins.")
+    parser.add_argument("--debug", "-d", default = "false", help = "Do extra console messaging.")
+    parser.add_argument("--trace-debug", "-td", default = "false", help = "Disable saves, ignore IPC lock, do extra console messaging.")
+    parser.add_argument("--no-plugins", "-np", default = "false", help = "Do not load plugins.")
 
-    parser.add_argument("--new-tab", "-nt", default="false", help="Opens a 'New Tab' if a handler is set for it.")
-    parser.add_argument("--file", "-f", default="default", help="JUST SOME FILE ARG.")
+    parser.add_argument("--new-tab", "-nt", default = "false", help = "Opens a 'New Tab' if a handler is set for it.")
+    parser.add_argument("--file", "-f", default = "default", help =  "JUST SOME FILE ARG.")
 
     # Read arguments (If any...)
     args, unknownargs = parser.parse_known_args()
+    settings_manager.set_starting_args( args, unknownargs )
 
     try:
         faulthandler.enable()  # For better debug info
-        main(args, unknownargs)
+        main()
     except Exception as e:
         traceback.print_exc()
         quit()
