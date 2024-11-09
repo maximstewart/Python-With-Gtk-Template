@@ -6,6 +6,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
+from ..widgets.vte_widget import VteWidget
 
 
 
@@ -33,4 +34,5 @@ class RightContainer(Gtk.Box):
         ...
 
     def _load_widgets(self):
-        ...
+        vte_widget = VteWidget()
+        self.add( vte_widget )

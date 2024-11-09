@@ -46,9 +46,11 @@ builtins.settings_manager  = SettingsManager()
 settings_manager.load_settings()
 
 builtins.settings          = settings_manager.settings
-builtins.logger            = Logger(settings_manager.get_home_config_path(), \
-                                    _ch_log_lvl=settings.debugging.ch_log_lvl, \
-                                    _fh_log_lvl=settings.debugging.fh_log_lvl).get_logger()
+builtins.logger            = Logger(
+                                settings_manager.get_home_config_path(), \
+                                _ch_log_lvl = settings.debugging.ch_log_lvl, \
+                                _fh_log_lvl = settings.debugging.fh_log_lvl
+                            ).get_logger()
 
 builtins.threaded          = threaded_wrapper
 builtins.daemon_threaded   = daemon_threaded_wrapper
@@ -60,6 +62,6 @@ def custom_except_hook(exc_type, exc_value, exc_traceback):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
 
-    logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+    logger.error("Uncaught exception", exc_info = (exc_type, exc_value, exc_traceback))
 
 sys.excepthook = custom_except_hook

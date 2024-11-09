@@ -14,7 +14,7 @@ from ..builder_wrapper import BuilderWrapper
 class BaseControllerData:
     ''' BaseControllerData contains most of the state of the app at ay given time. It also has some support methods. '''
 
-    def setup_controller_data(self) -> None:
+    def _setup_controller_data(self) -> None:
         self.window             = settings_manager.get_main_window()
         self.builder            = BuilderWrapper()
         self.plugins_controller = PluginsController()
@@ -25,10 +25,11 @@ class BaseControllerData:
         self.shift_down         = False
         self.alt_down           = False
 
+        self._collect_files_dirs()
         self._load_glade_file()
 
 
-    def collect_files_dirs(self):
+    def _collect_files_dirs(self):
         args, \
         unknownargs = settings_manager.get_starting_args()
         files       = []

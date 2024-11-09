@@ -30,11 +30,11 @@ class Application:
 
 
     def load_ipc(self):
-        args, unknownargs = settings_manager.get_starting_args()
-        ipc_server        = IPCServer()
+        args, \
+        unknownargs = settings_manager.get_starting_args()
+        ipc_server  = IPCServer()
 
         self.ipc_realization_check(ipc_server)
-
         if not ipc_server.is_ipc_alive:
             for arg in unknownargs + [args.new_tab,]:
                 if os.path.isfile(arg):

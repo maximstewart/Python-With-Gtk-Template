@@ -1,6 +1,7 @@
 html, body {
     display: block;
-    background-color: #32383e00;
+//    background-color: #32383e00;
+    background-color: rgba(39, 43, 52, 0.64);
     color: #ffffff;
     text-wrap: wrap;
 }

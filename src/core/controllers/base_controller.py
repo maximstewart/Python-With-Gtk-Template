@@ -18,9 +18,8 @@ from .bridge_controller import BridgeController
 
 class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
     def __init__(self):
-        self.collect_files_dirs()
-        self.setup_controller_data()
 
+        self._setup_controller_data()
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
