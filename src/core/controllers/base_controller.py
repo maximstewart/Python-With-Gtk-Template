@@ -52,8 +52,6 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
         args, unknownargs = settings_manager.get_starting_args()
         if args.no_plugins == "false":
             self.plugins_controller.pre_launch_plugins()
-
-        if args.no_plugins == "false":
             self.plugins_controller.post_launch_plugins()
 
         for file in settings_manager.get_starting_files():

@@ -1,5 +1,6 @@
 # Python imports
 import builtins
+import traceback
 import threading
 import sys
 
@@ -31,6 +32,17 @@ def daemon_threaded_wrapper(fn):
         return thread
     return wrapper
 
+def call_chain_wrapper(fn):
+    def wrapper(*args, **kwargs):
+        print()
+        print()
+        for line in traceback.format_stack():
+            print( line.strip() )
+        print()
+        print()
+
+        return fn(*args, **kwargs)
+    return wrapper
 
 
 # NOTE: Just reminding myself we can add to builtins two different ways...
@@ -54,6 +66,7 @@ builtins.logger            = Logger(
 
 builtins.threaded          = threaded_wrapper
 builtins.daemon_threaded   = daemon_threaded_wrapper
+builtins.call_chain        = call_chain_wrapper
 
 
 

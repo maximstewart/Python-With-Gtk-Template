@@ -10,8 +10,6 @@ import base64
 class BridgeController:
     def __init__(self):
 
-        self.opened_files = {}
-
         self._setup_signals()
         self._subscribe_to_events()
 

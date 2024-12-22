@@ -37,10 +37,14 @@ class BaseControllerData:
         for arg in unknownargs + [args.new_tab,]:
             if os.path.isdir( arg.replace("file://", "") ):
                 files.append( f"DIR|{arg.replace('file://', '')}" )
+                continue
 
             # NOTE: If passing line number with file split against :
             if os.path.isfile( arg.replace("file://", "").split(":")[0] ):
                 files.append( f"FILE|{arg.replace('file://', '')}" )
+                continue
+
+            logger.info(f"Not a File: {arg}")
 
         if len(files) > 0:
             settings_manager.set_is_starting_with_file(True)
