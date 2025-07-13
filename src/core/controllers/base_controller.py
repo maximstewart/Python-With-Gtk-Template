@@ -17,6 +17,8 @@ from .bridge_controller import BridgeController
 
 
 class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
+    """ docstring for BaseController. """
+
     def __init__(self):
 
         self._setup_controller_data()
