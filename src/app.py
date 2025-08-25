@@ -26,8 +26,11 @@ class Application:
             self.load_ipc()
 
         self.setup_debug_hook()
-        Window().main()
 
+
+    def run(self):
+        win = Window()
+        win.start()
 
     def load_ipc(self):
         args, \

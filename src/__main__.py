@@ -28,7 +28,9 @@ def main():
         settings_manager.set_trace_debug(True)
 
     settings_manager.do_dirty_start_check()
-    Application()
+
+    app = Application()
+    app.run()
 
 
 

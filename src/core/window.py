@@ -56,11 +56,11 @@ class Window(Gtk.ApplicationWindow):
         self.connect("focus-in-event", self._on_focus_in_event)
         self.connect("focus-out-event", self._on_focus_out_event)
 
-        self.connect("delete-event", self._tear_down)
-        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, self._tear_down)
+        self.connect("delete-event", self.stop)
+        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, self.stop)
 
     def _subscribe_to_events(self):
-        event_system.subscribe("tear-down", self._tear_down)
+        event_system.subscribe("tear-down", self.stop)
         event_system.subscribe("load-interactive-debug", self._load_interactive_debug)
 
     def _load_widgets(self):
@@ -119,7 +119,10 @@ class Window(Gtk.ApplicationWindow):
         self.set_interactive_debugging(True)
 
 
-    def _tear_down(self, widget = None, eve = None):
+    def start(self):
+        Gtk.main()
+
+    def stop(self, widget = None, eve = None):
         event_system.emit("shutting-down")
 
         size = self.get_size()
@@ -133,6 +136,3 @@ class Window(Gtk.ApplicationWindow):
 
         settings_manager.clear_pid()
         Gtk.main_quit()
-
-    def main(self):
-        Gtk.main()
