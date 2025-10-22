@@ -1,7 +1,6 @@
 /* ----  Make most desired things base transparent  ---- */
-/* ----  Make most desired things base transparent  ---- */
 popover,
-popover > box
+popover > box,
 .main-window,
 .base-container,
 .body-container,
