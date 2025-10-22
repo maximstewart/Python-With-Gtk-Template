@@ -46,9 +46,10 @@ class BaseControllerData:
 
             logger.info(f"Not a File: {arg}")
 
-        if len(files) > 0:
-            settings_manager.set_is_starting_with_file(True)
-            settings_manager.set_starting_files(files)
+        if len(files) == 0: return
+
+        settings_manager.set_is_starting_with_file(True)
+        settings_manager.set_starting_files(files)
 
     def get_base_container(self):
         return self.base_container
@@ -84,24 +85,22 @@ class BaseControllerData:
             widget.remove(child)
 
     def get_clipboard_data(self, encoding = "utf-8") -> str:
-        if which("xclip"):
-            command = ['xclip','-selection','clipboard']
-        else:
+        if not which("xclip"):
             logger.info('xclip not found...')
             return
 
+        command = ['xclip','-selection','clipboard']
         proc    = subprocess.Popen(['xclip','-selection', 'clipboard', '-o'], stdout = subprocess.PIPE)
         retcode = proc.wait()
         data    = proc.stdout.read()
         return data.decode(encoding).strip()
 
     def set_clipboard_data(self, data: type, encoding = "utf-8") -> None:
-        if which("xclip"):
-            command = ['xclip','-selection','clipboard']
-        else:
+        if not which("xclip"):
             logger.info('xclip not found...')
             return
 
+        command = ['xclip','-selection','clipboard']
         proc = subprocess.Popen(command, stdin = subprocess.PIPE)
         proc.stdin.write(data.encode(encoding))
         proc.stdin.close()

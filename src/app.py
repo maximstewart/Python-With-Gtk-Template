@@ -1,4 +1,5 @@
 # Python imports
+from contextlib import suppress
 import signal
 import os
 
@@ -52,18 +53,15 @@ class Application:
         except Exception:
             ipc_server.send_test_ipc_message()
 
-        try:
+        with suppress(Exception):
             ipc_server.create_ipc_listener()
-        except Exception as e:
-            ...
 
     def setup_debug_hook(self):
-        try:
+        # Typically: ValueError: signal only works in main thread
+        with suppress(ValueError):
             # kill -SIGUSR2 <pid> from Linux/Unix or SIGBREAK signal from Windows
             signal.signal(
                 vars(signal).get("SIGBREAK") or vars(signal).get("SIGUSR2"),
                 debug_signal_handler
             )
-        except ValueError:
-            # Typically: ValueError: signal only works in main thread
-            ...
+

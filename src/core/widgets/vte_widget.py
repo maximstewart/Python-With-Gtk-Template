@@ -99,7 +99,7 @@ class VteWidget(Vte.Terminal):
         try:
             command_ran  = lines[-1].split("-->:")[1].strip()
         except VteWidgetException as e:
-            logger.debud(e)
+            logger.debug(e)
             return
 
         if not command_ran[0:3].encode() in self.cd_cmd_prefix:
@@ -114,12 +114,12 @@ class VteWidget(Vte.Terminal):
         event = Event("pty_path_updated", "", target_path)
         event_system.emit("handle_bridge_event", (event,))
 
-    def update_term_path(self, fpath):
+    def update_term_path(self, fpath: str):
         self.dont_process = True
 
         cmds = [f"cd '{fpath}'\n", "clear\n"]
-        for i in cmds:
-            self.run_command(i)
+        for cmd in cmds:
+            self.run_command(cmd)
 
-    def run_command(self, cmd):
+    def run_command(self, cmd: str):
         self.feed_child_binary(bytes(cmd, 'utf8'))

@@ -1,4 +1,5 @@
 # Python imports
+from contextlib import suppress
 import os
 
 # Lib imports
@@ -58,11 +59,9 @@ class OpenFilesButton(Gtk.Button):
 
         chooser.set_select_multiple(True)
 
-        try:
+        with suppress(Exception):
             folder = widget.get_current_file().get_parent() if not start_dir else start_dir
             chooser.set_current_folder( folder.get_path() )
-        except Exception as e:
-            ...
 
         response = chooser.run()
         if not response == Gtk.ResponseType.OK:
