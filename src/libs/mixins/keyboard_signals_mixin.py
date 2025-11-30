@@ -68,11 +68,11 @@ class KeyboardSignalsMixin:
         if mapping:
             self.handle_mapped_key_event(mapping)
         else:
-            self.handle_as_key_event_scope(mapping)
+            self.handle_as_key_event_scope(keyname)
 
     def handle_mapped_key_event(self, mapping):
         try:
-            self.handle_as_controller_scope()
+            self.handle_as_controller_scope(mapping)
         except Exception:
             self.handle_as_plugin_scope(mapping)
 
@@ -86,13 +86,11 @@ class KeyboardSignalsMixin:
             sender = ""
             eve_type = mapping
 
-        self.handle_as_key_event_system(sender, eve_type)
+        self.handle_key_event_system(sender, eve_type)
 
-    def handle_as_key_event_scope(self, mapping):
-        logger.debug(f"on_global_key_release_controller > key > {keyname}")
-
+    def handle_as_key_event_scope(self, keyname):
         if self.ctrl_down and not keyname in ["1", "kp_1", "2", "kp_2", "3", "kp_3", "4", "kp_4"]:
-            self.handle_key_event_system(None, mapping)
+            self.handle_key_event_system(None, keyname)
 
     def handle_key_event_system(self, sender, eve_type):
         event_system.emit(eve_type)

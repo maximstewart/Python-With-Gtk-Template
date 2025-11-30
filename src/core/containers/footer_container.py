@@ -9,9 +9,11 @@ from gi.repository import Gtk
 
 
 
-class LeftContainer(Gtk.Box):
+class FooterContainer(Gtk.Box):
     def __init__(self):
-        super(LeftContainer, self).__init__()
+        super(FooterContainer, self).__init__()
+
+        self.ctx = self.get_style_context()
 
         self._setup_styling()
         self._setup_signals()
@@ -22,18 +24,18 @@ class LeftContainer(Gtk.Box):
 
 
     def _setup_styling(self):
-        self.set_orientation(Gtk.Orientation.VERTICAL)
+        self.set_orientation(Gtk.Orientation.HORIZONTAL)
 
-        self.set_vexpand(True)
+        self.set_hexpand(True)
 
-        ctx = self.get_style_context()
-        ctx.add_class("left-container")
+        self.ctx.add_class("footer-container")
 
     def _setup_signals(self):
         ...
 
     def _subscribe_to_events(self):
         ...
+
 
     def _load_widgets(self):
         ...

@@ -12,13 +12,11 @@ class SingletonError(Exception):
 
 
 class Singleton:
-    ccount = 0
+    _instance = None
 
     def __new__(cls, *args, **kwargs):
-        obj        = super(Singleton, cls).__new__(cls)
-        cls.ccount += 1
+        if cls._instance:
+            raise SingletonError(f"'{cls.__name__}' is a Singleton. Cannot create a new instance...")
 
-        if cls.ccount == 2:
-            raise SingletonError(f"Exceeded {cls.__name__} instantiation limit...")
-
-        return obj
+        cls._instance = super(Singleton, cls).__new__(cls)
+        return cls._instance

@@ -13,17 +13,17 @@ from .singleton import Singleton
 
 
 class IPCServer(Singleton):
-    """ Create a listener so that other {app_name} instances send requests back to existing instance. """
+    """ Create a listener so that other {APP_NAME} instances send requests back to existing instance. """
     def __init__(self, ipc_address: str = '127.0.0.1', conn_type: str = "socket"):
         self.is_ipc_alive     = False
-        self._ipc_port        = 4848
+        self._ipc_port        = 0 # Use 0 to let Listener chose port
         self._ipc_address     = ipc_address
         self._conn_type       = conn_type
-        self._ipc_authkey     = b'' + bytes(f'{app_name}-ipc', 'utf-8')
+        self._ipc_authkey     = b'' + bytes(f'{APP_NAME}-ipc', 'utf-8')
         self._ipc_timeout     = 15.0
 
         if conn_type == "socket":
-            self._ipc_address = f'/tmp/{app_name}-ipc.sock'
+            self._ipc_address = f'/tmp/{APP_NAME}-ipc.sock'
         elif conn_type == "full_network":
             self._ipc_address = '0.0.0.0'
         elif conn_type == "full_network_unsecured":
@@ -35,7 +35,7 @@ class IPCServer(Singleton):
         self._subscribe_to_events()
 
     def _subscribe_to_events(self):
-        event_system.subscribe("post_file_to_ipc", self.send_ipc_message)
+        event_system.subscribe("post-file-to-ipc", self.send_ipc_message)
 
 
     def create_ipc_listener(self) -> None:
@@ -56,7 +56,7 @@ class IPCServer(Singleton):
     @daemon_threaded
     def _run_ipc_loop(self, listener) -> None:
         # NOTE: Not thread safe if using with Gtk. Need to import GLib and use idle_add
-        while True:
+        while self.is_ipc_alive:
             try:
                 conn       = listener.accept()
                 start_time = time.perf_counter()
@@ -67,19 +67,22 @@ class IPCServer(Singleton):
         listener.close()
 
     def _handle_ipc_message(self, conn, start_time) -> None:
-        while True:
+        while self.is_ipc_alive:
             msg = conn.recv()
             logger.debug(msg)
 
             if "FILE|" in msg:
                 file = msg.split("FILE|")[1].strip()
                 if file:
-                    event_system.emit("handle_file_from_ipc", file)
+                    event_system.emit("handle-file-from-ipc", file)
+
+                conn.close()
+                break
 
             if "DIR|" in msg:
                 file = msg.split("DIR|")[1].strip()
                 if file:
-                    event_system.emit("handle_dir_from_ipc", file)
+                    event_system.emit("handle-dir-from-ipc", file)
 
                 conn.close()
                 break

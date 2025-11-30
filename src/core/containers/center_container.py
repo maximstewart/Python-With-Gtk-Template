@@ -21,9 +21,15 @@ class CenterContainer(Gtk.Box):
         self._subscribe_to_events()
         self._load_widgets()
 
+        self.show()
+
 
     def _setup_styling(self):
         self.set_orientation(Gtk.Orientation.VERTICAL)
+
+        self.set_hexpand(True)
+        self.set_vexpand(True)
+
         ctx = self.get_style_context()
         ctx.add_class("center-container")
 
@@ -31,7 +37,6 @@ class CenterContainer(Gtk.Box):
         ...
 
     def _subscribe_to_events(self):
-        # event_system.subscribe("handle_file_from_ipc", self.handle_file_from_ipc)
         ...
 
     def _load_widgets(self):
@@ -39,6 +44,9 @@ class CenterContainer(Gtk.Box):
         button   = Gtk.Button(label = "Click Me!")
 
         button.connect("clicked", self._hello_world)
+
+        button.show()
+        glade_box.show()
 
         self.add(button)
         self.add(glade_box)

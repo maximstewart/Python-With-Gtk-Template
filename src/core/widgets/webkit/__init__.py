@@ -1,3 +1,3 @@
 """
-    WebKit2 UI Module
+    WebKit2 UI Package
 """

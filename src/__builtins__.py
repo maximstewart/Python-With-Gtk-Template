@@ -1,5 +1,6 @@
 # Python imports
 import builtins
+import traceback
 import threading
 import sys
 
@@ -11,7 +12,7 @@ from libs.event_system import EventSystem
 from libs.endpoint_registry import EndpointRegistry
 from libs.keybindings import Keybindings
 from libs.logger import Logger
-from libs.settings_manager.manager import SettingsManager
+from libs.settings.manager import SettingsManager
 
 
 
@@ -31,11 +32,22 @@ def daemon_threaded_wrapper(fn):
         return thread
     return wrapper
 
+def call_chain_wrapper(fn):
+    def wrapper(*args, **kwargs):
+        print()
+        print()
+        for line in traceback.format_stack():
+            print( line.strip() )
+        print()
+        print()
+
+        return fn(*args, **kwargs)
+    return wrapper
 
 
 # NOTE: Just reminding myself we can add to builtins two different ways...
 # __builtins__.update({"event_system": Builtins()})
-builtins.app_name          = "<change_me>"
+builtins.APP_NAME          = "<change_me>"
 
 builtins.keybindings       = Keybindings()
 builtins.event_system      = EventSystem()
@@ -46,12 +58,15 @@ builtins.settings_manager  = SettingsManager()
 settings_manager.load_settings()
 
 builtins.settings          = settings_manager.settings
-builtins.logger            = Logger(settings_manager.get_home_config_path(), \
-                                    _ch_log_lvl=settings.debugging.ch_log_lvl, \
-                                    _fh_log_lvl=settings.debugging.fh_log_lvl).get_logger()
+builtins.logger            = Logger(
+                                settings_manager.get_home_config_path(), \
+                                _ch_log_lvl = settings.debugging.ch_log_lvl, \
+                                _fh_log_lvl = settings.debugging.fh_log_lvl
+                            ).get_logger()
 
 builtins.threaded          = threaded_wrapper
 builtins.daemon_threaded   = daemon_threaded_wrapper
+builtins.call_chain        = call_chain_wrapper
 
 
 
@@ -60,6 +75,6 @@ def custom_except_hook(exc_type, exc_value, exc_traceback):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
 
-    logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+    logger.error("Uncaught exception", exc_info = (exc_type, exc_value, exc_traceback))
 
 sys.excepthook = custom_except_hook

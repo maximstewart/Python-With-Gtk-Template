@@ -8,6 +8,7 @@ from gi.repository import Gtk
 # Application imports
 from .header_container import HeaderContainer
 from .body_container import BodyContainer
+from .footer_container import FooterContainer
 
 
 
@@ -22,7 +23,7 @@ class BaseContainer(Gtk.Box):
         self._subscribe_to_events()
         self._load_widgets()
 
-        self.show_all()
+        self.show()
 
 
     def _setup_styling(self):
@@ -33,12 +34,13 @@ class BaseContainer(Gtk.Box):
         ...
 
     def _subscribe_to_events(self):
-        event_system.subscribe("update_transparency", self._update_transparency)
-        event_system.subscribe("remove_transparency", self._remove_transparency)
+        event_system.subscribe("update-transparency", self._update_transparency)
+        event_system.subscribe("remove-transparency", self._remove_transparency)
 
     def _load_widgets(self):
         self.add(HeaderContainer())
         self.add(BodyContainer())
+        self.add(FooterContainer())
 
     def _update_transparency(self):
         self.ctx.add_class(f"mw_transparency_{settings.theming.transparency}")

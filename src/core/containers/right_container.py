@@ -6,6 +6,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
+from ..widgets.vte_widget import VteWidget
 
 
 
@@ -18,9 +19,14 @@ class RightContainer(Gtk.Box):
         self._subscribe_to_events()
         self._load_widgets()
 
+        self.show()
+
 
     def _setup_styling(self):
         self.set_orientation(Gtk.Orientation.VERTICAL)
+
+        self.set_vexpand(True)
+
         ctx = self.get_style_context()
         ctx.add_class("right-container")
 
@@ -28,8 +34,8 @@ class RightContainer(Gtk.Box):
         ...
 
     def _subscribe_to_events(self):
-        # event_system.subscribe("handle_file_from_ipc", self.handle_file_from_ipc)
         ...
 
     def _load_widgets(self):
-        ...
+        vte_widget = VteWidget()
+        self.add( vte_widget )

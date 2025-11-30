@@ -1,5 +1,4 @@
 # Python imports
-import os
 
 # Lib imports
 import gi
@@ -18,27 +17,20 @@ from .bridge_controller import BridgeController
 
 
 class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
-    def __init__(self, args, unknownargs):
-        self.setup_controller_data()
+    """ docstring for BaseController. """
 
+    def __init__(self):
+
+        self._setup_controller_data()
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
         self._load_controllers()
-
-        if args.no_plugins == "false":
-            self.plugins.launch_plugins()
-
-        for arg in unknownargs + [args.new_tab,]:
-            if os.path.isfile(arg):
-                message = f"FILE|{arg}"
-                event_system.emit("post_file_to_ipc", message)
-
-            if os.path.isdir(arg):
-                message = f"DIR|{arg}"
-                event_system.emit("post_file_to_ipc", message)
+        self._load_plugins_and_files()
 
         logger.info(f"Made it past {self.__class__} loading...")
+        settings_manager.set_end_load_time()
+        settings_manager.log_load_time()
 
 
     def _setup_styling(self):
@@ -50,20 +42,28 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
         self.window.connect("key-release-event", self.on_global_key_release_controller)
 
     def _subscribe_to_events(self):
-        event_system.subscribe("shutting_down", lambda: print("Shutting down..."))
-        event_system.subscribe("handle_file_from_ipc", self.handle_file_from_ipc)
-        event_system.subscribe("handle_dir_from_ipc", self.handle_dir_from_ipc)
-        event_system.subscribe("tggl_top_main_menubar", self._tggl_top_main_menubar)
+        event_system.subscribe("shutting-down", lambda: print("Shutting down..."))
+        event_system.subscribe("handle-file-from-ipc", self.handle_file_from_ipc)
+        event_system.subscribe("handle-dir-from-ipc", self.handle_dir_from_ipc)
+        event_system.subscribe("tggl-top-main-menubar", self._tggl_top_main_menubar)
 
     def _load_controllers(self):
         BridgeController()
 
+    def _load_plugins_and_files(self):
+        args, unknownargs = settings_manager.get_starting_args()
+        if args.no_plugins == "false":
+            self.plugins_controller.pre_launch_plugins()
+            self.plugins_controller.post_launch_plugins()
+
+        for file in settings_manager.get_starting_files():
+            event_system.emit("post-file-to-ipc", file)
+
     def _tggl_top_main_menubar(self):
         logger.debug("_tggl_top_main_menubar > stub...")
 
-    def setup_builder_and_container(self):
-        self.builder     = Gtk.Builder()
-        self.builder.add_from_file(settings_manager.get_glade_file())
+    def _load_glade_file(self):
+        self.builder.add_from_file( settings_manager.get_glade_file() )
         self.builder.expose_object("main_window", self.window)
 
         settings_manager.set_builder(self.builder)

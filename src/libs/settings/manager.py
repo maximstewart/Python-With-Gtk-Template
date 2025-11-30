@@ -1,5 +1,6 @@
 # Python imports
 import inspect
+import time
 import json
 import zipfile
 
@@ -22,35 +23,35 @@ class MissingConfigError(Exception):
 
 class SettingsManager(StartCheckMixin, Singleton):
     def __init__(self):
-        self._SCRIPT_PTH        = path.dirname(path.realpath(__file__))
-        self._USER_HOME         = path.expanduser('~')
-        self._HOME_CONFIG_PATH  = f"{self._USER_HOME}/.config/{app_name.lower()}"
-        self._USR_PATH          = f"/usr/share/{app_name.lower()}"
-        self._USR_CONFIG_FILE   = f"{self._USR_PATH}/settings.json"
+        self._SCRIPT_PTH: str        = path.dirname(path.realpath(__file__))
+        self._USER_HOME: str         = path.expanduser('~')
+        self._HOME_CONFIG_PATH: str  = f"{self._USER_HOME}/.config/{APP_NAME.lower()}"
+        self._USR_PATH: str          = f"/usr/share/{APP_NAME.lower()}"
+        self._USR_CONFIG_FILE: str   = f"{self._USR_PATH}/settings.json"
 
-        self._CONTEXT_PATH      = f"{self._HOME_CONFIG_PATH}/context_path"
-        self._PLUGINS_PATH      = f"{self._HOME_CONFIG_PATH}/plugins"
-        self._DEFAULT_ICONS     = f"{self._HOME_CONFIG_PATH}/icons"
-        self._CONFIG_FILE       = f"{self._HOME_CONFIG_PATH}/settings.json"
-        self._GLADE_FILE        = f"{self._HOME_CONFIG_PATH}/Main_Window.glade"
-        self._CSS_FILE          = f"{self._HOME_CONFIG_PATH}/stylesheet.css"
-        self._KEY_BINDINGS_FILE = f"{self._HOME_CONFIG_PATH}/key-bindings.json"
-        self._PID_FILE          = f"{self._HOME_CONFIG_PATH}/{app_name.lower()}.pid"
-        self._UI_WIDEGTS_PATH   = f"{self._HOME_CONFIG_PATH}/ui_widgets"
-        self._CONTEXT_MENU      = f"{self._HOME_CONFIG_PATH}/contexct_menu.json"
-        self._WINDOW_ICON       = f"{self._DEFAULT_ICONS}/{app_name.lower()}.png"
+        self._CONTEXT_PATH: str      = f"{self._HOME_CONFIG_PATH}/context_path"
+        self._PLUGINS_PATH: str      = f"{self._HOME_CONFIG_PATH}/plugins"
+        self._DEFAULT_ICONS: str     = f"{self._HOME_CONFIG_PATH}/icons"
+        self._CONFIG_FILE: str       = f"{self._HOME_CONFIG_PATH}/settings.json"
+        self._GLADE_FILE: str        = f"{self._HOME_CONFIG_PATH}/Main_Window.glade"
+        self._CSS_FILE: str          = f"{self._HOME_CONFIG_PATH}/stylesheet.css"
+        self._KEY_BINDINGS_FILE: str = f"{self._HOME_CONFIG_PATH}/key-bindings.json"
+        self._PID_FILE: str          = f"{self._HOME_CONFIG_PATH}/{APP_NAME.lower()}.pid"
+        self._UI_WIDEGTS_PATH: str   = f"{self._HOME_CONFIG_PATH}/ui_widgets"
+        self._CONTEXT_MENU: str      = f"{self._HOME_CONFIG_PATH}/contexct_menu.json"
+        self._WINDOW_ICON: str       = f"{self._DEFAULT_ICONS}/{APP_NAME.lower()}.png"
 
-        # self._USR_CONFIG_FILE   = f"{self._USR_PATH}/settings.json"
-        # self._PLUGINS_PATH      = f"plugins"
-        # self._CONFIG_FILE       = f"settings.json"
-        # self._GLADE_FILE        = f"Main_Window.glade"
-        # self._CSS_FILE          = f"stylesheet.css"
-        # self._KEY_BINDINGS_FILE = f"key-bindings.json"
-        # self._PID_FILE          = f"{app_name.lower()}.pid"
-        # self._WINDOW_ICON       = f"{app_name.lower()}.png"
-        # self._UI_WIDEGTS_PATH   = f"ui_widgets"
-        # self._CONTEXT_MENU      = f"contexct_menu.json"
-        # self._DEFAULT_ICONS     = f"icons"
+        # self._USR_CONFIG_FILE: str   = f"{self._USR_PATH}/settings.json"
+        # self._PLUGINS_PATH: str      = f"plugins"
+        # self._CONFIG_FILE: str       = f"settings.json"
+        # self._GLADE_FILE: str        = f"Main_Window.glade"
+        # self._CSS_FILE: str          = f"stylesheet.css"
+        # self._KEY_BINDINGS_FILE: str = f"key-bindings.json"
+        # self._PID_FILE: str          = f"{APP_NAME.lower()}.pid"
+        # self._WINDOW_ICON: str       = f"{APP_NAME.lower()}.png"
+        # self._UI_WIDEGTS_PATH: str   = f"ui_widgets"
+        # self._CONTEXT_MENU: str      = f"contexct_menu.json"
+        # self._DEFAULT_ICONS: str     = f"icons"
 
 
         # with zipfile.ZipFile("files.zip", mode="r", allowZip64=True) as zf:
@@ -79,7 +80,7 @@ class SettingsManager(StartCheckMixin, Singleton):
             if not path.exists(self._CSS_FILE):
                 raise MissingConfigError("Unable to find the application Stylesheet file.")
         if not path.exists(self._WINDOW_ICON):
-            self._WINDOW_ICON  = f"{self._USR_PATH}/icons/{app_name.lower()}.png"
+            self._WINDOW_ICON  = f"{self._USR_PATH}/icons/{APP_NAME.lower()}.png"
             if not path.exists(self._WINDOW_ICON):
                 raise MissingConfigError("Unable to find the application icon.")
         if not path.exists(self._UI_WIDEGTS_PATH):
@@ -90,7 +91,9 @@ class SettingsManager(StartCheckMixin, Singleton):
 
         try:
             with open(self._KEY_BINDINGS_FILE) as file:
-                bindings = json.load(file)["keybindings"]
+                bindings        = json.load(file)["keybindings"]
+                self._guake_key = bindings["guake_key"]
+
                 keybindings.configure(bindings)
         except Exception as e:
             print( f"Settings Manager: {self._KEY_BINDINGS_FILE}\n\t\t{repr(e)}" )
@@ -102,23 +105,25 @@ class SettingsManager(StartCheckMixin, Singleton):
             print( f"Settings Manager: {self._CONTEXT_MENU}\n\t\t{repr(e)}" )
 
 
-        self.settings: Settings = None
-        self._main_window       = None
-        self._builder           = None
-        self.PAINT_BG_COLOR     = (0, 0, 0, 0.0)
+        self.settings: Settings    = None
+        self._main_window          = None
+        self._builder              = None
+        self.PAINT_BG_COLOR: tuple = (0, 0, 0, 0.0)
 
-        self._trace_debug       = False
-        self._debug             = False
-        self._dirty_start       = False
+        self._trace_debug: bool    = False
+        self._debug: bool          = False
+        self._dirty_start: bool    = False
+        self._passed_in_file: bool = False
+        self._starting_files: list = []
 
 
-    def register_signals_to_builder(self, classes=None):
+    def register_signals_to_builder(self, classes = None):
         handlers = {}
 
         for c in classes:
             methods = None
             try:
-                methods = inspect.getmembers(c, predicate=inspect.ismethod)
+                methods = inspect.getmembers(c, predicate = inspect.ismethod)
                 handlers.update(methods)
             except Exception as e:
                 ...
@@ -127,7 +132,6 @@ class SettingsManager(StartCheckMixin, Singleton):
 
     def set_main_window(self, window): self._main_window  = window
     def set_builder(self, builder) -> any:  self._builder = builder
-
 
     def get_monitor_data(self) -> list:
         screen = self._main_window.get_screen()
@@ -152,28 +156,45 @@ class SettingsManager(StartCheckMixin, Singleton):
     def get_home_config_path(self) -> str:   return self._HOME_CONFIG_PATH
     def get_window_icon(self)      -> str:   return self._WINDOW_ICON
     def get_home_path(self)        -> str:   return self._USER_HOME
+    def get_starting_files(self)   -> list:  return self._starting_files
+    def get_guake_key(self)        -> tuple: return self._guake_key
+
+    def get_starting_args(self):
+        return self.args, self.unknownargs
+
+    def set_main_window_x(self, x: int = 0):                 self.settings.config.main_window_x  = x
+    def set_main_window_y(self, y: int = 0):                 self.settings.config.main_window_y  = y
+    def set_main_window_width(self, width: int = 800):       self.settings.config.main_window_width  = width
+    def set_main_window_height(self, height: int = 600):     self.settings.config.main_window_height = height
+    def set_main_window_min_width(self, width: int = 720):   self.settings.config.main_window_min_width  = width
+    def set_main_window_min_height(self, height: int = 480): self.settings.config.main_window_min_height = height
+    def set_starting_files(self, files: list):               self._starting_files = files
+    def set_start_load_time(self): self._start_load_time = time.perf_counter()
+    def set_end_load_time(self):   self._end_load_time   = time.perf_counter()
+
+    def set_starting_args(self, args, unknownargs):
+        self.args = args
+        self.unknownargs = unknownargs
+
+    def set_trace_debug(self, trace_debug: bool):
+        self._trace_debug = trace_debug
+
+    def set_debug(self, debug: bool):
+        self._debug = debug
+
+    def set_is_starting_with_file(self, is_passed_in_file: bool = False):
+        self._passed_in_file = is_passed_in_file
 
     def is_trace_debug(self)       -> str:   return self._trace_debug
     def is_debug(self)             -> str:   return self._debug
+    def is_starting_with_file(self) -> bool: return self._passed_in_file
 
-    def call_method(self, target_class = None, _method_name = None, data = None):
+    def log_load_time(self):       logger.info( f"Load Time: {self._end_load_time - self._start_load_time}" )
+
+    def call_method(self, target_class: any = None, _method_name: str = "", data: any = None):
         method_name = str(_method_name)
         method      = getattr(target_class, method_name, lambda data: f"No valid key passed...\nkey={method_name}\nargs={data}")
         return method(data) if data else method()
-
-    def set_main_window_x(self, x = 0):  self.settings.config.main_window_x  = x
-    def set_main_window_y(self, y = 0):  self.settings.config.main_window_y  = y
-    def set_main_window_width(self, width = 800):   self.settings.config.main_window_width  = width
-    def set_main_window_height(self, height = 600): self.settings.config.main_window_height = height
-    def set_main_window_min_width(self, width = 720):   self.settings.config.main_window_min_width  = width
-    def set_main_window_min_height(self, height = 480): self.settings.config.main_window_min_height = height
-
-    def set_trace_debug(self, trace_debug):
-        self._trace_debug = trace_debug
-
-    def set_debug(self, debug):
-        self._debug = debug
-
 
     def load_settings(self):
         if not path.exists(self._CONFIG_FILE):

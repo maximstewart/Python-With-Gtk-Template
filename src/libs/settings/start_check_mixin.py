@@ -41,7 +41,7 @@ class StartCheckMixin:
         try:
             os.kill(pid, 0)
         except OSError:
-            print(f"{app_name} PID file exists but PID is irrelevant; starting dirty...")
+            print(f"{APP_NAME} PID file exists but PID is irrelevant; starting dirty...")
             self._dirty_start = True
             return False
 
@@ -53,7 +53,7 @@ class StartCheckMixin:
         self._print_pid(pid)
 
     def _print_pid(self, pid):
-        print(f"{app_name} PID:  {pid}")
+        print(f"{APP_NAME} PID:  {pid}")
 
     def _clean_pid(self):
         os.unlink(self._PID_FILE)

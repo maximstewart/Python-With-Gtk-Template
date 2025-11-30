@@ -43,6 +43,6 @@
 
 
 /* Other message text colors */
-.errorTxt   { color: rgb(170, 18, 18); }
-.warningTxt { color: rgb(255, 168, 0); }
-.successTxt { color: rgb(136, 204, 39); }
+.error-txt   { color: rgb(170, 18, 18); }
+.warning-txt { color: rgb(255, 168, 0); }
+.success=txt { color: rgb(136, 204, 39); }

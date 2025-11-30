@@ -9,27 +9,20 @@ from gi.repository import Gdk
 from gi.repository import WebKit2
 
 # Application imports
-from libs.data_types import Event
-
+from libs.settings.other.webkit_ui_settings import WebkitUISettings
+from libs.dto.event import Event
 
 
 class WebkitUI(WebKit2.WebView):
     def __init__(self):
         super(WebkitUI, self).__init__()
 
-        # self.get_context().set_sandbox_enabled(False)
-
-        self._load_settings()
         self._setup_styling()
         self._subscribe_to_events()
         self._load_view()
         self._setup_content_manager()
 
         self.show_all()
-
-        if settings_manager.is_debug():
-            inspector = self.get_inspector()
-            inspector.show()
 
 
     def _setup_styling(self):
@@ -38,8 +31,8 @@ class WebkitUI(WebKit2.WebView):
         self.set_background_color( Gdk.RGBA(0, 0, 0, 0.0) )
 
     def _subscribe_to_events(self):
-        event_system.subscribe(f"ui_message", self.ui_message)
-    
+        event_system.subscribe(f"ui-message", self.ui_message)
+
     def _load_settings(self):
         self.set_settings( WebkitUISettings() )
 
@@ -54,7 +47,6 @@ class WebkitUI(WebKit2.WebView):
 
     def _setup_content_manager(self):
         content_manager = self.get_user_content_manager()
-
         content_manager.connect("script-message-received", self._process_js_message)
         content_manager.register_script_message_handler("backend")
 
@@ -64,45 +56,14 @@ class WebkitUI(WebKit2.WebView):
 
         try:
             event = Event( **json.loads(message) )
-            event_system.emit("handle_bridge_event", (event,))
+            event_system.emit("handle-bridge-event", (event,))
         except Exception as e:
             logger.info(e)
 
-    def ui_message(self, mtype, message):
+    def ui_message(self, message, mtype):
         command = f"displayMessage('{message}', '{mtype}', '3')"
         self.run_javascript(command, None, None)
 
-
-class WebkitUISettings(WebKit2.Settings):
-    def __init__(self):
-        super(WebkitUISettings, self).__init__()
-        
-        self._set_default_settings()
-
-
-    # Note: Highly insecure setup but most "app" like setup I could think of.
-    #       Audit heavily any scripts/links ran/clicked under this setup! 
-    def _set_default_settings(self):
-        # self.set_enable_xss_auditor(True)
-        # self.set_enable_hyperlink_auditing(True)
-        self.set_enable_xss_auditor(False)
-        self.set_enable_hyperlink_auditing(False)
-        self.set_enable_dns_prefetching(False)
-        self.set_allow_file_access_from_file_urls(True)
-        self.set_allow_universal_access_from_file_urls(True)
-        # self.set_enable_java(True)
-
-        self.set_enable_page_cache(False)
-        self.set_enable_offline_web_application_cache(False)
-        self.set_enable_html5_local_storage(False)
-        self.set_enable_html5_database(False)
-
-        self.set_print_backgrounds(False)
-        self.set_enable_tabs_to_links(False)
-        self.set_enable_fullscreen(True)
-        self.set_enable_developer_extras(True)
-        self.set_enable_webrtc(True)
-        self.set_enable_webaudio(True)
-        self.set_enable_accelerated_2d_canvas(True)
-
-        self.set_user_agent(f"Mozilla/5.0 {app_name}")
+    def run_javascript(self, script, cancellable, callback):
+        logger.debug(script)
+        super().run_javascript(script, cancellable, callback)

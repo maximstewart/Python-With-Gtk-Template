@@ -1,5 +1,5 @@
 """
-    Options module
+    Settings.Options Package
 """
 from .settings import Settings
 from .config import Config
