@@ -93,6 +93,9 @@ class VteWidget(Vte.Terminal):
         if not text.encode() == "\r".encode(): return
 
         text, attributes = self.get_text()
+
+        if not text: return
+
         lines            = text.strip().splitlines()
         command_ran      = None
 
