@@ -91,7 +91,9 @@ class SettingsManager(StartCheckMixin, Singleton):
 
         try:
             with open(self._KEY_BINDINGS_FILE) as file:
-                bindings = json.load(file)["keybindings"]
+                bindings        = json.load(file)["keybindings"]
+                self._guake_key = bindings["guake_key"]
+
                 keybindings.configure(bindings)
         except Exception as e:
             print( f"Settings Manager: {self._KEY_BINDINGS_FILE}\n\t\t{repr(e)}" )
@@ -155,6 +157,7 @@ class SettingsManager(StartCheckMixin, Singleton):
     def get_window_icon(self)      -> str:   return self._WINDOW_ICON
     def get_home_path(self)        -> str:   return self._USER_HOME
     def get_starting_files(self)   -> list:  return self._starting_files
+    def get_guake_key(self)        -> tuple: return self._guake_key
 
     def get_starting_args(self):
         return self.args, self.unknownargs

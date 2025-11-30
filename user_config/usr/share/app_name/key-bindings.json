@@ -1,6 +1,7 @@
 {
     "keybindings": {
         "help"                   : "F1",
+        "guake_key"              : "",
         "rename-files"           : ["F2", "<Control>e"],
         "open-terminal"          : "F4",
         "refresh-tab"            : ["F5", "<Control>r"],

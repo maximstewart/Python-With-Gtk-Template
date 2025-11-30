@@ -10,6 +10,11 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GLib
 
+try:
+    from gi.repository import GdkX11
+except ImportError:
+    logger.debug("Could not import X11 gir module...")
+
 # Application imports
 from libs.status_icon import StatusIcon
 from core.controllers.base_controller import BaseController
@@ -31,6 +36,9 @@ class Window(Gtk.ApplicationWindow):
         self._status_icon = None
         self._controller  = None
 
+        self.guake_key    = settings_manager.get_guake_key()
+        self.hidefunc     = None
+
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
@@ -38,6 +46,7 @@ class Window(Gtk.ApplicationWindow):
 
         self._set_window_data()
         self._set_size_constraints()
+        self._setup_window_toggle_event()
 
         self.show()
 
@@ -45,6 +54,9 @@ class Window(Gtk.ApplicationWindow):
     def _setup_styling(self):
         self.set_title(f"{APP_NAME}")
         self.set_icon_from_file( settings_manager.get_window_icon() )
+        self.set_decorated(True)
+        self.set_skip_pager_hint(False)
+        self.set_skip_taskbar_hint(False)
         self.set_gravity(5)  # 5 = CENTER
         self.set_position(1) # 1 = CENTER, 4 = CENTER_ALWAYS
 
@@ -73,6 +85,15 @@ class Window(Gtk.ApplicationWindow):
             raise ControllerStartException("BaseController exited and doesn't exist...")
 
         self.add( self._controller.get_base_container() )
+
+    def _display_manager(self):
+        """ Try to detect which display manager we are running under... """
+
+        import os
+        if os.environ.get('WAYLAND_DISPLAY'):
+            return 'WAYLAND'
+
+        return 'X11'
 
     def _set_size_constraints(self):
         _window_x   = settings.config.main_window_x
@@ -117,6 +138,48 @@ class Window(Gtk.ApplicationWindow):
 
     def _load_interactive_debug(self):
         self.set_interactive_debugging(True)
+
+    def _setup_window_toggle_event(self) -> None:
+        hidebound = None
+        if not self.guake_key or not self._display_manager() == 'X11':
+            return
+
+        try:
+            import gi
+            gi.require_version('Keybinder', '3.0')
+            from gi.repository import Keybinder
+
+            Keybinder.init()
+            Keybinder.set_use_cooked_accelerators(False)
+        except (ImportError, ValueError) as e:
+            logger.warning(e)
+            logger.warning('Unable to load Keybinder module. This means the hide_window shortcut will be unavailable')
+
+            return
+
+        # Attempt to grab a global hotkey for hiding the window.
+        # If we fail, we'll never hide the window, iconifying instead.
+        try:
+            hidebound = Keybinder.bind(self.guake_key, self._on_toggle_window, self)
+        except (KeyError, NameError) as e:
+            logger.warning(e)
+
+        if not hidebound:
+            logger.debug('Unable to bind hide_window key, another instance/window has it.')
+            self.hidefunc = self.iconify
+        else:
+            self.hidefunc = self.hide
+
+    def _on_toggle_window(self, data, window):
+        """Handle a request to hide/show the window"""
+        if not window.get_property('visible'):
+            window.show()
+            # Note: Needed to properly grab widget focus when set_skip_taskbar_hint set to True
+            window.present()
+            # NOTE:  Need here to enforce sticky after hide and reshow.
+            window.stick()
+        else:
+            self.hidefunc()
 
 
     def start(self):

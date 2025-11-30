@@ -8,6 +8,7 @@ from gi.repository import Gtk
 # Application imports
 from .header_container import HeaderContainer
 from .body_container import BodyContainer
+from .footer_container import FooterContainer
 
 
 
@@ -39,6 +40,7 @@ class BaseContainer(Gtk.Box):
     def _load_widgets(self):
         self.add(HeaderContainer())
         self.add(BodyContainer())
+        self.add(FooterContainer())
 
     def _update_transparency(self):
         self.ctx.add_class(f"mw_transparency_{settings.theming.transparency}")

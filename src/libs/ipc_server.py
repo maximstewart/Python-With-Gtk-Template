@@ -16,7 +16,7 @@ class IPCServer(Singleton):
     """ Create a listener so that other {APP_NAME} instances send requests back to existing instance. """
     def __init__(self, ipc_address: str = '127.0.0.1', conn_type: str = "socket"):
         self.is_ipc_alive     = False
-        self._ipc_port        = 4848
+        self._ipc_port        = 0 # Use 0 to let Listener chose port
         self._ipc_address     = ipc_address
         self._conn_type       = conn_type
         self._ipc_authkey     = b'' + bytes(f'{APP_NAME}-ipc', 'utf-8')

@@ -22,11 +22,14 @@ class HeaderContainer(Gtk.Box):
         self._subscribe_to_events()
         self._load_widgets()
 
-        self.show_all()
+        self.show()
 
 
     def _setup_styling(self):
         self.set_orientation(Gtk.Orientation.HORIZONTAL)
+
+        self.set_hexpand(True)
+
         self.ctx.add_class("header-container")
 
     def _setup_signals(self):
