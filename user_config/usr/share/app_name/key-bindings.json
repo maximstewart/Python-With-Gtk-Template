@@ -6,6 +6,7 @@
         "open-terminal"          : "F4",
         "refresh-tab"            : ["F5", "<Control>r"],
         "delete-files"           : "Delete",
+        "load-interactive-debug" : "<Control>d",
         "tggl-top-main-menubar"  : "Alt_L",
         "tggl-top-main-menubar"  : "<Control>0",
         "trash-files"            : "<Shift><Control>t",

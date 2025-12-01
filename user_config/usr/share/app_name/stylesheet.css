@@ -1,6 +1,24 @@
 /* ----  Make most desired things base transparent  ---- */
 popover,
 popover > box,
+notebook,
+header,
+stack,
+scrolledwindow,
+viewport {
+    background: rgba(0, 0, 0, 0.0);
+    color: rgba(255, 255, 255, 1);
+}
+
+tab {
+    color: rgba(255, 255, 255, 1);
+}
+
+tab:checked {
+    border-bottom-color: rgba(125, 125, 125, 1);
+}
+
+
 .main-window,
 .base-container,
 .body-container,
@@ -12,6 +30,7 @@ popover > box,
     background: rgba(0, 0, 0, 0.0);
     color: rgba(255, 255, 255, 1);
 }
+
 
 .base-container {
     margin: 10px;
