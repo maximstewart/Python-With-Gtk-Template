@@ -36,6 +36,5 @@ class FooterContainer(Gtk.Box):
     def _subscribe_to_events(self):
         ...
 
-
     def _load_widgets(self):
         ...

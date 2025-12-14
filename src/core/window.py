@@ -118,9 +118,8 @@ class Window(Gtk.ApplicationWindow):
 
         # bind css file
         cssProvider  = Gtk.CssProvider()
-        cssProvider.load_from_path( settings_manager.get_css_file() )
-        screen       = Gdk.Screen.get_default()
         styleContext = Gtk.StyleContext()
+        cssProvider.load_from_path( settings_manager.get_css_file() )
         styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     def _area_draw(self, widget: Gtk.ApplicationWindow, cr: cairo.Context) -> None:

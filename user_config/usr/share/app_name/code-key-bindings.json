@@ -1,0 +1,10 @@
+{
+    "keybindings": {
+        "show_completion" : { "released" : "<Control>space" },
+        "line_up"         : { "held"     : "<Control>Up"    },
+        "line_down"       : { "held"     : "<Control>Down"  },
+        "new_file"        : { "released" : "<Control>t"     },
+        "open_files"      : { "released" : "<Control>o"     },
+        "close_file"      : { "released" : "<Control>w"     }
+    }
+}
