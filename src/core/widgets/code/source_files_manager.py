@@ -24,6 +24,28 @@ class SourceFilesManager(list):
 
         super().append(file)
 
+    def get_file(self, buffer: SourceBuffer):
+        if not buffer: return
+
+        for i, file in enumerate(self):
+            if not buffer == file.buffer: continue
+            return file
+
+    def pop_file(self, buffer: SourceBuffer):
+        if not buffer: return
+
+        for i, file in enumerate(self):
+            if not buffer == file.buffer: continue
+
+            popped_file  = self.pop(i)
+            sibling_file = None
+            if len(self) == 0:
+                sibling_file = self.new()
+            else:
+                sibling_file = self[ i - 1 if i > 0 else i + 1]
+
+            return sibling_file, popped_file
+
     def remove_file(self, buffer: SourceBuffer):
         if not buffer: return
 

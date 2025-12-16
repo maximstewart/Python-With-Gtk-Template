@@ -93,15 +93,14 @@ class KeyMapper:
         self.states = copy.deepcopy(self._map)
 
     def _key_press_event(self, eve):
-        keyname = Gdk.keyval_name(eve.keyval)
-        print(keyname)
+        keyname = Gdk.keyval_name(eve.keyval).lower()
 
         self._set_key_state(eve)
         if keyname in self.states[self.state].held:
             return self.states[self.state].held[keyname]
 
     def _key_release_event(self, eve):
-        keyname = Gdk.keyval_name(eve.keyval)
+        keyname = Gdk.keyval_name(eve.keyval).lower()
 
         self._set_key_state(eve)
         if keyname in self.states[self.state].released:

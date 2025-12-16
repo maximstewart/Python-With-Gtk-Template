@@ -35,7 +35,7 @@ class OpenFilesButton(Gtk.Button):
         self.connect("button-release-event", self._open_files)
 
     def _subscribe_to_events(self):
-        event_system.subscribe("open_files", self._open_files)
+        event_system.subscribe("open-files", self._open_files)
 
     def _load_widgets(self):
         ...

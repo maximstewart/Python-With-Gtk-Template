@@ -23,12 +23,11 @@ class RightContainer(Gtk.Box):
 
 
     def _setup_styling(self):
+        self.ctx = self.get_style_context()
+        self.ctx.add_class("right-container")
+
         self.set_orientation(Gtk.Orientation.VERTICAL)
-
         self.set_vexpand(True)
-
-        ctx = self.get_style_context()
-        ctx.add_class("right-container")
 
     def _setup_signals(self):
         ...

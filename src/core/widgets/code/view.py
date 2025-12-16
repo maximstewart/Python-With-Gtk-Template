@@ -16,11 +16,14 @@ from .command_system import CommandSystem
 from .key_mapper import KeyMapper
 
 
+
 class SourceView(GtkSource.View):
     def __init__(self):
         super(SourceView, self).__init__()
 
-        self.key_mapper = KeyMapper()
+        self.sibling_right = None
+        self.sibling_left  = None
+        self.key_mapper    = KeyMapper()
 
         self._setup_styles()
         self._setup_signals()
@@ -84,14 +87,18 @@ class SourceView(GtkSource.View):
         self.style_scheme_manager = GtkSource.StyleSchemeManager()
         self.command              = CommandSystem()
         self.files                = SourceFilesManager()
-        self.completion           = CompletionManager(
-            self.get_completion()
+        self.completion           = CompletionManager()
+
+        self.completion.set_completer( self.get_completion() )
+
+        self.style_scheme_manager.append_search_path(
+            f"{settings_manager.get_home_config_path()}/code_styles"
+        )
+        self.syntax_theme = self.style_scheme_manager.get_scheme(
+            f"{settings.theming.syntax_theme}"
         )
 
-        self.style_scheme_manager.append_search_path(f"{settings_manager.get_home_config_path()}/code_styles")
-        self.syntax_theme = self.style_scheme_manager.get_scheme("penguins-in-space")
-
-        self.command.set_data(self, self.get_buffer())
+        self.command.set_data(self)
         self.exec_command("new_file")
 
     def _key_press_event(self, view, eve):
@@ -107,9 +114,6 @@ class SourceView(GtkSource.View):
 
         self.exec_command(command)
         return True
-
-    def _show_completion(self, view):
-        self.completion.request_completion()
 
     def exec_command(self, command: str):
         self.command.exec(command)

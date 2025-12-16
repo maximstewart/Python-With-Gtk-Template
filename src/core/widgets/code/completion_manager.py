@@ -5,30 +5,33 @@ import gi
 from gi.repository import GLib
 
 # Application imports
-from .custom_completion_providers.lsp_completion_provider import LSPCompletionProvider
+from .completion_providers.example_completion_provider import ExampleCompletionProvider
+from .completion_providers.lsp_completion_provider import LSPCompletionProvider
 
 
 
 class CompletionManager():
-    def __init__(self, completer):
+    def __init__(self):
         super(CompletionManager, self).__init__()
 
-        self._completor    = completer
         self._lsp_provider = LSPCompletionProvider()
         self._timeout_id   = None
 
+
+    def set_completer(self, completer):
+        self._completor = completer
 
     def request_completion(self):
         if self._timeout_id:
             GLib.source_remove(self._timeout_id)
 
         self._timeout_id = GLib.timeout_add(
-            1000,
+            800,
             self._process_request_completion
         )
 
     def _process_request_completion(self):
-        print('hello')
+        self._start_completion()
 
         self._timeout_id = None
         return False
@@ -51,11 +54,12 @@ class CompletionManager():
         """
             Note: Use IF NO providers have been added to completion...
         """
-        self._completion.start(
+        self._completor.start(
             [
+                ExampleCompletionProvider(),
                 self._lsp_provider
             ],
-            self._completion.create_context()
+            self._completor.create_context()
         )
 
                                                                                                                                                   

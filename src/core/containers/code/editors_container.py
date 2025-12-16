@@ -6,12 +6,15 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
+from ...widgets.separator_widget import Separator
+from ...widgets.code.miniview_widget import MiniViewWidget
+from .paned_editors_container import PanedEditorsContainer
 
 
 
-class FooterContainer(Gtk.Box):
+class EditorsContainer(Gtk.Box):
     def __init__(self):
-        super(FooterContainer, self).__init__()
+        super(EditorsContainer, self).__init__()
 
         self._setup_styling()
         self._setup_signals()
@@ -22,11 +25,7 @@ class FooterContainer(Gtk.Box):
 
 
     def _setup_styling(self):
-        self.ctx = self.get_style_context()
-        self.ctx.add_class("footer-container")
-
-        self.set_orientation(Gtk.Orientation.HORIZONTAL)
-        self.set_hexpand(True)
+        ...
 
     def _setup_signals(self):
         ...
@@ -35,4 +34,7 @@ class FooterContainer(Gtk.Box):
         ...
 
     def _load_widgets(self):
-        ...
+        self.add( Separator("separator_left") )
+        self.add( PanedEditorsContainer() )
+        self.add( Separator("separator_right") )
+        self.add( MiniViewWidget() )

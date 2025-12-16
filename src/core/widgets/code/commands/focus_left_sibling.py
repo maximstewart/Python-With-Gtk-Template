@@ -14,5 +14,6 @@ from gi.repository import GtkSource
 def execute(
     editor: GtkSource.View  = None
 ):
-    logger.debug("Line Up Command")
-    editor.emit("move-lines", True)
+    logger.debug("Focus Left Sibling Command")
+    if not editor.sibling_left: return
+    editor.sibling_left.grab_focus()

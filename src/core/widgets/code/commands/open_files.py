@@ -12,17 +12,16 @@ from gi.repository import GtkSource
 
 
 def execute(
-    editor: GtkSource.View  = None,
-    buffer: GtkSource.Buffer= None
+    editor: GtkSource.View  = None
 ):
     logger.debug("Open File(s) Command")
-    gfiles = event_system.emit_and_await("open_files")
+    gfiles = event_system.emit_and_await("open-files")
     if not gfiles: return
 
     size   = len(gfiles)
     for i, gfile in enumerate(gfiles):
         file = editor.files.new()
-        file.set_path(gfile)
+        file.load_path(gfile)
 
         language   = editor.language_manager \
                            .guess_language(file.fname, None)

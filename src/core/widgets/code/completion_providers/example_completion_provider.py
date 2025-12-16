@@ -19,20 +19,30 @@ class ExampleCompletionProvider(GObject.GObject, GtkSource.CompletionProvider):
         This is a custom Completion Example Provider.
         # NOTE: used information from here --> https://warroom.rsmus.com/do-that-auto-complete/
     """
-    __gtype_name__ = 'CustomProvider'
+    __gtype_name__ = 'ExampleCompletionProvider'
 
     def __init__(self):
         GObject.Object.__init__(self)
 
     def do_get_name(self):
         """ Returns: a new string containing the name of the provider. """
-        return _('ExampleProvider')
+        return 'Example Completion Provider'
 
     def do_match(self, context):
         """ Get whether the provider match the context of completion detailed in context. """
         # NOTE: True for debugging but context needs to normally get checked for actual usage needs.
         # TODO: Fix me
         return True
+
+    def do_get_priority(self):
+        """ Determin position in result list along other providor results. """
+        return 1
+
+    # def do_get_activation(self):
+    #     """ The context for when a provider will show results """
+    #     return GtkSource.CompletionActivation.NONE
+    #     return GtkSource.CompletionActivation.USER_REQUESTED
+    #     return GtkSource.CompletionActivation.INTERACTIVE
 
     def do_populate(self, context):
         """
@@ -46,7 +56,7 @@ class ExampleCompletionProvider(GObject.GObject, GtkSource.CompletionProvider):
         """
 
         proposals = [
-            # GtkSource.CompletionItem(label='Hello World!', text = 'Hello World!', icon = None, info = None) # NOTE: Always proposed...
+            GtkSource.CompletionItem(label='Hello World!', text = 'Hello World!', icon = None, info = None) # NOTE: Always proposed...
         ]
 
         # Gtk Versions differ on get_iter responses...

@@ -30,16 +30,20 @@ class SourceFile(GtkSource.File):
         self._set_signals()
 
 
-    def set_path(self, gfile: Gio.File.new_for_path):
+    def load_path(self, gfile: Gio.File):
         if not gfile: return
 
+        self.set_path(gfile)
+        data = gfile.load_bytes()[0].get_data().decode("UTF-8")
+
+        self.buffer.insert_at_cursor(data)
+
+    def set_path(self, gfile: Gio.File):
+        if not gfile: return
         self.set_location(gfile)
 
         self.fpath = gfile.get_parent().get_path(),
         self.fname = gfile.get_basename()
-        data       = gfile.load_bytes()[0].get_data().decode("UTF-8")
-
-        self.buffer.insert_at_cursor(data)
 
     def _set_signals(self):
         self.buffer.set_signals(
@@ -70,8 +74,33 @@ class SourceFile(GtkSource.File):
         # logger.info("SourceFile._mark_set")
         ...
 
-    def _modified_changed(self,buffer: SourceBuffer):
+    def _modified_changed(self, buffer: SourceBuffer):
         logger.info("SourceFile._modified_changed")
+
+    def _write_file(self, gfile: Gio.File):
+        if not gfile: return
+
+        with open(gfile.get_path(), 'w') as f:
+            start_itr = self.buffer.get_start_iter()
+            end_itr   = self.buffer.get_end_iter()
+            text      = self.buffer.get_text(start_itr, end_itr, True)
+
+            f.write(text)
+
+        return gfile
+
+    def save(self):
+        self._write_file( self.get_location() )
+
+    def save_as(self):
+        print("poop")
+        file = event_system.emit_and_await("save-file-dialog")
+        if not file: return
+
+        self._write_file(file)
+        self.set_path(file)
+
+        return file
 
     def close(self):
         del self.buffer

@@ -28,6 +28,9 @@ class LSPCompletionProvider(GObject.Object, GtkSource.CompletionProvider):
         self.lsp_data = None
 
 
+    def pre_populate(self, context):
+        ...
+
     def do_get_name(self):
         return "LSP Code Completion"
 
@@ -35,19 +38,36 @@ class LSPCompletionProvider(GObject.Object, GtkSource.CompletionProvider):
         return context.get_iter()[1] if isinstance(context.get_iter(), tuple) else context.get_iter()
 
     def do_match(self, context):
+        iter = self.get_iter_correctly(context)
+        iter.backward_char()
+
+        buffer = iter.get_buffer()
+        if buffer.get_context_classes_at_iter(iter) != ['no-spell-check']:
+            return False
+
+        ch = iter.get_char()
+        # NOTE: Look to re-add or apply supprting logic to use spaces
+         # As is it slows down the editor in certain contexts...
+        # if not (ch in ('_', '.', ' ') or ch.isalnum()):
+        if not (ch in ('_', '.') or ch.isalnum()):
+            return False
+
         return True
 
     def do_get_priority(self):
-        return 1
-
-    def do_get_activation(self):
-        return GtkSource.CompletionActivation.USER_REQUESTED
-
+        return 5
 
     def do_populate(self, context, items = []):
-        self.lsp_data 
+        # self.lsp_data
+        proposals = []
 
+        comp_item = GtkSource.CompletionItem.new()
+        comp_item.set_label("LSP Class")
+        comp_item.set_text("LSP Code")
+        # comp_item.set_icon(self.get_icon_for_type(completion.type))
+        comp_item.set_info("A test LSP completion item...")
 
+        context.add_proposals(self, [comp_item], True)
 
 
 
