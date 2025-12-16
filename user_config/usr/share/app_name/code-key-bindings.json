@@ -1,10 +1,40 @@
 {
     "keybindings": {
-        "show_completion" : { "released" : "<Control>space" },
-        "line_up"         : { "held"     : "<Control>Up"    },
-        "line_down"       : { "held"     : "<Control>Down"  },
-        "new_file"        : { "released" : "<Control>t"     },
-        "open_files"      : { "released" : "<Control>o"     },
-        "close_file"      : { "released" : "<Control>w"     }
+        "show_completion": {
+            "released": "<Control>space"
+        },
+        "line_up": {
+            "held": "<Control>Up"
+        },
+        "line_down": {
+            "held": "<Control>Down"
+        },
+        "new_file": {
+            "released": "<Control>t"
+        },
+        "open_files": {
+            "released": "<Control>o"
+        },
+        "close_file": {
+            "released": "<Control>w"
+        },
+        "save_file": {
+            "released": "<Control>s"
+        },
+        "save_file_as": {
+            "released": "<Control><Shift>s"
+        },
+        "focus_left_sibling": {
+            "released": "<Control>Page_Up"
+        },
+        "focus_right_sibling": {
+            "released": "<Control>Page_Down"
+        },
+        "move_to_left_sibling": {
+            "released": "<Control><Shift>Up"
+        },
+        "move_to_right_sibling": {
+            "released": "<Control><Shift>Down"
+        }
     }
 }
