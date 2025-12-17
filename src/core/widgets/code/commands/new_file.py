@@ -23,3 +23,4 @@ def execute(
     file.buffer.set_style_scheme(editor.syntax_theme)
 
     editor.set_buffer(file.buffer)
+    editor.exec_command("update_info_bar")

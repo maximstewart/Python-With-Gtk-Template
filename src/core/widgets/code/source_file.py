@@ -42,7 +42,7 @@ class SourceFile(GtkSource.File):
         if not gfile: return
         self.set_location(gfile)
 
-        self.fpath = gfile.get_parent().get_path(),
+        self.fpath = gfile.get_path()
         self.fname = gfile.get_basename()
 
     def _set_signals(self):
@@ -93,7 +93,6 @@ class SourceFile(GtkSource.File):
         self._write_file( self.get_location() )
 
     def save_as(self):
-        print("poop")
         file = event_system.emit_and_await("save-file-dialog")
         if not file: return
 

@@ -39,10 +39,14 @@ class SourceFilesManager(list):
 
             popped_file  = self.pop(i)
             sibling_file = None
-            if len(self) == 0:
+            size         = len(self)
+
+            if size == 0:
                 sibling_file = self.new()
             else:
-                sibling_file = self[ i - 1 if i > 0 else i + 1]
+                new_i = 0 if size == 1 else i - 1 if i > 1 else i + 1
+
+                sibling_file = self[new_i]
 
             return sibling_file, popped_file
 

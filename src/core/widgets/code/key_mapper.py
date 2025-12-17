@@ -85,7 +85,8 @@ class KeyMapper:
 
                 keyname = keyname.replace("<Control>", "") \
                                  .replace("<Shift>",   "") \
-                                 .replace("<Alt>",     "")
+                                 .replace("<Alt>",     "") \
+                                 .lower()
 
                 getattr(self.states[state], press_state)[keyname] = command
 

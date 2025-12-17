@@ -57,11 +57,10 @@ builtins.settings_manager  = SettingsManager()
 
 settings_manager.load_settings()
 
-builtins.settings          = settings_manager.settings
 builtins.logger            = Logger(
                                 settings_manager.get_home_config_path(), \
-                                _ch_log_lvl = settings.debugging.ch_log_lvl, \
-                                _fh_log_lvl = settings.debugging.fh_log_lvl
+                                _ch_log_lvl = settings_manager.settings.debugging.ch_log_lvl, \
+                                _fh_log_lvl = settings_manager.settings.debugging.fh_log_lvl
                             ).get_logger()
 
 builtins.threaded          = threaded_wrapper

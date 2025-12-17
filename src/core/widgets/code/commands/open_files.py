@@ -21,15 +21,8 @@ def execute(
     size   = len(gfiles)
     for i, gfile in enumerate(gfiles):
         file = editor.files.new()
-        file.load_path(gfile)
-
-        language   = editor.language_manager \
-                           .guess_language(file.fname, None)
-        file.ftype = language
-        file.buffer.set_language(language)
-        file.buffer.set_style_scheme(editor.syntax_theme)
+        editor.command.exec_with_args("load_file", (editor, gfile, file))
 
         if i == (size - 1):
             editor.set_buffer(file.buffer)
-    
-
+            editor.command.exec("update_info_bar")

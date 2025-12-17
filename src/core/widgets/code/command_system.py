@@ -3,7 +3,7 @@
 # Lib imports
 
 # Application imports
-from .commands import *
+from . import commands
 
 
 
@@ -18,12 +18,17 @@ class CommandSystem:
         self.data = (args, kwargs)
 
     def exec(self, command: str):
-        if not command in globals(): return
+        if not hasattr(commands, command): return
+        method = getattr(commands, command)
 
-        # method = getattr(self, command, None)
-        method       = globals()[command]
         args, kwargs = self.data
         if kwargs:
             method.execute(*args, kwargs)
         else:
             method.execute(*args)
+
+    def exec_with_args(self, command: str, args: list):
+        if not hasattr(commands, command): return
+
+        method = getattr(commands, command)
+        method.execute(*args)

@@ -2,11 +2,15 @@
     Commands Package
 """
 
-import os
+import pkgutil
+import importlib
 
+__all__ = []
 
-__all__ = [
-    command.replace(".py", "") for command in os.listdir(
-        os.path.dirname(__file__)
-    ) if "__init__" not in command
-]
+for loader, module_name, is_pkg in pkgutil.walk_packages(__path__):
+    module = importlib.import_module(f"{__name__}.{module_name}")
+    globals()[module_name] = module  # Add module to package namespace
+    __all__.append(module_name)
+
+del pkgutil
+del importlib

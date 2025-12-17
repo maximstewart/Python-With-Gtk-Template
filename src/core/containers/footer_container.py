@@ -6,6 +6,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
+from .code.editors_container import EditorsContainer
 
 
 
@@ -35,4 +36,4 @@ class FooterContainer(Gtk.Box):
         ...
 
     def _load_widgets(self):
-        ...
+        self.add( EditorsContainer() )

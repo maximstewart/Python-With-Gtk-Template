@@ -43,7 +43,7 @@ class BaseContainer(Gtk.Box):
         self.add( FooterContainer() )
 
     def _update_transparency(self):
-        self.ctx.add_class(f"mw_transparency_{settings.theming.transparency}")
+        self.ctx.add_class(f"mw_transparency_{settings_manager.settings.theming.transparency}")
 
     def _remove_transparency(self):
-        self.ctx.remove_class(f"mw_transparency_{settings.theming.transparency}")
+        self.ctx.remove_class(f"mw_transparency_{settings_manager.settings.theming.transparency}")

@@ -53,6 +53,7 @@ class CompletionManager():
     def _start_completion(self):
         """
             Note: Use IF NO providers have been added to completion...
+        print("here")
         """
         self._completor.start(
             [

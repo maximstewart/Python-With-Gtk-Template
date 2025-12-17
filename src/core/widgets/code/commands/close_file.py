@@ -18,5 +18,6 @@ def execute(
     file   = editor.files.new()
     buffer = editor.get_buffer()
     editor.set_buffer(file.buffer)
-    
+
     editor.files.remove_file(buffer)
+    editor.command.exec("update_info_bar")

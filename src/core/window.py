@@ -62,7 +62,7 @@ class Window(Gtk.ApplicationWindow):
 
         ctx = self.get_style_context()
         ctx.add_class("main-window")
-        ctx.add_class(f"mw_transparency_{settings.theming.transparency}")
+        ctx.add_class(f"mw_transparency_{settings_manager.settings.theming.transparency}")
 
     def _setup_signals(self):
         self.connect("focus-in-event", self._on_focus_in_event)
@@ -96,12 +96,12 @@ class Window(Gtk.ApplicationWindow):
         return 'X11'
 
     def _set_size_constraints(self):
-        _window_x   = settings.config.main_window_x
-        _window_y   = settings.config.main_window_y
-        _min_width  = settings.config.main_window_min_width
-        _min_height = settings.config.main_window_min_height
-        _width      = settings.config.main_window_width
-        _height     = settings.config.main_window_height
+        _window_x   = settings_manager.settings.config.main_window_x
+        _window_y   = settings_manager.settings.config.main_window_y
+        _min_width  = settings_manager.settings.config.main_window_min_width
+        _min_height = settings_manager.settings.config.main_window_min_height
+        _width      = settings_manager.settings.config.main_window_width
+        _height     = settings_manager.settings.config.main_window_height
 
         self.move(_window_x, _window_y - 28)
         self.set_size_request(_min_width, _min_height)
@@ -111,7 +111,7 @@ class Window(Gtk.ApplicationWindow):
         screen = self.get_screen()
         visual = screen.get_rgba_visual()
 
-        if visual and screen.is_composited() and settings.config.make_transparent == 0:
+        if visual and screen.is_composited() and settings_manager.settings.config.make_transparent == 0:
             self.set_visual(visual)
             self.set_app_paintable(True)
             # self.connect("draw", self._area_draw)

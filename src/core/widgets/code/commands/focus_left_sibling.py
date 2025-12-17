@@ -17,3 +17,4 @@ def execute(
     logger.debug("Focus Left Sibling Command")
     if not editor.sibling_left: return
     editor.sibling_left.grab_focus()
+    editor.sibling_left.command.exec("set_miniview")

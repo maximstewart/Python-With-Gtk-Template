@@ -10,6 +10,8 @@ from gi.repository import GLib
 from gi.repository import GtkSource
 
 # Application imports
+from .mixins.source_view_dnd_mixin import SourceViewDnDMixin
+
 from .source_files_manager import SourceFilesManager
 from .completion_manager import CompletionManager
 from .command_system import CommandSystem
@@ -17,7 +19,7 @@ from .key_mapper import KeyMapper
 
 
 
-class SourceView(GtkSource.View):
+class SourceView(SourceViewDnDMixin, GtkSource.View):
     def __init__(self):
         super(SourceView, self).__init__()
 
@@ -36,6 +38,7 @@ class SourceView(GtkSource.View):
         ctx.add_class("source-view")
 
         self.set_vexpand(True)
+        self.set_bottom_margin(800)
 
         self.set_show_line_marks(True)
         self.set_show_line_numbers(True)
@@ -51,24 +54,20 @@ class SourceView(GtkSource.View):
         self.set_highlight_current_line(True)
 
     def _setup_signals(self):
-        # self.connect("show-completion", self._show_completion)
         self.map_id =  self.connect("map", self._init_map)
 
-        # self.connect("focus", self._on_widget_focus)
-        # self.connect("focus-in-event", self._focus_in_event)
-
-        # self.connect("drag-data-received", self._on_drag_data_received)
+        self.connect("drag-data-received", self._on_drag_data_received)
+        self.connect("focus-in-event", self._focus_in_event)
         self.connect("key-press-event", self._key_press_event)
         self.connect("key-release-event", self._key_release_event)
-        # self.connect("button-press-event", self._button_press_event)
-        # self.connect("button-release-event", self._button_release_event)
-        # self.connect("scroll-event", self._scroll_event)
+        self.connect("button-press-event", self._button_press_event)
+        self.connect("button-release-event", self._button_release_event)
 
     def _subscribe_to_events(self):
         ...
 
     def _load_widgets(self):
-        ...
+        self._set_up_dnd()
 
     def _init_map(self, view):
         def _first_show_init():
@@ -89,19 +88,38 @@ class SourceView(GtkSource.View):
         self.files                = SourceFilesManager()
         self.completion           = CompletionManager()
 
+        self.command.set_data(self)
         self.completion.set_completer( self.get_completion() )
 
         self.style_scheme_manager.append_search_path(
             f"{settings_manager.get_home_config_path()}/code_styles"
         )
         self.syntax_theme = self.style_scheme_manager.get_scheme(
-            f"{settings.theming.syntax_theme}"
+            f"{settings_manager.settings.theming.syntax_theme}"
         )
 
-        self.command.set_data(self)
         self.exec_command("new_file")
+        if self.sibling_right:
+            self.grab_focus()
+
+
+    def _focus_in_event(self, view, eve):
+        self.command.exec("set_miniview")
+        self.command.exec("set_focus_border")
+        self.command.exec("update_info_bar")
+
+    def _move_cursor(self, view, step, count, extend_selection):
+        self.command.exec("update_info_bar")
+
+    def _button_press_event(self, view, eve):
+        self.command.exec("update_info_bar")
+
+    def _button_release_event(self, view, eve):
+        self.command.exec("update_info_bar")
 
     def _key_press_event(self, view, eve):
+        self.command.exec("update_info_bar")
+
         command = self.key_mapper._key_press_event(eve)
         if not command: return False
 
@@ -109,6 +127,8 @@ class SourceView(GtkSource.View):
         return True
 
     def _key_release_event(self, view, eve):
+        self.command.exec("update_info_bar")
+
         command = self.key_mapper._key_release_event(eve)
         if not command: return False
 
