@@ -15,13 +15,11 @@ class SourceFilesManager(list):
 
     def new(self):
         file = SourceFile()
-        super().append(file)
-
+        self.append(file)
         return file
 
     def append(self, file: SourceFile):
         if not file: return
-
         super().append(file)
 
     def get_file(self, buffer: SourceBuffer):
@@ -42,13 +40,12 @@ class SourceFilesManager(list):
             size         = len(self)
 
             if size == 0:
-                sibling_file = self.new()
-            else:
-                new_i = 0 if size == 1 else i - 1 if i > 1 else i + 1
+                return popped_file, sibling_file
 
-                sibling_file = self[new_i]
+            j = 0 if size == 1 else i - 1 if i > 1 else i + 1
+            sibling_file = self[j]
 
-            return sibling_file, popped_file
+            return popped_file, sibling_file
 
     def remove_file(self, buffer: SourceBuffer):
         if not buffer: return
@@ -56,7 +53,7 @@ class SourceFilesManager(list):
         for file in self:
             if not buffer == file.buffer: continue
             self.remove(file)
-
             file.close()
+
             del file
             break

@@ -24,5 +24,10 @@ def execute(
         editor.command.exec_with_args("load_file", (editor, gfile, file))
 
         if i == (size - 1):
+            buffer = editor.get_buffer()
+            _file  = editor.files.get_file(buffer)
+            _file.unsubscribe(editor)
+
             editor.set_buffer(file.buffer)
+            file.subscribe(editor)
             editor.command.exec("update_info_bar")

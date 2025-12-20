@@ -10,6 +10,7 @@ from gi.repository import GLib
 from gi.repository import GtkSource
 
 # Application imports
+from .mixins.source_view_events_mixin import SourceViewEventsMixin
 from .mixins.source_view_dnd_mixin import SourceViewDnDMixin
 
 from .source_files_manager import SourceFilesManager
@@ -19,7 +20,7 @@ from .key_mapper import KeyMapper
 
 
 
-class SourceView(SourceViewDnDMixin, GtkSource.View):
+class SourceView(SourceViewEventsMixin, SourceViewDnDMixin, GtkSource.View):
     def __init__(self):
         super(SourceView, self).__init__()
 
@@ -57,7 +58,7 @@ class SourceView(SourceViewDnDMixin, GtkSource.View):
         self.map_id =  self.connect("map", self._init_map)
 
         self.connect("drag-data-received", self._on_drag_data_received)
-        self.connect("focus-in-event", self._focus_in_event)
+        self.connect("move-cursor", self._move_cursor)
         self.connect("key-press-event", self._key_press_event)
         self.connect("key-release-event", self._key_release_event)
         self.connect("button-press-event", self._button_press_event)
@@ -70,18 +71,17 @@ class SourceView(SourceViewDnDMixin, GtkSource.View):
         self._set_up_dnd()
 
     def _init_map(self, view):
-        def _first_show_init():
+        def _init_first_show():
             self.disconnect(self.map_id)
             del self.map_id
 
-            self._handle_first_show()
+            self._init_show()
 
             return False
 
-        # GLib.timeout_add(1000, _first_show_init)
-        GLib.idle_add(_first_show_init)
+        GLib.idle_add(_init_first_show)
 
-    def _handle_first_show(self):
+    def _init_show(self):
         self.language_manager     = GtkSource.LanguageManager()
         self.style_scheme_manager = GtkSource.StyleSchemeManager()
         self.command              = CommandSystem()
@@ -98,42 +98,12 @@ class SourceView(SourceViewDnDMixin, GtkSource.View):
             f"{settings_manager.settings.theming.syntax_theme}"
         )
 
-        self.exec_command("new_file")
-        if self.sibling_right:
-            self.grab_focus()
+        def _inner_init():
+            self.connect("focus-in-event", self._focus_in_event)
+            self.command.exec("new_file")
 
+            if self.sibling_right:
+                self.grab_focus()
+                self._focus_in_event(None, None)
 
-    def _focus_in_event(self, view, eve):
-        self.command.exec("set_miniview")
-        self.command.exec("set_focus_border")
-        self.command.exec("update_info_bar")
-
-    def _move_cursor(self, view, step, count, extend_selection):
-        self.command.exec("update_info_bar")
-
-    def _button_press_event(self, view, eve):
-        self.command.exec("update_info_bar")
-
-    def _button_release_event(self, view, eve):
-        self.command.exec("update_info_bar")
-
-    def _key_press_event(self, view, eve):
-        self.command.exec("update_info_bar")
-
-        command = self.key_mapper._key_press_event(eve)
-        if not command: return False
-
-        self.exec_command(command)
-        return True
-
-    def _key_release_event(self, view, eve):
-        self.command.exec("update_info_bar")
-
-        command = self.key_mapper._key_release_event(eve)
-        if not command: return False
-
-        self.exec_command(command)
-        return True
-
-    def exec_command(self, command: str):
-        self.command.exec(command)
+        GLib.idle_add(_inner_init)

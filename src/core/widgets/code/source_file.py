@@ -20,6 +20,8 @@ class SourceFile(GtkSource.File):
     def __init__(self):
         super(SourceFile, self).__init__()
 
+        self.observers            = []
+
         self.encoding: str        = "UTF-8"
         self.fname: str           = "buffer"
         self.fpath: str           = "buffer"
@@ -28,6 +30,46 @@ class SourceFile(GtkSource.File):
         self.buffer: SourceBuffer = SourceBuffer()
 
         self._set_signals()
+
+
+    def _set_signals(self):
+        self.buffer.set_signals(
+            self._changed,
+            self._mark_set,
+            self._insert_text,
+            self._modified_changed
+        )
+
+
+    def _insert_text(self, buffer: SourceBuffer, location: Gtk.TextIter,
+        text: str, length: int
+    ):
+        self.notify((self, buffer, "insert_text"))
+
+    def _changed(self, buffer: SourceBuffer):
+        self.notify((self, buffer, "changed"))
+
+    def _mark_set(self, buffer: SourceBuffer, location: Gtk.TextIter,
+        mark: Gtk.TextMark
+    ):
+        # self.notify((self, buffer, "mark_set"))
+        ...
+
+    def _modified_changed(self, buffer: SourceBuffer):
+        self.notify((self, buffer, "modified_changed"))
+
+
+    def _write_file(self, gfile: Gio.File):
+        if not gfile: return
+
+        with open(gfile.get_path(), 'w') as f:
+            start_itr = self.buffer.get_start_iter()
+            end_itr   = self.buffer.get_end_iter()
+            text      = self.buffer.get_text(start_itr, end_itr, True)
+
+            f.write(text)
+
+        return gfile
 
 
     def load_path(self, gfile: Gio.File):
@@ -45,49 +87,16 @@ class SourceFile(GtkSource.File):
         self.fpath = gfile.get_path()
         self.fname = gfile.get_basename()
 
-    def _set_signals(self):
-        self.buffer.set_signals(
-            self._changed,
-            self._mark_set,
-            self._insert_text,
-            self._modified_changed
-        )
 
-    def _insert_text(
-        self,
-        buffer: SourceBuffer,
-        location: Gtk.TextIter,
-        text: str,
-        length: int
-    ):
-        logger.info("SourceFile._insert_text")
+    def subscribe(self, editor):
+        self.observers.append(editor)
 
-    def _changed(self, buffer: SourceBuffer):
-        logger.info("SourceFile._changed")
+    def unsubscribe(self, editor):
+        self.observers.remove(editor)
 
-    def _mark_set(
-        self,
-        buffer: SourceBuffer,
-        location: Gtk.TextIter,
-        mark: Gtk.TextMark
-    ):
-        # logger.info("SourceFile._mark_set")
-        ...
-
-    def _modified_changed(self, buffer: SourceBuffer):
-        logger.info("SourceFile._modified_changed")
-
-    def _write_file(self, gfile: Gio.File):
-        if not gfile: return
-
-        with open(gfile.get_path(), 'w') as f:
-            start_itr = self.buffer.get_start_iter()
-            end_itr   = self.buffer.get_end_iter()
-            text      = self.buffer.get_text(start_itr, end_itr, True)
-
-            f.write(text)
-
-        return gfile
+    def notify(self, data):
+        for editor in self.observers:
+            editor.notify(*data)
 
     def save(self):
         self._write_file( self.get_location() )
@@ -102,4 +111,7 @@ class SourceFile(GtkSource.File):
         return file
 
     def close(self):
+        self.observers.clear()
+
+        del observers
         del self.buffer

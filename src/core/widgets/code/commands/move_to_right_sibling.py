@@ -18,9 +18,17 @@ def execute(
     if not editor.sibling_right: return
 
     buffer = editor.get_buffer()
-    sibling_file, popped_file = editor.files.pop_file(buffer)
+    popped_file, sibling_file = editor.files.pop_file(buffer)
 
-    editor.set_buffer(sibling_file.buffer)
+    if sibling_file:
+        sibling_file.subscribe(editor)
+        editor.set_buffer(sibling_file.buffer)
+    else:
+        sibling_file = editor.command.exec("new_file")
+
+    popped_file.unsubscribe(editor)
+    popped_file.subscribe(editor.sibling_right)
+
     editor.sibling_right.set_buffer(buffer)
     editor.sibling_right.files.append(popped_file)
     editor.sibling_right.grab_focus()

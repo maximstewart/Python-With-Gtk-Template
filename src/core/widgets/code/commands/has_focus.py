@@ -14,10 +14,6 @@ from gi.repository import GtkSource
 def execute(
     editor: GtkSource.View  = None
 ):
-    logger.debug("Close File Command")
-    buffer = editor.get_buffer()
-
-    editor.command.exec("new_file")
-
-    editor.files.remove_file(buffer)
-    editor.command.exec("update_info_bar")
+    logger.debug("Has Focus Command")
+    ctx = editor.get_parent().get_style_context()
+    return ctx.has_class("source-view-focused")

@@ -17,18 +17,18 @@ class CommandSystem:
     def set_data(self, *args, **kwargs):
         self.data = (args, kwargs)
 
-    def exec(self, command: str):
+    def exec(self, command: str) -> any:
         if not hasattr(commands, command): return
         method = getattr(commands, command)
 
         args, kwargs = self.data
         if kwargs:
-            method.execute(*args, kwargs)
+            return method.execute(*args, kwargs)
         else:
-            method.execute(*args)
+            return method.execute(*args)
 
-    def exec_with_args(self, command: str, args: list):
+    def exec_with_args(self, command: str, args: list) -> any:
         if not hasattr(commands, command): return
 
         method = getattr(commands, command)
-        method.execute(*args)
+        return method.execute(*args)

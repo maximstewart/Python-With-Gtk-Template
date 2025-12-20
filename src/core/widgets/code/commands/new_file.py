@@ -23,4 +23,10 @@ def execute(
     file.buffer.set_style_scheme(editor.syntax_theme)
 
     editor.set_buffer(file.buffer)
-    editor.exec_command("update_info_bar")
+    file.subscribe(editor)
+
+    has_focus = editor.command.exec("has_focus")
+    if not has_focus: return file
+
+    editor.command.exec("update_info_bar")
+    return file
