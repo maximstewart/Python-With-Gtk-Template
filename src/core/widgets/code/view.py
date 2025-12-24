@@ -71,15 +71,10 @@ class SourceView(SourceViewEventsMixin, SourceViewDnDMixin, GtkSource.View):
         self._set_up_dnd()
 
     def _init_map(self, view):
-        def _init_first_show():
-            self.disconnect(self.map_id)
-            del self.map_id
+        self.disconnect(self.map_id)
+        del self.map_id
 
-            self._init_show()
-
-            return False
-
-        GLib.idle_add(_init_first_show)
+        GLib.idle_add(self._init_show)
 
     def _init_show(self):
         self.language_manager     = GtkSource.LanguageManager()
@@ -98,12 +93,13 @@ class SourceView(SourceViewEventsMixin, SourceViewDnDMixin, GtkSource.View):
             f"{settings_manager.settings.theming.syntax_theme}"
         )
 
-        def _inner_init():
-            self.connect("focus-in-event", self._focus_in_event)
-            self.command.exec("new_file")
+        self.connect("focus-in-event", self._focus_in_event)
 
-            if self.sibling_right:
-                self.grab_focus()
-                self._focus_in_event(None, None)
+        self.command.exec("new_file")
+        if not self.sibling_right: return
 
-        GLib.idle_add(_inner_init)
+        self.grab_focus()
+        self._focus_in_event(None, None)
+        self.command.exec("load_start_files")
+
+        return False

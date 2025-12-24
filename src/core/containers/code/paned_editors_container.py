@@ -20,8 +20,6 @@ class PanedEditorsContainer(Gtk.Paned):
         self._subscribe_to_events()
         self._load_widgets()
 
-        self.show()
-
 
     def _setup_styling(self):
         self.ctx = self.get_style_context()
@@ -53,9 +51,6 @@ class PanedEditorsContainer(Gtk.Paned):
         self.add1(scrolled_win1)
         self.add2(scrolled_win2)
 
-        scrolled_win1.show_all()
-        scrolled_win2.show_all()
-
     def _init_map(self, view):
         def _first_show_init():
             self.disconnect(self.map_id)
@@ -65,8 +60,7 @@ class PanedEditorsContainer(Gtk.Paned):
 
             return False
 
-        # GLib.timeout_add(1000, _first_show_init)
-        GLib.idle_add(_first_show_init)
+        GLib.timeout_add(200, _first_show_init)
 
     def _handle_first_show(self):
         self.set_position(

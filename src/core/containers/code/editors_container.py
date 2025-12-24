@@ -21,7 +21,7 @@ class EditorsContainer(Gtk.Box):
         self._subscribe_to_events()
         self._load_widgets()
 
-        self.show()
+        self.show_all()
 
 
     def _setup_styling(self):
