@@ -19,8 +19,6 @@ class MiniViewWidget(Map):
         self._subscribe_to_events()
         self._load_widgets()
 
-        self.show_all()
-
 
     def _setup_styling(self):
         self.set_hexpand(False)
