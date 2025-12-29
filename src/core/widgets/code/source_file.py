@@ -86,9 +86,8 @@ class SourceFile(GtkSource.File, ObservableMixin):
         if not gfile: return
 
         with open(gfile.get_path(), 'w') as f:
-            start_itr = self.buffer.get_start_iter()
-            end_itr   = self.buffer.get_end_iter()
-            text      = self.buffer.get_text(start_itr, end_itr, True)
+            start_itr, end_itr = self.buffer.get_bounds()
+            text = self.buffer.get_text(start_itr, end_itr, True)
 
             f.write(text)
 
@@ -99,9 +98,12 @@ class SourceFile(GtkSource.File, ObservableMixin):
         if not gfile: return
 
         self.set_path(gfile)
-        data = gfile.load_bytes()[0].get_data().decode("UTF-8")
+        data         = gfile.load_bytes()[0].get_data().decode("UTF-8")
+        undo_manager = self.buffer.get_undo_manager()
 
+        undo_manager.begin_not_undoable_action()
         self.buffer.insert_at_cursor(data)
+        undo_manager.end_not_undoable_action()
 
     def set_path(self, gfile: Gio.File):
         if not gfile: return

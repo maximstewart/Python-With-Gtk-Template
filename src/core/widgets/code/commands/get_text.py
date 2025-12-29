@@ -14,6 +14,8 @@ from gi.repository import GtkSource
 def execute(
     view: GtkSource.View  = None
 ):
-    logger.debug("Focus Left Sibling Command")
-    if not view.sibling_left: return
-    view.sibling_left.grab_focus()
+    logger.debug("Get Text Command")
+
+    buffer = view.get_buffer()
+    start_itr, end_itr = buffer.get_bounds()
+    return buffer.get_text(start_itr, end_itr, True)

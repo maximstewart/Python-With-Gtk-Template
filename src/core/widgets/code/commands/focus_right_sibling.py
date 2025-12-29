@@ -17,4 +17,3 @@ def execute(
     logger.debug("Focus Right Sibling Command")
     if not view.sibling_right: return
     view.sibling_right.grab_focus()
-    view.sibling_right.command.exec("set_miniview")

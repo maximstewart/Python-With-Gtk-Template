@@ -14,6 +14,8 @@ from gi.repository import GtkSource
 def execute(
     view: GtkSource.View  = None
 ):
-    logger.debug("Focus Left Sibling Command")
-    if not view.sibling_left: return
-    view.sibling_left.grab_focus()
+    logger.debug("Get File Type Command")
+
+    buffer = view.get_buffer()
+    file   = view.files_manager.get_file(buffer)
+    return file.ftype 

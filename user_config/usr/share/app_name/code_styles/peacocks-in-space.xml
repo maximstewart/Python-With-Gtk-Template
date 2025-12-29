@@ -2,7 +2,8 @@
     <author> ITDominator</author>
     <description>An attempted clone of Dayle Rees' Peacocks In Space theme.</description>
 
-    <style name="current-line"	background="#2b303b" />
+    <!--<style name="current-line"	background="#2b303b" />-->
+    <style name="current-line"	background="#44475a" />
     <style name="current-line-number"	background="#f7b83d" />
     <style name="draw-spaces"	foreground="#babdb6" />
     <style name="background-pattern"	background="#6e7a94" />

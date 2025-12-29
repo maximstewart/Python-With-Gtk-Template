@@ -18,11 +18,23 @@
         "cut_to_temp_buffer": {
             "held": "<Control>k"
         },
+        "duplicate_line": {
+            "held": "<Control>d"
+        },
+        "go_to": {
+            "released": "<Control>g"
+        },
         "paste_temp_buffer": {
             "held": "<Control>u"
         },
         "new_file": {
             "released": "<Control>t"
+        },
+        "buffer_undo": {
+            "held": "<Control>z"
+        },
+        "buffer_redo": {
+            "held": "<Control>y"
         },
         "open_files": {
             "released": "<Control>o"
