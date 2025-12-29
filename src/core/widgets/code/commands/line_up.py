@@ -12,7 +12,7 @@ from gi.repository import GtkSource
 
 
 def execute(
-    editor: GtkSource.View  = None
+    view: GtkSource.View  = None
 ):
     logger.debug("Line Up Command")
-    editor.emit("move-lines", False)
+    view.emit("move-lines", False)

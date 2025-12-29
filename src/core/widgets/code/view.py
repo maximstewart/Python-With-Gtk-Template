@@ -10,6 +10,8 @@ from gi.repository import GLib
 from gi.repository import GtkSource
 
 # Application imports
+from libs.mixins.observable_mixin import ObservableMixin
+
 from .mixins.source_view_events_mixin import SourceViewEventsMixin
 from .mixins.source_view_dnd_mixin import SourceViewDnDMixin
 
@@ -20,13 +22,14 @@ from .key_mapper import KeyMapper
 
 
 
-class SourceView(SourceViewEventsMixin, SourceViewDnDMixin, GtkSource.View):
+class SourceView(GtkSource.View, ObservableMixin, SourceViewEventsMixin, SourceViewDnDMixin):
     def __init__(self):
         super(SourceView, self).__init__()
 
+        self.observers     = []
+
         self.sibling_right = None
         self.sibling_left  = None
-        self.key_mapper    = KeyMapper()
 
         self._setup_styles()
         self._setup_signals()
@@ -57,6 +60,7 @@ class SourceView(SourceViewEventsMixin, SourceViewDnDMixin, GtkSource.View):
     def _setup_signals(self):
         self.map_id =  self.connect("map", self._init_map)
 
+        self.connect("focus-in-event", self._focus_in_event)
         self.connect("drag-data-received", self._on_drag_data_received)
         self.connect("move-cursor", self._move_cursor)
         self.connect("key-press-event", self._key_press_event)
@@ -69,6 +73,7 @@ class SourceView(SourceViewEventsMixin, SourceViewDnDMixin, GtkSource.View):
 
     def _load_widgets(self):
         self._set_up_dnd()
+        event_system.emit("register-view-to-tabs-widget", (self,))
 
     def _init_map(self, view):
         self.disconnect(self.map_id)
@@ -79,8 +84,9 @@ class SourceView(SourceViewEventsMixin, SourceViewDnDMixin, GtkSource.View):
     def _init_show(self):
         self.language_manager     = GtkSource.LanguageManager()
         self.style_scheme_manager = GtkSource.StyleSchemeManager()
+
+        self.key_mapper           = KeyMapper()
         self.command              = CommandSystem()
-        self.files                = SourceFilesManager()
         self.completion           = CompletionManager()
 
         self.command.set_data(self)
@@ -93,13 +99,15 @@ class SourceView(SourceViewEventsMixin, SourceViewDnDMixin, GtkSource.View):
             f"{settings_manager.settings.theming.syntax_theme}"
         )
 
-        self.connect("focus-in-event", self._focus_in_event)
-
         self.command.exec("new_file")
+
         if not self.sibling_right: return
 
         self.grab_focus()
-        self._focus_in_event(None, None)
         self.command.exec("load_start_files")
 
         return False
+
+    def set_files_manager(self, files_manager: SourceFilesManager):
+        self.files_manager = files_manager
+        # self.files_manager.add_observer(self)

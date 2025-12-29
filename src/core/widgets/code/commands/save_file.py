@@ -12,16 +12,16 @@ from gi.repository import GtkSource
 
 
 def execute(
-    editor: GtkSource.View  = None
+    view: GtkSource.View  = None
 ):
     logger.debug("Save File Command")
-    buffer = editor.get_buffer()
-    file   = editor.files.get_file(buffer)
+    buffer = view.get_buffer()
+    file   = view.files_manager.get_file(buffer)
 
     if file.ftype == "buffer":
         file.save_as()
-        language   = editor.language_manager \
-                           .guess_language(file.fname, None)
+        language   = view.language_manager \
+                         .guess_language(file.fname, None)
         file.ftype = language
         file.buffer.set_language(language)
         return

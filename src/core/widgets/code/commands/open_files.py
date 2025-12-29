@@ -12,7 +12,7 @@ from gi.repository import GtkSource
 
 
 def execute(
-    editor: GtkSource.View  = None
+    view: GtkSource.View  = None
 ):
     logger.debug("Open File(s) Command")
     gfiles = event_system.emit_and_await("open-files")
@@ -20,14 +20,14 @@ def execute(
 
     size   = len(gfiles)
     for i, gfile in enumerate(gfiles):
-        file = editor.files.new()
-        editor.command.exec_with_args("load_file", (editor, gfile, file))
+        file = view.files_manager.new()
+        view.command.exec_with_args("load_file", (view, gfile, file))
 
         if i == (size - 1):
-            buffer = editor.get_buffer()
-            _file  = editor.files.get_file(buffer)
-            _file.unsubscribe(editor)
+            buffer = view.get_buffer()
+            _file  = view.files_manager.get_file(buffer)
+            _file.remove_observer(view)
 
-            editor.set_buffer(file.buffer)
-            file.subscribe(editor)
-            editor.command.exec("update_info_bar")
+            view.set_buffer(file.buffer)
+            file.add_observer(view)
+            view.command.exec("update_info_bar")

@@ -12,7 +12,7 @@ from gi.repository import GtkSource
 
 
 def execute(
-    editor: GtkSource.View  = None
+    view: GtkSource.View  = None
 ):
     logger.debug("Show Completion Command")
-    editor.completion.request_completion()
+    view.completion.request_completion()

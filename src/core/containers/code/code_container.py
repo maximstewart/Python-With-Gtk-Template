@@ -6,28 +6,26 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
-from .code.code_container import CodeContainer
+from ...widgets.code.tabs_widget import TabsWidget
+
+from .editors_container import EditorsContainer
 
 
 
-class FooterContainer(Gtk.Box):
+class CodeContainer(Gtk.Box):
     def __init__(self):
-        super(FooterContainer, self).__init__()
+        super(CodeContainer, self).__init__()
 
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
         self._load_widgets()
 
-        self.show()
+        self.show_all()
 
 
     def _setup_styling(self):
-        self.ctx = self.get_style_context()
-        self.ctx.add_class("footer-container")
-
-        self.set_orientation(Gtk.Orientation.HORIZONTAL)
-        self.set_hexpand(True)
+        self.set_orientation(Gtk.Orientation.VERTICAL)
 
     def _setup_signals(self):
         ...
@@ -36,4 +34,5 @@ class FooterContainer(Gtk.Box):
         ...
 
     def _load_widgets(self):
-        self.add( CodeContainer() )
+        self.add( TabsWidget() )
+        self.add( EditorsContainer() )

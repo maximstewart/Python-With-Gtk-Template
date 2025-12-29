@@ -14,11 +14,11 @@ from ..source_file import SourceFile
 
 
 def execute(
-    editor: GtkSource.View,
+    view: GtkSource.View,
 ):
     logger.debug("Update Info Bar Command")
-    buffer = editor.get_buffer()
-    file   = editor.files.get_file(buffer)
+    buffer = view.get_buffer()
+    file   = view.files_manager.get_file(buffer)
 
     if not file: return
 

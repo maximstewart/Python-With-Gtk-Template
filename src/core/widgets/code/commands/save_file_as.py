@@ -12,17 +12,17 @@ from gi.repository import GtkSource
 
 
 def execute(
-    editor: GtkSource.View  = None
+    view: GtkSource.View  = None
 ):
     logger.info("Save File As Command")
-    buffer = editor.get_buffer()
-    file   = editor.files.get_file(buffer)
+    buffer = view.get_buffer()
+    file   = view.files_manager.get_file(buffer)
 
     file.save_as()
 
-    language   = editor.language_manager \
+    language   = view.language_manager \
                        .guess_language(file.fname, None)
     file.ftype = language
     file.buffer.set_language(language)
-    file.subscribe(editor)
-    editor.exec_command("update_info_bar")
+    file.add_observer(view)
+    view.exec_command("update_info_bar")

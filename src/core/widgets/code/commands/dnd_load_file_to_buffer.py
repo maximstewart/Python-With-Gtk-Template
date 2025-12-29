@@ -13,26 +13,23 @@ from gi.repository import Gio
 
 
 def execute(
-    editor: GtkSource.View,
+    view: GtkSource.View,
     uri: str
 ):
     logger.debug("DnD Load File To Buffer Command")
-    if not uri: return
 
-    buffer = editor.get_buffer()
-    file   = editor.files.get_file(buffer)
+    buffer = view.get_buffer()
+    file   = view.files_manager.get_file(buffer)
 
-    if not file.ftype == "buffer": return
+    if not file.ftype == "buffer":
+        file = view.command.exec("new_file")
 
     gfile  = Gio.File.new_for_uri(uri)
-    editor.command.exec_with_args(
+    view.command.exec_with_args(
         "load_file",
-        (editor, gfile, file)
+        (view, gfile, file)
     )
 
-    ctx        = editor.get_parent().get_style_context()
-    is_focused = ctx.has_class("source-view-focused")
-    if is_focused:
-        editor.command.exec("update_info_bar")
-
-    return uri
+    has_focus = view.command.exec("has_focus")
+    if has_focus:
+        view.command.exec("update_info_bar")

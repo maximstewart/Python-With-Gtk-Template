@@ -14,7 +14,7 @@ from ..source_file import SourceFile
 
 
 def execute(
-    editor: GtkSource.View,
+    view: GtkSource.View,
     uris: list = []
 ):
     logger.debug("DnD Load Files Command")
@@ -24,4 +24,4 @@ def execute(
         except Exception as e:
             gfile = Gio.File.new_for_path(uri)
 
-        editor.command.exec_with_args("load_file", (editor, gfile))
+        view.command.exec_with_args("load_file", (view, gfile))

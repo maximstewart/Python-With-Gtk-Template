@@ -1,5 +1,6 @@
 # Python imports
 
+
 # Lib imports
 import gi
 
@@ -12,21 +13,21 @@ from gi.repository import GtkSource
 
 
 def execute(
-    editor: GtkSource.View  = None
+    view: GtkSource.View  = None
 ):
     logger.debug("New File Command")
-    file       = editor.files.new()
-    language   = editor.language_manager \
+    file       = view.files_manager.new()
+    language   = view.language_manager \
                        .guess_language("file.txt", None)
 
     file.buffer.set_language(language)
-    file.buffer.set_style_scheme(editor.syntax_theme)
+    file.buffer.set_style_scheme(view.syntax_theme)
 
-    editor.set_buffer(file.buffer)
-    file.subscribe(editor)
+    view.set_buffer(file.buffer)
+    file.add_observer(view)
 
-    has_focus = editor.command.exec("has_focus")
+    has_focus = view.command.exec("has_focus")
     if not has_focus: return file
 
-    editor.command.exec("update_info_bar")
+    view.command.exec("update_info_bar")
     return file

@@ -3,6 +3,7 @@
 # Lib imports
 
 # Application imports
+from libs.dto.code_event import CodeEvent
 
 
 
@@ -35,12 +36,12 @@ class SourceViewEventsMixin:
         self.command.exec(command)
         return True
 
-    def notify(self, file, buffer, etype: str):
+    def notification(self, event: CodeEvent):
         has_focus = self.command.exec("has_focus")
         if not has_focus: return
 
         self.command.exec("update_info_bar")
-        match etype:
+        match event.etype:
             case "changed":
                 logger.debug("SourceFile._changed")
             case "modified_changed":

@@ -29,8 +29,12 @@ class SourceViewDnDMixin:
             if len(uris) == 0:
                 uris = data.get_text().split("\n")
 
-            pop_file = self.command.exec_with_args("dnd_load_file_to_buffer", (self, uris[0]))
-            if pop_file:
-                uris.pop(0)
+            self._on_uri_data_received(uris)
+
+    def _on_uri_data_received(self, uris: []):
+            uri = uris.pop(0)
+            self.command.exec_with_args("dnd_load_file_to_buffer", (self, uri))
+
+            if len(uris) == 0: return
 
             self.command.exec_with_args("dnd_load_files", (self, uris))

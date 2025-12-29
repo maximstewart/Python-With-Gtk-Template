@@ -12,24 +12,23 @@ from gi.repository import GtkSource
 
 
 def execute(
-    editor: GtkSource.View  = None
+    view: GtkSource.View  = None
 ):
     logger.debug("Move To Right Sibling Command")
-    if not editor.sibling_right: return
+    if not view.sibling_right: return
 
-    buffer = editor.get_buffer()
-    popped_file, sibling_file = editor.files.pop_file(buffer)
+    buffer = view.get_buffer()
+    popped_file, sibling_file = view.files_manager.swap_file(buffer)
 
     if sibling_file:
-        sibling_file.subscribe(editor)
-        editor.set_buffer(sibling_file.buffer)
+        sibling_file.add_observer(view)
+        view.set_buffer(sibling_file.buffer)
     else:
-        sibling_file = editor.command.exec("new_file")
+        sibling_file = view.command.exec("new_file")
 
-    popped_file.unsubscribe(editor)
-    popped_file.subscribe(editor.sibling_right)
+    popped_file.remove_observer(view)
+    popped_file.add_observer(view.sibling_right)
 
-    editor.sibling_right.set_buffer(buffer)
-    editor.sibling_right.files.append(popped_file)
-    editor.sibling_right.grab_focus()
+    view.sibling_right.set_buffer(buffer)
+    view.sibling_right.grab_focus()
 

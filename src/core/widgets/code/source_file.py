@@ -12,11 +12,14 @@ from gi.repository import GtkSource
 from gi.repository import Gio
 
 # Application imports
+from libs.mixins.observable_mixin import ObservableMixin
+from libs.dto.code_event import CodeEvent
+
 from .source_buffer import SourceBuffer
 
 
 
-class SourceFile(GtkSource.File):
+class SourceFile(GtkSource.File, ObservableMixin):
     def __init__(self):
         super(SourceFile, self).__init__()
 
@@ -44,19 +47,39 @@ class SourceFile(GtkSource.File):
     def _insert_text(self, buffer: SourceBuffer, location: Gtk.TextIter,
         text: str, length: int
     ):
-        self.notify((self, buffer, "insert_text"))
+        event        = CodeEvent()
+        event.etype  = "insert_text"
+        event.file   = self
+        event.buffer = buffer
+
+        self.notify_observers(event)
 
     def _changed(self, buffer: SourceBuffer):
-        self.notify((self, buffer, "changed"))
+        event        = CodeEvent()
+        event.etype  = "changed"
+        event.file   = self
+        event.buffer = buffer
+
+        self.notify_observers(event)
 
     def _mark_set(self, buffer: SourceBuffer, location: Gtk.TextIter,
         mark: Gtk.TextMark
     ):
-        # self.notify((self, buffer, "mark_set"))
+        # event        = CodeEvent()
+        # event.etype  = "mark_set"
+        # event.file   = self
+        # event.buffer = buffer
+
+        # self.notify_observers(event)
         ...
 
     def _modified_changed(self, buffer: SourceBuffer):
-        self.notify((self, buffer, "modified_changed"))
+        event        = CodeEvent()
+        event.etype  = "modified_changed"
+        event.file   = self
+        event.buffer = buffer
+
+        self.notify_observers(event)
 
 
     def _write_file(self, gfile: Gio.File):
@@ -87,16 +110,11 @@ class SourceFile(GtkSource.File):
         self.fpath = gfile.get_path()
         self.fname = gfile.get_basename()
 
+        event        = CodeEvent()
+        event.etype  = "set_path"
+        event.file   = self
 
-    def subscribe(self, editor):
-        self.observers.append(editor)
-
-    def unsubscribe(self, editor):
-        self.observers.remove(editor)
-
-    def notify(self, data):
-        for editor in self.observers:
-            editor.notify(*data)
+        self.notify_observers(event)
 
     def save(self):
         self._write_file( self.get_location() )
@@ -113,5 +131,5 @@ class SourceFile(GtkSource.File):
     def close(self):
         self.observers.clear()
 
-        del observers
+        del self.observers
         del self.buffer

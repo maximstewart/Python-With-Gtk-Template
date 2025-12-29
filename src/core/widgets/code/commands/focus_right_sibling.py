@@ -12,9 +12,9 @@ from gi.repository import GtkSource
 
 
 def execute(
-    editor: GtkSource.View  = None
+    view: GtkSource.View  = None
 ):
     logger.debug("Focus Right Sibling Command")
-    if not editor.sibling_right: return
-    editor.sibling_right.grab_focus()
-    editor.sibling_right.command.exec("set_miniview")
+    if not view.sibling_right: return
+    view.sibling_right.grab_focus()
+    view.sibling_right.command.exec("set_miniview")

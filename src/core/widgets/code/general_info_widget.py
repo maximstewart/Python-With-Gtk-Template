@@ -26,10 +26,8 @@ class GeneralInfoWidget(Gtk.Box):
 
 
     def _setup_styling(self):
-        self.set_margin_top(20)
-        self.set_margin_bottom(20)
-        self.set_margin_left(25)
-        self.set_margin_right(25)
+        self.set_margin_start(25)
+        self.set_margin_end(25)
 
     def _setup_signals(self):
         ...
