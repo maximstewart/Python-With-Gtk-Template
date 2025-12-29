@@ -17,10 +17,10 @@ def execute(
     logger.debug("Close File Command")
     buffer = view.get_buffer()
 
-    sibling_file = view.files_manager.remove_file(buffer)
-    if not sibling_file:
+    next_file = view.files_manager.remove_file(buffer)
+    if not next_file:
         view.command.exec("new_file")
     else:
-        view.set_buffer(sibling_file.buffer)
+        view.set_buffer(next_file.buffer)
 
     view.command.exec("update_info_bar")

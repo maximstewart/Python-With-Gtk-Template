@@ -110,4 +110,4 @@ class SourceView(GtkSource.View, ObservableMixin, SourceViewEventsMixin, SourceV
 
     def set_files_manager(self, files_manager: SourceFilesManager):
         self.files_manager = files_manager
-        # self.files_manager.add_observer(self)
+        self.files_manager.add_observer(self)

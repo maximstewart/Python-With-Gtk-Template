@@ -20,7 +20,7 @@ class TabsWidget(Gtk.ScrolledWindow):
     def __init__(self):
         super(TabsWidget, self).__init__()
 
-        self.active_view: SourceView           = None
+        self.active_view: SourceView = None
 
         self._setup_styling()
         self._setup_signals()
@@ -77,8 +77,16 @@ class TabsWidget(Gtk.ScrolledWindow):
         tab.label.set_label(event.file.fname)
         event.file.add_observer(self)
 
+        def select_signal(widget, eve, file):
+            self.active_view.command.exec_with_args("set_buffer", (self.active_view, file))
+
+        def close_signal(widget, eve, file):
+            self.files_manager.remove_file(file.buffer)
+
+        tab.set_select_signal(select_signal)
+        tab.set_close_signal(close_signal)
+
         self.tabs.add(tab)
-        tab.show()
 
     def remove_tab(self, event: CodeEvent):
         for child in self.tabs.get_children():
@@ -86,8 +94,6 @@ class TabsWidget(Gtk.ScrolledWindow):
 
             child.file.remove_observer(self)
             self.tabs.remove(child)
-
-            del child.file
             del child
 
             return

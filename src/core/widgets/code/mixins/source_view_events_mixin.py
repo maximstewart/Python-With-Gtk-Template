@@ -37,11 +37,17 @@ class SourceViewEventsMixin:
         return True
 
     def notification(self, event: CodeEvent):
-        has_focus = self.command.exec("has_focus")
-        if not has_focus: return
+        if not hasattr(self, "command"): return
 
-        self.command.exec("update_info_bar")
+        has_focus = self.command.exec("has_focus")
+        if not has_focus and not event.ignore_focus: return
+
         match event.etype:
+            case "removed_file":
+                logger.debug("SourceFileManager.remove_file")
+                if not event.file.buffer == self.get_buffer(): return
+                self.command.exec_with_args("set_buffer", (self, event.next_file))
+                return
             case "changed":
                 logger.debug("SourceFile._changed")
             case "modified_changed":
@@ -54,3 +60,4 @@ class SourceViewEventsMixin:
             case _:
                 ...
 
+        self.command.exec("update_info_bar")

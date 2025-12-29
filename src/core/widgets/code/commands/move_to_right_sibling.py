@@ -18,17 +18,15 @@ def execute(
     if not view.sibling_right: return
 
     buffer = view.get_buffer()
-    popped_file, sibling_file = view.files_manager.swap_file(buffer)
-
-    if sibling_file:
-        sibling_file.add_observer(view)
-        view.set_buffer(sibling_file.buffer)
-    else:
-        sibling_file = view.command.exec("new_file")
+    popped_file, next_file = view.files_manager.swap_file(buffer)
 
     popped_file.remove_observer(view)
     popped_file.add_observer(view.sibling_right)
-
     view.sibling_right.set_buffer(buffer)
     view.sibling_right.grab_focus()
 
+    if next_file:
+        next_file.add_observer(view)
+        view.set_buffer(next_file.buffer)
+    else:
+        view.command.exec("new_file")
