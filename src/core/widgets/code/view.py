@@ -26,7 +26,9 @@ class SourceView(GtkSource.View, ObservableMixin, SourceViewEventsMixin, SourceV
     def __init__(self):
         super(SourceView, self).__init__()
 
-        self.observers     = []
+        self.observers            = []
+        self._cut_temp_timeout_id = None
+        self._cut_buffer          = ""
 
         self.sibling_right = None
         self.sibling_left  = None
@@ -38,8 +40,11 @@ class SourceView(GtkSource.View, ObservableMixin, SourceViewEventsMixin, SourceV
 
 
     def _setup_styles(self):
-        ctx = self.get_style_context()
+        self.zoom_level = settings_manager.settings.theming.default_zoom
+        ctx             = self.get_style_context()
+
         ctx.add_class("source-view")
+        ctx.add_class(f"px{self.zoom_level}")
 
         self.set_vexpand(True)
         self.set_bottom_margin(800)
@@ -111,3 +116,15 @@ class SourceView(GtkSource.View, ObservableMixin, SourceViewEventsMixin, SourceV
     def set_files_manager(self, files_manager: SourceFilesManager):
         self.files_manager = files_manager
         self.files_manager.add_observer(self)
+
+    def clear_temp_cut_buffer_delayed(self):
+        if self._cut_temp_timeout_id:
+            GLib.source_remove(self._cut_temp_timeout_id)
+
+    def set_temp_cut_buffer_delayed(self):
+        def clear_temp_buffer():
+            self._cut_buffer          = ""
+            self._cut_temp_timeout_id = None
+            return False
+
+        self._cut_temp_timeout_id = GLib.timeout_add(15000, clear_temp_buffer)

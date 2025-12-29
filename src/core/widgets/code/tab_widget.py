@@ -13,8 +13,7 @@ class TabWidget(Gtk.Box):
     def __init__(self):
         super(TabWidget, self).__init__()
 
-        self._handler_ids: list = []
-        self.file               = None
+        self.file = None
 
         self._setup_styling()
         self._setup_signals()
@@ -51,14 +50,12 @@ class TabWidget(Gtk.Box):
         self.add(self.close_btn)
 
     def __del__(self):
-        for handle_id in self._handler_ids:
-            self.disconnect(handle_id)
         del self.file
+        self._label_eve_box.disconnect(self._label_eve_box_id)
+        self.close_btn.disconnect(self.close_btn_id)
 
     def set_select_signal(self, callback):
-        _id = self._label_eve_box.connect('button-release-event', callback, self.file)
-        self._handler_ids.append(_id)
+        self._label_eve_box_id = self._label_eve_box.connect('button-release-event', callback, self.file)
 
     def set_close_signal(self, callback):
-        _id = self.close_btn.connect('button-release-event', callback, self.file)
-        self._handler_ids.append(_id)
+        self.close_btn_id = self.close_btn.connect('button-release-event', callback, self.file)

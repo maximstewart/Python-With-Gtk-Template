@@ -9,6 +9,18 @@
         "line_down": {
             "held": "<Control>Down"
         },
+        "zoom_in": {
+            "held": "<Control>equal"
+        },
+        "zoom_out": {
+            "held": "<Control>minus"
+        },
+        "cut_to_temp_buffer": {
+            "held": "<Control>k"
+        },
+        "paste_temp_buffer": {
+            "held": "<Control>u"
+        },
         "new_file": {
             "released": "<Control>t"
         },
