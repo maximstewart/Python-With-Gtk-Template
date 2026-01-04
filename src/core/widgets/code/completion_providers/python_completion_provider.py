@@ -101,8 +101,7 @@ class PythonCompletionProvider(GObject.Object, GtkSource.CompletionProvider):
     def get_icon_for_type(self, _type):
         try:
             return self._theme.load_icon(icon_names[_type.lower()], 16, 0)
-        except:
-            try:
-                return self._theme.load_icon(Gtk.STOCK_ADD, 16, 0)
-            except:
-                return None
+        except (KeyError, AttributeError, GObject.GError) as e:
+            return self._theme.load_icon(Gtk.STOCK_ADD, 16, 0)
+        except (GObject.GError, AttributeError) as e:
+            return None

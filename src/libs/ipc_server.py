@@ -63,8 +63,10 @@ class IPCServer(Singleton):
                 self._handle_ipc_message(conn, start_time)
             except EOFError as e:
                 logger.debug( repr(e) )
+            except (OSError, ConnectionError, BrokenPipeError) as e:
+                logger.debug( f"IPC connection error: {e}" )
             except Exception as e:
-                logger.debug( repr(e) )
+                logger.debug( f"Unexpected IPC error: {e}" )
             finally:
                 conn.close()
 
@@ -116,8 +118,10 @@ class IPCServer(Singleton):
             conn.close()
         except ConnectionRefusedError as e:
             logger.error("Connection refused...")
+        except (OSError, ConnectionError, BrokenPipeError) as e:
+            logger.error( f"IPC connection error: {e}" )
         except Exception as e:
-            logger.error( repr(e) )
+            logger.error( f"Unexpected IPC error: {e}" )
 
 
     def send_test_ipc_message(self, message: str = "Empty Data...") -> None:
@@ -135,5 +139,7 @@ class IPCServer(Singleton):
             if self._conn_type == "socket":
                 logger.error("IPC Socket no longer valid.... Removing.")
                 os.unlink(self._ipc_address)
+        except (OSError, ConnectionError, BrokenPipeError) as e:
+            logger.error( f"IPC connection error: {e}" )
         except Exception as e:
-            logger.error( repr(e) )
+            logger.error( f"Unexpected IPC error: {e}" )

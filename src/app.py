@@ -58,7 +58,11 @@ class Application:
     def ipc_realization_check(self, ipc_server):
         try:
             ipc_server.create_ipc_listener()
-        except Exception:
+        except (OSError, PermissionError) as e:
+            logger.info(f"IPC listener creation failed: {e}, falling back to test message")
+            ipc_server.send_test_ipc_message()
+        except Exception as e:
+            logger.error(f"Unexpected IPC setup error: {e}")
             ipc_server.send_test_ipc_message()
 
     def setup_debug_hook(self):
