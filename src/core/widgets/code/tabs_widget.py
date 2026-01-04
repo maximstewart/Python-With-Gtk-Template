@@ -94,6 +94,7 @@ class TabsWidget(Gtk.ScrolledWindow):
 
             child.file.remove_observer(self)
             self.tabs.remove(child)
+            child.clear_signals_and_data()
             del child
 
             return

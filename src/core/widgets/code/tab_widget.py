@@ -49,7 +49,7 @@ class TabWidget(Gtk.Box):
         self.add(self._label_eve_box)
         self.add(self.close_btn)
 
-    def __del__(self):
+    def clear_signals_and_data(self):
         del self.file
         self._label_eve_box.disconnect(self._label_eve_box_id)
         self.close_btn.disconnect(self.close_btn_id)

@@ -10,22 +10,22 @@ class Manifest:
     author: str   = "John Doe"
     version: str  = "0.0.1"
     support: str  = ""
+    pre_launch: bool = False
     requests: {}  = {
         'pass_ui_objects': ["plugin_control_list"],
-        'pass_events': "true",
+        'pass_events': True,
         'bind_keys': []
     }
-    pre_launch: bool = False
 ```
 
 
 ### Requests
 ```
 requests: {}  = {
-    'pass_events': "true",                                # If empty or not present will be ignored.
-    "pass_ui_objects": [""],                              # Request reference to a UI component. Will be passed back as array to plugin.
+    'pass_events': true,                                # If empty or not present will be ignored.
+    "pass_ui_objects": [""],                            # Request reference to a UI component. Will be passed back as array to plugin.
     'bind_keys': [f"{name}||send_message:<Control>f"],
-                  f"{name}||do_save:<Control>s"]          # Bind keys with method and key pare using list. Must pass "name" like shown with delimiter to its right.
+                  f"{name}||do_save:<Control>s"]        # Bind keys with method and key pare using list. Must pass "name" like shown with delimiter to its right.
 
 }
 ```

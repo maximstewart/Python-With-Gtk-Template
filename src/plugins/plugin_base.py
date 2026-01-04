@@ -15,12 +15,12 @@ class PluginBaseException(Exception):
 class PluginBase:
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.name               = "Example Plugin"  # NOTE: Need to remove after establishing private bidirectional 1-1 message bus
-                                                    #       where self.name should not be needed for message comms
+        self.name          = "Example Plugin"  # NOTE: Need to remove after establishing private bidirectional 1-1 message bus
+                                               #       where self.name should not be needed for message comms
 
-        self._builder           = None
-        self._ui_objects        = None
-        self._event_system      = None
+        self._builder      = None
+        self._ui_objects   = None
+        self._event_system = None
 
 
     def run(self):
@@ -48,8 +48,8 @@ class PluginBase:
 
     def set_event_system(self, event_system):
         """
-            Requests Key:  'pass_events': "true"
-            Must define in plugin if "pass_events" is set to "true" string.
+            Requests Key:  'pass_events': true
+            Must define in plugin if "pass_events" is set to true.
         """
         self._event_system = event_system
 
