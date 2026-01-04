@@ -53,7 +53,7 @@ class Window(Gtk.ApplicationWindow):
 
     def _setup_styling(self):
         self.set_title(f"{APP_NAME}")
-        self.set_icon_from_file( settings_manager.get_window_icon() )
+        self.set_icon_from_file( settings_manager.path_manager.get_window_icon() )
         self.set_decorated(True)
         self.set_skip_pager_hint(False)
         self.set_skip_taskbar_hint(False)
@@ -119,7 +119,7 @@ class Window(Gtk.ApplicationWindow):
         # bind css file
         cssProvider  = Gtk.CssProvider()
         styleContext = Gtk.StyleContext()
-        cssProvider.load_from_path( settings_manager.get_css_file() )
+        cssProvider.load_from_path( settings_manager.path_manager.get_css_file() )
         styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     def _area_draw(self, widget: Gtk.ApplicationWindow, cr: cairo.Context) -> None:

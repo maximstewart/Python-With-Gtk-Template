@@ -31,7 +31,7 @@ class PluginsController(PluginReloadMixin):
 
         self._plugin_collection   = []
 
-        self._plugins_path        = settings_manager.get_plugins_path()
+        self._plugins_path        = settings_manager.path_manager.get_plugins_path()
         self._manifest_manager    = ManifestManager()
 
         self._set_plugins_watcher()

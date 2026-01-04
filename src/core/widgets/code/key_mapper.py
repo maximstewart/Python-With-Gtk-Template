@@ -66,7 +66,7 @@ class KeyMapper:
 
     def load_map(self):
         self.states   = copy.deepcopy(self._map)
-        bindings_file = f"{settings_manager.get_home_config_path()}/code-key-bindings.json"
+        bindings_file = f"{settings_manager.path_manager.get_home_config_path()}/code-key-bindings.json"
 
         with open(bindings_file, 'r') as f:
             data = json.load(f)["keybindings"]

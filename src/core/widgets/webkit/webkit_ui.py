@@ -37,7 +37,7 @@ class WebkitUI(WebKit2.WebView):
         self.set_settings( WebkitUISettings() )
 
     def _load_view(self):
-        path = settings_manager.get_context_path()
+        path = settings_manager.path_manager.get_context_path()
         data = None
 
         with open(f"{path}/index.html", "r") as f:

@@ -24,8 +24,8 @@ class StartCheckMixin:
             self._print_pid(pid)
             return
 
-        if os.path.exists(self._PID_FILE):
-            with open(self._PID_FILE, "r") as f:
+        if os.path.exists(self.path_manager._PID_FILE):
+            with open(self.path_manager._PID_FILE, "r") as f:
                 pid = f.readline().strip()
                 if pid not in ("", None):
                     if self.is_pid_alive( int(pid) ):
@@ -56,8 +56,8 @@ class StartCheckMixin:
         print(f"{APP_NAME} PID:  {pid}")
 
     def _clean_pid(self):
-        os.unlink(self._PID_FILE)
+        os.unlink(self.path_manager._PID_FILE)
 
     def _write_pid(self, pid):
-        with open(self._PID_FILE, "w") as _pid:
+        with open(self.path_manager._PID_FILE, "w") as _pid:
             _pid.write(f"{pid}")

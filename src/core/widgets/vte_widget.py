@@ -61,7 +61,7 @@ class VteWidget(Vte.Terminal):
     def _do_session_spawn(self):
         self.spawn_sync(
             Vte.PtyFlags.DEFAULT,
-            settings_manager.get_home_path(),
+            settings_manager.path_manager.get_home_path(),
             ["/bin/bash"],
             [],
             GLib.SpawnFlags.DEFAULT,
@@ -76,8 +76,8 @@ class VteWidget(Vte.Terminal):
             "export LC_ALL=C\n",
             "export XDG_RUNTIME_DIR='/run/user/1000'\n",
             "export DISPLAY=:0\n",
-            f"export XAUTHORITY='{settings_manager.get_home_path()}/.Xauthority'\n",
-            f"\nexport HOME='{settings_manager.get_home_path()}'\n",
+            f"export XAUTHORITY='{settings_manager.path_manager.get_home_path()}/.Xauthority'\n",
+            f"\nexport HOME='{settings_manager.path_manager.get_home_path()}'\n",
             "export PS1='\\h@\\u \\W -->: '\n",
             "clear\n"
         ]

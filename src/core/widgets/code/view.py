@@ -98,7 +98,7 @@ class SourceView(GtkSource.View, ObservableMixin, SourceViewEventsMixin, SourceV
         self.completion.set_completer( self.get_completion() )
 
         self.style_scheme_manager.append_search_path(
-            f"{settings_manager.get_home_config_path()}/code_styles"
+            f"{settings_manager.path_manager.get_home_config_path()}/code_styles"
         )
         self.syntax_theme = self.style_scheme_manager.get_scheme(
             f"{settings_manager.settings.theming.syntax_theme}"

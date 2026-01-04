@@ -63,7 +63,7 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerData):
         logger.debug("_tggl_top_main_menubar > stub...")
 
     def _load_glade_file(self):
-        self.builder.add_from_file( settings_manager.get_glade_file() )
+        self.builder.add_from_file( settings_manager.path_manager.get_glade_file() )
         self.builder.expose_object("main_window", self.window)
 
         settings_manager.set_builder(self.builder)

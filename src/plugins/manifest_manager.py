@@ -19,7 +19,7 @@ class ManifestMapperException(Exception):
 class ManifestManager:
     def __init__(self):
 
-        self._plugins_path         = settings_manager.get_plugins_path()
+        self._plugins_path         = settings_manager.path_manager.get_plugins_path()
 
         self.pre_launch_manifests  = []
         self.post_launch_manifests = []
