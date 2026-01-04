@@ -2,6 +2,7 @@
 import os
 import threading
 import time
+from contextlib import suppress
 from multiprocessing.connection import Client
 from multiprocessing.connection import Listener
 
@@ -40,8 +41,9 @@ class IPCServer(Singleton):
 
     def create_ipc_listener(self) -> None:
         if self._conn_type == "socket":
-            if os.path.exists(self._ipc_address) and settings_manager.is_dirty_start():
-                os.unlink(self._ipc_address)
+            if settings_manager.is_dirty_start():
+                with suppress(FileNotFoundError, PermissionError):
+                    os.unlink(self._ipc_address)
 
             listener = Listener(address=self._ipc_address, family="AF_UNIX", authkey=self._ipc_authkey)
         elif "unsecured" not in self._conn_type:
@@ -138,7 +140,8 @@ class IPCServer(Singleton):
         except ConnectionRefusedError as e:
             if self._conn_type == "socket":
                 logger.error("IPC Socket no longer valid.... Removing.")
-                os.unlink(self._ipc_address)
+                with suppress(FileNotFoundError, PermissionError):
+                    os.unlink(self._ipc_address)
         except (OSError, ConnectionError, BrokenPipeError) as e:
             logger.error( f"IPC connection error: {e}" )
         except Exception as e:

@@ -2,6 +2,7 @@
 import os
 import json
 import inspect
+from contextlib import suppress
 
 # Lib imports
 
@@ -56,7 +57,8 @@ class StartCheckMixin:
         print(f"{APP_NAME} PID:  {pid}")
 
     def _clean_pid(self):
-        os.unlink(self.path_manager._PID_FILE)
+        with suppress(FileNotFoundError, PermissionError):
+            os.unlink(self.path_manager._PID_FILE)
 
     def _write_pid(self, pid):
         with open(self.path_manager._PID_FILE, "w") as _pid:
