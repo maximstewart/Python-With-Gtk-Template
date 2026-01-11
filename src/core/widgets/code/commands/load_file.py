@@ -18,9 +18,9 @@ def execute(
     gfile: Gio.File,
     file: SourceFile = None,
 ):
-    logger.debug("Load File Command")
+    logger.debug("Command: Load File")
     if not file:
-        file = view.files_manager.new()
+        file = view.command.new_file(view)
 
     file.load_path(gfile)
 

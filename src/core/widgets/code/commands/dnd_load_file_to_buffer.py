@@ -16,13 +16,13 @@ def execute(
     view: GtkSource.View,
     uri: str
 ):
-    logger.debug("DnD Load File To Buffer Command")
+    logger.debug("Command: DnD Load File To Buffer")
 
-    buffer = view.get_buffer()
-    file   = view.files_manager.get_file(buffer)
+    file   = view.command.get_file(view)
+    buffer = file.buffer
 
     if not file.ftype == "buffer":
-        file = view.command.exec("new_file")
+        file = view.command.new_file(view)
 
     gfile  = Gio.File.new_for_uri(uri)
     view.command.exec_with_args(

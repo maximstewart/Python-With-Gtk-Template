@@ -14,20 +14,16 @@ from gi.repository import GtkSource
 def execute(
     view: GtkSource.View  = None
 ):
-    logger.debug("Open File(s) Command")
+    logger.debug("Command: Open File(s)")
     gfiles = event_system.emit_and_await("open-files")
     if not gfiles: return
 
-    size   = len(gfiles)
-    for i, gfile in enumerate(gfiles):
-        file = view.files_manager.new()
+    file = view.command.get_file(view)
+    if file.ftype == "buffer":
+        gfile = gfiles.pop()
         view.command.exec_with_args("load_file", (view, gfile, file))
+        view.set_buffer(file.buffer)
+        view.command.exec("update_info_bar")
 
-        if i == (size - 1):
-            buffer = view.get_buffer()
-            _file  = view.files_manager.get_file(buffer)
-            _file.remove_observer(view)
-
-            view.set_buffer(file.buffer)
-            file.add_observer(view)
-            view.command.exec("update_info_bar")
+    for i, gfile in enumerate(gfiles):
+        view.command.exec_with_args("load_file", (view, gfile))

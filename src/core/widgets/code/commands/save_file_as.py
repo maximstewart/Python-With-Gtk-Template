@@ -14,9 +14,9 @@ from gi.repository import GtkSource
 def execute(
     view: GtkSource.View  = None
 ):
-    logger.info("Save File As Command")
-    buffer = view.get_buffer()
-    file   = view.files_manager.get_file(buffer)
+    logger.info("Command: Save File As")
+    file   = view.command.get_file(view)
+    buffer = file.buffer
 
     file.save_as()
 
@@ -24,5 +24,5 @@ def execute(
                        .guess_language(file.fname, None)
     file.ftype = language
     file.buffer.set_language(language)
-    file.add_observer(view)
-    view.exec_command("update_info_bar")
+
+    view.command.exec("update_info_bar")

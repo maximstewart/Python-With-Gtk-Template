@@ -14,9 +14,9 @@ from gi.repository import GtkSource
 def execute(
     view: GtkSource.View  = None
 ):
-    logger.debug("Save File Command")
-    buffer = view.get_buffer()
-    file   = view.files_manager.get_file(buffer)
+    logger.debug("Command: Save File")
+    file   = view.command.get_file(view)
+    buffer = file.buffer
 
     if file.ftype == "buffer":
         file.save_as()

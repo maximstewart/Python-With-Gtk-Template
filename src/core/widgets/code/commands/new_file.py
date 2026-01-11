@@ -15,16 +15,16 @@ from gi.repository import GtkSource
 def execute(
     view: GtkSource.View  = None
 ):
-    logger.debug("New File Command")
-    file       = view.files_manager.new()
+    logger.debug("Command: New File")
+
+    file       = view.command.new_file(view)
     language   = view.language_manager \
-                       .guess_language("file.txt", None)
+                      .guess_language("file.txt", None)
 
     file.buffer.set_language(language)
     file.buffer.set_style_scheme(view.syntax_theme)
 
     view.set_buffer(file.buffer)
-    file.add_observer(view)
 
     has_focus = view.command.exec("has_focus")
     if not has_focus: return file

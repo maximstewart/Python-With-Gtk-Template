@@ -17,18 +17,13 @@ def execute(
     view: GtkSource.View,
     file: SourceFile
 ):
-    logger.debug("Set Buffer Command")
-
-    buffer = view.get_buffer()
-    _file  = view.files_manager.get_file(buffer)
-    _file.remove_observer(view)
+    logger.debug("Command: Set Buffer")
 
     if not file:
-        view.command.exec("new_file")
+        view.command.new_file(view)
         return
 
     view.set_buffer(file.buffer)
-    file.add_observer(view)
 
     has_focus = view.command.exec("has_focus")
     if has_focus:
