@@ -8,6 +8,7 @@ gi.require_version('GtkSource', '4')
 from gi.repository import GtkSource
 
 # Application imports
+from ..command_helpers import set_language_and_style, update_info_bar_if_focused
 
 
 
@@ -20,9 +21,6 @@ def execute(
 
     file.save_as()
 
-    language   = view.language_manager \
-                       .guess_language(file.fname, None)
-    file.ftype = language
-    file.buffer.set_language(language)
+    set_language_and_style(view, file)
 
-    view.command.exec("update_info_bar")
+    update_info_bar_if_focused(view.command, view)

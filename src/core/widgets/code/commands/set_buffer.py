@@ -10,6 +10,7 @@ from gi.repository import GtkSource
 
 # Application imports
 from ..source_file import SourceFile
+from ..command_helpers import update_info_bar_if_focused
 
 
 
@@ -25,7 +26,5 @@ def execute(
 
     view.set_buffer(file.buffer)
 
-    has_focus = view.command.exec("has_focus")
-    if has_focus:
-        view.command.exec("update_info_bar")
+    update_info_bar_if_focused(view.command, view)
 
