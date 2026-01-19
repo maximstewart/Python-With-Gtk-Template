@@ -14,7 +14,6 @@ class CenterContainer(Gtk.Box):
     def __init__(self):
         super(CenterContainer, self).__init__()
 
-        self._builder = settings_manager.get_builder()
 
         self._setup_styling()
         self._setup_signals()
@@ -39,7 +38,7 @@ class CenterContainer(Gtk.Box):
         ...
 
     def _load_widgets(self):
-        glade_box = self._builder.get_object("glade_box")
+        glade_box = widget_registery.get_object("glade_box")
         button    = Gtk.Button(label = "Click Me!")
 
         button.connect("clicked", self._hello_world)
