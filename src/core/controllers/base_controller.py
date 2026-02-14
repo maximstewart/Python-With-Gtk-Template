@@ -24,11 +24,14 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerMixin)
     def __init__(self):
 
         self._setup_controller_data()
+
+        self._load_plugins(is_pre = True)
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
         self._load_controllers()
-        self._load_plugins_and_files()
+        self._load_plugins(is_pre = False)
+        self._load_files()
 
         logger.info(f"Made it past {self.__class__} loading...")
         settings_manager.set_end_load_time()
@@ -62,13 +65,19 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerMixin)
     def _load_controllers(self):
         BridgeController()
 
-    def _load_plugins_and_files(self):
+    def _load_plugins(self, is_pre: bool):
         args, unknownargs = settings_manager.get_starting_args()
+        if args.no_plugins == "true": return
 
-        if args.no_plugins == "false":
+        if is_pre:
             self.plugins_controller.pre_launch_plugins()
-            self.plugins_controller.post_launch_plugins()
+            return
 
+        if not is_pre:
+            self.plugins_controller.post_launch_plugins()
+            return
+
+    def _load_files(self):
         for file in settings_manager.get_starting_files():
             event_system.emit("post-file-to-ipc", file)
 

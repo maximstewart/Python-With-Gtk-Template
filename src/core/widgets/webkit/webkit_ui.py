@@ -44,6 +44,7 @@ class WebkitUI(WebKit2.WebView):
             data = f.read()
 
         self.load_html(content = data, base_uri = f"file://{path}/")
+        # self.load_uri("https://duckduckgo.com/")
 
     def _setup_content_manager(self):
         content_manager = self.get_user_content_manager()
