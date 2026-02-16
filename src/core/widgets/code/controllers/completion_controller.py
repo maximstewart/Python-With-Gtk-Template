@@ -45,9 +45,12 @@ class CompletionController(ControllerBase):
     def register_completer(self, completer: GtkSource.Completion):
         self._completers.append(completer)
 
-        completer.add_provider(self.words_provider)
+        # completer.add_provider(self.words_provider)
         for provider in self._providers.values():
             completer.add_provider(provider)
+
+    def unregister_completer(self, completer: GtkSource.Completion):
+        self._completers.remove(completer)
 
     def register_provider(
         self,

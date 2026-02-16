@@ -52,12 +52,17 @@ class ProviderResponseCache(ProviderResponseCacheBase):
     def process_file_change(self, event: Code_Event_Types.TextChangedEvent):
         ...
 
-    def filter(self, word: str):
-        response: list = []
+    def filter(self, word: str) -> list[dict]:
+        response: list[dict] = []
 
         for entry in self.matchers:
             if not word in entry: continue
             data = self.matchers[entry]
             response.append(data)
+
+        return response
+
+    def filter_with_context(self, context: GtkSource.CompletionContext) -> list[dict]:
+        response: list[dict] = []
 
         return response

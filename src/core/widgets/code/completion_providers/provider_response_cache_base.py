@@ -51,7 +51,7 @@ class ProviderResponseCacheBase:
         text: str       = "",
         info: str       = "",
         completion: any = None
-    ):
+    ) -> dict:
         if not label or not text: return
 
         comp_item = GtkSource.CompletionItem.new()
@@ -69,19 +69,51 @@ class ProviderResponseCacheBase:
 
         return comp_item
 
-    def get_word(self, context):
-        start_iter = context.get_iter()
-        end_iter   = None
+    def get_all_marks(self, buffer):
+        marks = []
+        iter_ = buffer.get_start_iter()
 
-        if not isinstance(start_iter, Gtk.TextIter):
-            _, start_iter = context.get_iter()
-            end_iter = start_iter.copy()
+        while iter_:
+            marks = iter_.get_marks()
+
+            for mark in marks:
+                if mark and mark not in marks:
+                    marks.append(mark)
+
+            if not iter_.forward_char():
+                break
+
+        return marks
+
+    def get_all_insert_marks(self, buffer):
+        marks = []
+        iter_ = buffer.get_start_iter()
+
+        while iter_:
+            marks = iter_.get_marks()
+
+            for mark in marks:
+                if mark.get_name() and "multi_insert_" in mark.get_name():
+                    marks.append(mark)
+
+            if not iter_.forward_char():
+                break
+
+        return marks
+
+    def get_word(self, context) -> str:
+        start_iter = self.get_iter_correctly(context)
+        end_iter   = start_iter.copy()
 
         if not start_iter.starts_word():
             start_iter.backward_word_start()
 
-        end_iter.forward_word_end()
+        if not end_iter.ends_word():
+            end_iter.forward_word_end()
 
         buffer = start_iter.get_buffer()
 
         return buffer.get_text(start_iter, end_iter, False)
+
+    def get_iter_correctly(self, context):
+        return context.get_iter()[1] if isinstance(context.get_iter(), tuple) else context.get_iter()
