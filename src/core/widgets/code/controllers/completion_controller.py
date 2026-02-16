@@ -17,9 +17,6 @@ class CompletionController(ControllerBase):
     def __init__(self):
         super(CompletionController, self).__init__()
 
-        self.words_provider = GtkSource.CompletionWords.new("words", None)
-        self.words_provider.props.activation = GtkSource.CompletionActivation.INTERACTIVE
-
         self._completers: list[GtkSource.Completion]             = []
         self._providers: dict[str, GtkSource.CompletionProvider] = {}
 
@@ -45,7 +42,6 @@ class CompletionController(ControllerBase):
     def register_completer(self, completer: GtkSource.Completion):
         self._completers.append(completer)
 
-        # completer.add_provider(self.words_provider)
         for provider in self._providers.values():
             completer.add_provider(provider)
 
@@ -71,14 +67,10 @@ class CompletionController(ControllerBase):
             completer.remove_provider(provider)
 
     def provider_process_file_load(self, event: Code_Event_Types.AddedNewFileEvent):
-        self.words_provider.register(event.file.buffer)
-
         for provider in self._providers.values():
             provider.response_cache.process_file_load(event)
 
     def provider_process_file_close(self, event: Code_Event_Types.RemovedFileEvent):
-        self.words_provider.unregister(event.file.buffer)
-
         for provider in self._providers.values():
             provider.response_cache.process_file_close(event)
 

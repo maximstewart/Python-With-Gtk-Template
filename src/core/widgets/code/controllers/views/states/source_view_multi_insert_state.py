@@ -63,10 +63,10 @@ class SourceViewsMultiInsertState(MarkEventsMixin):
             for mark in self.insert_markers:
                 end_itr = buffer.get_iter_at_mark(mark)
                 start_itr = end_itr.copy()
-        
+
                 if not start_itr.starts_word():
                     start_itr.backward_word_start()
-        
+
                 if not end_itr.ends_word():
                     end_itr.forward_word_end()
 

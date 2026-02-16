@@ -38,19 +38,19 @@ class ProviderResponseCacheBase:
     def process_file_change(self, buffer: GtkSource.Buffer):
         raise ProviderResponseCacheException("ProviderResponseCacheBase 'process_change' not implemented...")
 
-    def filter(self, word: str):
+    def filter(self, word: str) -> list[dict]:
         raise ProviderResponseCacheException("ProviderResponseCacheBase 'filter' not implemented...")
 
-    def filter_with_context(self, context: GtkSource.CompletionContext):
+    def filter_with_context(self, context: GtkSource.CompletionContext) -> list[dict]:
         raise ProviderResponseCacheException("ProviderResponseCacheBase 'filter_with_context' not implemented...")
 
 
     def create_completion_item(
         self,
-        label: str      = "",
-        text: str       = "",
-        info: str       = "",
-        completion: any = None
+        label: str = "",
+        text: str  = "",
+        info: str  = "",
+        icon: any  = None
     ) -> dict:
         if not label or not text: return
 
@@ -62,15 +62,15 @@ class ProviderResponseCacheBase:
             comp_item.set_info(info)
             # comp_item.set_markup(f"<h3>{info}</h3>")
 
-        if completion:
+        if icon:
             comp_item.set_icon(
-                self.get_icon_for_type(completion.type)
+                self.get_icon_for_type(icon.type)
             )
 
         return comp_item
 
-    def get_all_marks(self, buffer):
-        marks = []
+    def get_all_marks(self, buffer) -> list:
+        marks: list = []
         iter_ = buffer.get_start_iter()
 
         while iter_:
@@ -85,8 +85,8 @@ class ProviderResponseCacheBase:
 
         return marks
 
-    def get_all_insert_marks(self, buffer):
-        marks = []
+    def get_all_insert_marks(self, buffer) -> list:
+        marks: list = []
         iter_ = buffer.get_start_iter()
 
         while iter_:
@@ -115,5 +115,5 @@ class ProviderResponseCacheBase:
 
         return buffer.get_text(start_iter, end_iter, False)
 
-    def get_iter_correctly(self, context):
+    def get_iter_correctly(self, context) -> Gtk.TextIter:
         return context.get_iter()[1] if isinstance(context.get_iter(), tuple) else context.get_iter()
