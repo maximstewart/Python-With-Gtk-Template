@@ -38,6 +38,8 @@ class CenterContainer(Gtk.Box):
         ...
 
     def _load_widgets(self):
+        widget_registery.expose_object("center-container", self)
+
         glade_box = widget_registery.get_object("glade_box")
         button    = Gtk.Button(label = "Click Me!")
 

@@ -36,4 +36,6 @@ class FooterContainer(Gtk.Box):
         ...
 
     def _load_widgets(self):
+        widget_registery.expose_object("footer-container", self)
+
         self.add( CodeContainer() )

@@ -36,5 +36,7 @@ class RightContainer(Gtk.Box):
         ...
 
     def _load_widgets(self):
+        widget_registery.expose_object("right-container", self)
+
         vte_widget = VteWidget()
         self.add( vte_widget )
