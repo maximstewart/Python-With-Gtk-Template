@@ -1,4 +1,5 @@
 # Python imports
+from concurrent.futures import ThreadPoolExecutor
 import re
 
 # Lib imports
@@ -21,6 +22,9 @@ class ProviderResponseCache(ProviderResponseCacheBase):
     def __init__(self):
         super(ProviderResponseCache, self).__init__()
 
+        # Note: Using asyncio.run causes a keyboard trap that prevents app
+        # closure from terminal. ThreadPoolExecutor seems to not have such issues...
+        self.executor = ThreadPoolExecutor(max_workers = 1)
         self.matchers: dict = {
             "hello": {
                 "label": "Hello, World!",

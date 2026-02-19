@@ -8,11 +8,11 @@ from gi.repository import Gtk
 # Application imports
 from libs.dto.base_event import BaseEvent
 
-from plugins.plugin_base import PluginBase
+from plugins.plugin_types import PluginUI
 
 
 
-class Plugin(PluginBase):
+class Plugin(PluginUI):
     def __init__(self):
         super(Plugin, self).__init__()
 
@@ -21,14 +21,14 @@ class Plugin(PluginBase):
         ...
 
     def load(self):
-        ui_element = self.requests_ui_element("plugin_control_list")
+        ui_element = self.requests_ui_element("header-container")
         ui_element.add( self.generate_plugin_element() )
 
     def run(self):
         ...
  
     def generate_plugin_element(self):
-        button = Gtk.Button(label = self.name)
+        button = Gtk.Button(label = "Hello, World!")
 
         button.connect("button-release-event", self.send_message)
         button.show()
@@ -36,6 +36,5 @@ class Plugin(PluginBase):
         return button
 
     def send_message(self, widget = None, eve = None):
-        message = "Hello, World!"
-        self.emit("display_message", ("warning", message, None))
+        logger.info("Hello, World!")
  

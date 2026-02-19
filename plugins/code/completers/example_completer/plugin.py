@@ -6,8 +6,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
-from libs.dto.base_event import BaseEvent
-from libs.event_factory import Event_Factory
+from libs.event_factory import Event_Factory, Code_Event_Types
 
 from plugins.plugin_types import PluginCode
 
@@ -22,7 +21,7 @@ class Plugin(PluginCode):
         self.provider: Provider = None
 
 
-    def _controller_message(self, event: BaseEvent):
+    def _controller_message(self, event: Code_Event_Types.CodeEvent):
         ...
 
     def load(self):
@@ -30,14 +29,11 @@ class Plugin(PluginCode):
 
         event = Event_Factory.create_event(
             "register_provider",
-            provider_name = "LSP Completer",
+            provider_name = "Example Completer",
             provider      = self.provider,
             language_ids  = []
         )
         self.message_to("completion", event)
 
     def run(self):
-        ...
- 
-    def generate_plugin_element(self):
         ...

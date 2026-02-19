@@ -1,5 +1,5 @@
 # Python imports
-import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
 # Lib imports
 import gi
@@ -24,7 +24,8 @@ class ProviderResponseCache(ProviderResponseCacheBase):
 
     def process_file_load(self, event: Code_Event_Types.AddedNewFileEvent):
         buffer = event.file.buffer
-        asyncio.run( self._handle_change(buffer) )
+        with ThreadPoolExecutor(max_workers = 1) as executor:
+            executor.submit(self._handle_change, buffer)
 
     def process_file_close(self, event: Code_Event_Types.RemovedFileEvent):
         self.matchers[event.file.buffer] = set()
@@ -35,13 +36,14 @@ class ProviderResponseCache(ProviderResponseCacheBase):
 
     def process_file_change(self, event: Code_Event_Types.TextChangedEvent):
         buffer = event.file.buffer
-        asyncio.run( self._handle_change(buffer) )
+        with ThreadPoolExecutor(max_workers = 1) as executor:
+            executor.submit(self._handle_change, buffer)
 
-    async def _handle_change(self, buffer):
+    def _handle_change(self, buffer):
         start_itr = buffer.get_start_iter()
         end_itr   = buffer.get_end_iter()
         data      = buffer.get_text(start_itr, end_itr, False)
-
+ 
         if not data:
             GLib.idle_add(self.load_empty_set, buffer)
             return
@@ -67,6 +69,9 @@ class ProviderResponseCache(ProviderResponseCacheBase):
         buffer = self.get_iter_correctly(context).get_buffer()
         word   = self.get_word(context).rstrip()
 
+        if not buffer in self.matchers:
+            self.matchers[buffer] = set()
+
         response: list[dict] = []
         for entry in self.matchers[buffer]:
             if not entry.rstrip().startswith(word): continue
@@ -80,7 +85,6 @@ class ProviderResponseCache(ProviderResponseCacheBase):
             response.append(data)
 
         return response
-
 
     def load_empty_set(self, buffer):
         self.matchers[buffer] = set()

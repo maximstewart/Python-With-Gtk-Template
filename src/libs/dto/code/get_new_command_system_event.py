@@ -9,5 +9,5 @@ from .code_event import CodeEvent
 
 
 @dataclass
-class GetCommandSystemEvent(CodeEvent):
+class GetNewCommandSystemEvent(CodeEvent):
     ...

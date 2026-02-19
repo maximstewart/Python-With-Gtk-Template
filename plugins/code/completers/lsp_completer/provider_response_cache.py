@@ -1,4 +1,5 @@
 # Python imports
+from concurrent.futures import ThreadPoolExecutor
 
 # Lib imports
 import gi
@@ -17,9 +18,13 @@ class ProviderResponseCache(ProviderResponseCacheBase):
     def __init__(self):
         super(ProviderResponseCache, self).__init__()
 
+        self.executor = ThreadPoolExecutor(max_workers = 1)
+        self.matchers: dict = {}
+
 
     def process_file_load(self, event: Code_Event_Types.AddedNewFileEvent):
-        ...
+        buffer = event.file.buffer
+        self.executor.submit(self._handle_change, buffer)
 
     def process_file_close(self, event: Code_Event_Types.RemovedFileEvent):
         ...
@@ -28,7 +33,12 @@ class ProviderResponseCache(ProviderResponseCacheBase):
         ...
 
     def process_file_change(self, event: Code_Event_Types.TextChangedEvent):
+        buffer = event.file.buffer
+        self.executor.submit(self._handle_change, buffer)
+
+    def _handle_change(self, buffer):
         ...
+
 
     def filter(self, word: str) -> list[dict]:
         return []
