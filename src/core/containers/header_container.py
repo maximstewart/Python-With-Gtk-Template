@@ -6,6 +6,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
+from ..widgets.separator_widget import Separator
 from ..widgets.controls.open_files_button import OpenFilesButton
 from ..widgets.controls.transparency_scale import TransparencyScale
 
@@ -27,7 +28,7 @@ class HeaderContainer(Gtk.Box):
         self.ctx = self.get_style_context()
         self.ctx.add_class("header-container")
 
-        self.set_orientation(Gtk.Orientation.HORIZONTAL)
+        self.set_orientation(Gtk.Orientation.VERTICAL)
         self.set_hexpand(True)
 
     def _setup_signals(self):
@@ -42,6 +43,7 @@ class HeaderContainer(Gtk.Box):
         button = Gtk.Button(label = "Interactive Debug")
         button.connect("clicked", self._interactive_debug)
 
+        self.add( Separator("separator-header", 0) )
         self.add( OpenFilesButton() )
         self.add( TransparencyScale() )
         self.add(button)
