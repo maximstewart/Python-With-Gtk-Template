@@ -42,6 +42,9 @@ class CenterContainer(Gtk.Box):
 
         glade_box = widget_registery.get_object("glade_box")
         button    = Gtk.Button(label = "Click Me!")
+        webkit_ui = WebkitUI()
+
+        webkit_ui.load_context_base_path()
 
         button.connect("clicked", self._hello_world)
 
@@ -50,7 +53,7 @@ class CenterContainer(Gtk.Box):
 
         self.add(button)
         self.add(glade_box)
-        self.add( WebkitUI() )
+        self.add(webkit_ui)
 
     def _hello_world(self, widget = None, eve = None):
         logger.debug("Hello, World!")
