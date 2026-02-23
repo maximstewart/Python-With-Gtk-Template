@@ -8,9 +8,9 @@ import sys
 
 # Application imports
 # from libs.db import DB
+from libs.logger import Logger
 from libs.event_system import EventSystem
 from libs.keybindings import Keybindings
-from libs.logger import Logger
 from libs.settings.manager import SettingsManager
 from libs.widget_registery import WidgetRegisteryController
 
