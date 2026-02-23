@@ -26,6 +26,7 @@ class EditorsContainer(Gtk.Paned):
         self.ctx = self.get_style_context()
         self.ctx.add_class("paned-editors-container")
 
+        self.set_size_request(-1, 300)
         self.set_hexpand(True)
         self.set_vexpand(True)
         self.set_wide_handle(True)

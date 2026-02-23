@@ -43,7 +43,7 @@ def call_chain_wrapper(fn):
 
 # NOTE: Just reminding myself we can add to builtins two different ways...
 # __builtins__.update({"event_system": Builtins()})
-builtins.APP_NAME          = "<change_me>"
+builtins.APP_NAME          = "<change_me>".replace("<","").replace(">","")
 
 builtins.keybindings       = Keybindings()
 builtins.event_system      = EventSystem()
