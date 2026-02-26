@@ -59,6 +59,7 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerMixin)
     def _subscribe_to_events(self):
         event_system.subscribe("shutting-down", lambda: print("Shutting down..."))
         event_system.subscribe("handle-file-from-ipc", self.handle_file_from_ipc)
+        event_system.subscribe("handle-files-from-ipc", self.handle_files_from_ipc)
         event_system.subscribe("handle-dir-from-ipc", self.handle_dir_from_ipc)
         event_system.subscribe("tggl-top-main-menubar", self._tggl_top_main_menubar)
 

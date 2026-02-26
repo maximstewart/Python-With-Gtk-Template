@@ -2,6 +2,7 @@
 from contextlib import suppress
 import signal
 import os
+import json
 
 # Lib imports
 
@@ -44,25 +45,25 @@ class Application:
             return True
 
         logger.warning(f"{APP_NAME} IPC Server Exists: Have sent path(s) to it and closing...")
+        files: list = []
         for arg in unknownargs + [args.new_tab,]:
             if os.path.isfile(arg):
-                message = f"FILE|{arg}"
-                ipc_server.send_ipc_message(message)
+                files.append(f"file://{arg}")
 
             if os.path.isdir(arg):
                 message = f"DIR|{arg}"
                 ipc_server.send_ipc_message(message)
+
+        if files:
+            message = f"FILES|{json.dumps(files)}"
+            ipc_server.send_ipc_message(message)
 
         return False
 
     def ipc_realization_check(self, ipc_server):
         try:
             ipc_server.create_ipc_listener()
-        except (OSError, PermissionError) as e:
-            logger.info(f"IPC listener creation failed: {e}, falling back to test message")
-            ipc_server.send_test_ipc_message()
-        except Exception as e:
-            logger.error(f"Unexpected IPC setup error: {e}")
+        except Exception:
             ipc_server.send_test_ipc_message()
 
     def setup_debug_hook(self):

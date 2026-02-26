@@ -13,8 +13,6 @@ from .controllers.commands_controller import CommandsController
 from .controllers.completion_controller import CompletionController
 from .controllers.views.source_views_controller import SourceViewsController
 
-from .mini_view_widget import MiniViewWidget
-
 
 
 class CodeBase:
@@ -22,7 +20,6 @@ class CodeBase:
         super(CodeBase, self).__init__()
 
         self.controller_manager: ControllerManager = ControllerManager()
-        self.miniview_widget: MiniViewWidget       = MiniViewWidget()
 
         self._subscribe_to_events()
         self._load_controllers()
@@ -30,6 +27,7 @@ class CodeBase:
 
     def _subscribe_to_events(self):
         event_system.subscribe("handle-file", self._load_ipc_file)
+        event_system.subscribe("handle-files", self._load_ipc_files)
 
     def _load_controllers(self):
         files_controller        = FilesController()
@@ -50,9 +48,6 @@ class CodeBase:
     def get_tabs_widget(self):
         return self.controller_manager["tabs"].get_tabs_widget()
 
-    def get_mini_view_widget(self):
-        return self.miniview_widget
-
     def create_source_view(self):
         source_view = self.controller_manager["source_views"].create_source_view()
         self.controller_manager["completion"].register_completer(
@@ -67,4 +62,8 @@ class CodeBase:
     def _load_ipc_file(self, fpath: str):
         active_view = self.controller_manager["source_views"].signal_mapper.active_view
         uris        = [ f"file://{fpath}" ]
+        active_view._on_uri_data_received(uris)
+
+    def _load_ipc_files(self, uris: list):
+        active_view = self.controller_manager["source_views"].signal_mapper.active_view
         active_view._on_uri_data_received(uris)
