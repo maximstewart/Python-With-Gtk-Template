@@ -7,6 +7,7 @@ from gi.repository import Gtk
 
 # Application imports
 from ..widgets.separator_widget import Separator
+from .code.code_container import CodeContainer
 
 
 
@@ -39,3 +40,4 @@ class LeftContainer(Gtk.Box):
         widget_registery.expose_object("left-container", self)
 
         self.add( Separator("separator-left", 1) )
+        self.add( CodeContainer() )
