@@ -6,6 +6,8 @@
 from libs.controllers.controller_base import ControllerBase
 from libs.event_factory import Event_Factory, Code_Event_Types
 
+from libs.dto.states import SourceViewStates
+
 from ...source_view import SourceView
 
 from .state_manager import SourceViewStateManager
@@ -25,7 +27,9 @@ class SourceViewsController(ControllerBase, list):
 
 
     def _controller_message(self, event: Code_Event_Types.CodeEvent):
-        if isinstance(event, Code_Event_Types.RemovedFileEvent):
+        if isinstance(event, Code_Event_Types.CreateSourceViewEvent):
+            event.response = self.create_source_view(event.state)
+        elif isinstance(event, Code_Event_Types.RemovedFileEvent):
             self._remove_file(event)
         elif isinstance(event, Code_Event_Types.RegisterCommandEvent):
             self._register_command(event)
@@ -74,8 +78,8 @@ class SourceViewsController(ControllerBase, list):
 
             source_view.set_buffer(event.next_file.buffer)
 
-    def create_source_view(self):
-        source_view: SourceView = SourceView()
+    def create_source_view(self, state: SourceViewStates = SourceViewStates.INSERT):
+        source_view: SourceView = SourceView(state)
         source_view.command     = self._get_command_system()
         source_view.command.set_data(source_view)
 
@@ -86,6 +90,7 @@ class SourceViewsController(ControllerBase, list):
 
     def first_map_load(self):
         for source_view in self:
+            if source_view.state == SourceViewStates.INDEPENDENT: continue
             source_view.command.exec("new_file")
             if not source_view.sibling_left: continue
             source_view.get_parent().hide()

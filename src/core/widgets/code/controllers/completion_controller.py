@@ -21,7 +21,13 @@ class CompletionController(ControllerBase):
         self._providers: dict[str, GtkSource.CompletionProvider] = {}
 
     def _controller_message(self, event: Code_Event_Types.CodeEvent):
-        if isinstance(event, Code_Event_Types.RegisterProviderEvent):
+        if isinstance(event, Code_Event_Types.RegisterCompleterEvent):
+            self.register_completer(event.completer)
+        elif isinstance(event, Code_Event_Types.UnregisterCompleterEvent):
+            self.unregister_completer(event.completer)
+        elif isinstance(event, Code_Event_Types.UnregisterProviderEvent):
+            self.unregister_provider(event.provider_name)
+        elif isinstance(event, Code_Event_Types.RegisterProviderEvent):
             self.register_provider(
                 event.provider_name,
                 event.provider,

@@ -4,7 +4,11 @@
 
 
 from .code_event import CodeEvent
+from .create_source_view_event import CreateSourceViewEvent
+from .register_completer_event import RegisterCompleterEvent
+from .unregister_completer_event import UnregisterCompleterEvent
 from .register_provider_event import RegisterProviderEvent
+from .unregister_provider_event import UnregisterProviderEvent
 from .register_command_event import RegisterCommandEvent
 from .file_externally_modified_event import FileExternallyModifiedEvent
 from .file_externally_deleted_event import FileExternallyDeletedEvent
