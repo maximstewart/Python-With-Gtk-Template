@@ -36,7 +36,9 @@ class SourceViewsController(ControllerBase, list):
 
         if not self.signal_mapper.active_view: return
 
-        if isinstance(event, Code_Event_Types.TextChangedEvent):
+        if isinstance(event, Code_Event_Types.GetActiveViewEvent):
+            event.response = self.signal_mapper.active_view
+        elif isinstance(event, Code_Event_Types.TextChangedEvent):
             self.signal_mapper.active_view.command.exec("update_info_bar")
         elif isinstance(event, Code_Event_Types.SetActiveFileEvent):
             self.signal_mapper.set_buffer_to_active_view(event.buffer)
