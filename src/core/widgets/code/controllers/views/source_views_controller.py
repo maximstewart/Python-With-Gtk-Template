@@ -73,6 +73,7 @@ class SourceViewsController(ControllerBase, list):
         for source_view in self:
             if not event.file.buffer == source_view.get_buffer(): continue
             if not event.next_file:
+                if source_view.state in [SourceViewStates.INDEPENDENT, SourceViewStates.READONLY]: continue
                 source_view.command.exec("new_file")
                 continue
 
@@ -90,7 +91,7 @@ class SourceViewsController(ControllerBase, list):
 
     def first_map_load(self):
         for source_view in self:
-            if source_view.state == SourceViewStates.INDEPENDENT: continue
+            if source_view.state in [SourceViewStates.INDEPENDENT, SourceViewStates.READONLY]: continue
             source_view.command.exec("new_file")
             if not source_view.sibling_left: continue
             source_view.get_parent().hide()

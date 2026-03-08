@@ -19,8 +19,8 @@ class SourceViewSignalMapper:
         self.state_manager = state_manager
 
     def set_buffer_to_active_view(self, buffer):
-            self.active_view.set_buffer(buffer)
-            self.active_view.command.exec("update_info_bar")
+        self.active_view.set_buffer(buffer)
+        self.active_view.command.exec("update_info_bar")
 
     def connect_signals(self, source_view: SourceView):
         signal_mappings = self._get_signal_mappings()

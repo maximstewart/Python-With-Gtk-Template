@@ -9,16 +9,16 @@ import re
 from .singleton import Singleton
 
 from .dto.base_event import BaseEvent
-from .dto import code
+from .dto.code import events as code
 
 
 
 class EventFactory(Singleton):
     def __init__(self):
+
         self._event_classes: Dict[str, Type[BaseEvent]] = {}
 
         self._auto_register_events( code.__dict__.items() )
-
 
     def register_event(self, event_type: str, event_class: Type[BaseEvent]):
         self._event_classes[event_type] = event_class

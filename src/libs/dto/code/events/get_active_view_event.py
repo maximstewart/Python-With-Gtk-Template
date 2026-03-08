@@ -9,5 +9,5 @@ from .code_event import CodeEvent
 
 
 @dataclass
-class RequestCompletionEvent(CodeEvent):
+class GetActiveViewEvent(CodeEvent):
     ...

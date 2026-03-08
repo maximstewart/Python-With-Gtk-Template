@@ -32,16 +32,13 @@ class Provider(GObject.GObject, GtkSource.CompletionProvider):
         return "LSP Code Completion"
 
     def do_match(self, context):
-        word = self.response_cache.get_word(context)
-        if not word or len(word) < 2: return False
-
         iter = self.response_cache.get_iter_correctly(context)
         iter.backward_char()
         ch = iter.get_char()
+
         # NOTE: Look to re-add or apply supprting logic to use spaces
-         # As is it slows down the editor in certain contexts...
-        # if not (ch in ('_', '.', ' ') or ch.isalnum()):
-        if not (ch in ('_', '.') or ch.isalnum()):
+        # As is it slows down the editor in certain contexts...
+        if not (ch in ('_', '.', ' ') or ch.isalnum()):
             return False
 
         buffer = iter.get_buffer()
@@ -62,9 +59,10 @@ class Provider(GObject.GObject, GtkSource.CompletionProvider):
 
     def do_get_activation(self):
         """ The context for when a provider will show results """
-    #     return GtkSource.CompletionActivation.NONE
-        return GtkSource.CompletionActivation.USER_REQUESTED
-    #     return GtkSource.CompletionActivation.INTERACTIVE
+#        return GtkSource.CompletionActivation.NONE
+#        return GtkSource.CompletionActivation.USER_REQUESTED
+#        return GtkSource.CompletionActivation.INTERACTIVE
+        return GtkSource.CompletionActivation.INTERACTIVE | GtkSource.CompletionActivation.USER_REQUESTED
 
     def do_populate(self, context):
         results   = self.response_cache.filter_with_context(context)

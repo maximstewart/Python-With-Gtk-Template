@@ -8,12 +8,12 @@ gi.require_version('GtkSource', '4')
 from gi.repository import GtkSource
 
 # Application imports
-from ..base_event import BaseEvent
+from .code_event import CodeEvent
 
 
 
 @dataclass
-class RegisterCommandEvent(BaseEvent):
+class RegisterCommandEvent(CodeEvent):
     command_name: str    = ""
     command: callable    = None
     binding_mode: str    = ""

@@ -34,6 +34,8 @@ class CompletionController(ControllerBase):
                 event.language_ids
             )
         elif isinstance(event, Code_Event_Types.AddedNewFileEvent):
+            ...
+        elif isinstance(event, Code_Event_Types.LoadedNewFileEvent):
             self.provider_process_file_load(event)
         elif isinstance(event, Code_Event_Types.RemovedFileEvent):
             self.provider_process_file_close(event)

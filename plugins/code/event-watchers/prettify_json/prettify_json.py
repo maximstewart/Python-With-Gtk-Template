@@ -9,13 +9,10 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
-from libs.event_factory import Event_Factory, Code_Event_Types
-
-from plugins.plugin_types import PluginCode
 
 
 
-def _load_prettify_json(buffer, menu):
+def add_prettify_json(buffer, menu):
     menu.append( Gtk.SeparatorMenuItem() )
 
     def on_prettify_json(menuitem, buffer):
@@ -32,24 +29,3 @@ def _load_prettify_json(buffer, menu):
     item = Gtk.MenuItem(label = "Prettify JSON")
     item.connect("activate", on_prettify_json, buffer)
     menu.append(item)
-
-
-
-class Plugin(PluginCode):
-    def __init__(self):
-        super(Plugin, self).__init__()
-
-
-    def _controller_message(self, event: Code_Event_Types.CodeEvent):
-        if isinstance(event, Code_Event_Types.PopulateSourceViewPopupEvent):
-            language = event.buffer.get_language()
-            if not language: return
-
-            if language.get_id() == "json":
-                _load_prettify_json(event.buffer, event.menu)
-
-    def load(self):
-        ...
-
-    def run(self):
-        ...
