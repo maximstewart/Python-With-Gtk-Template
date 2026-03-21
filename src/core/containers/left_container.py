@@ -18,7 +18,6 @@ class LeftContainer(Gtk.Box):
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
-        self._load_widgets()
 
         self.show()
 
@@ -31,10 +30,14 @@ class LeftContainer(Gtk.Box):
         self.set_vexpand(True)
 
     def _setup_signals(self):
-        ...
+        self.connect("show", self._handle_show)
 
     def _subscribe_to_events(self):
         ...
+
+    def _handle_show(self, widget):
+        self.disconnect_by_func( self._handle_show )
+        self._load_widgets()
 
     def _load_widgets(self):
         widget_registery.expose_object("left-container", self)

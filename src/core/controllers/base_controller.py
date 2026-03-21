@@ -24,6 +24,7 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerMixin)
     def __init__(self):
 
         self._setup_controller_data()
+        self.plugins_controller.manual_launch_plugins()
 
         self._load_plugins(is_pre = True)
         self._setup_styling()
@@ -31,6 +32,7 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerMixin)
         self._subscribe_to_events()
         self._load_controllers()
         self._load_plugins(is_pre = False)
+
         self._load_files()
 
         logger.info(f"Made it past {self.__class__} loading...")
@@ -43,7 +45,6 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerMixin)
         self.base_container     = BaseContainer()
         self.plugins_controller = plugins_controller
 
-        widget_registery.expose_object("main_window", self.window)
         settings_manager.register_signals_to_builder([self, self.base_container])
 
         self._collect_files_dirs()
