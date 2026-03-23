@@ -16,29 +16,32 @@ class BodyContainer(Gtk.Box):
     def __init__(self):
         super(BodyContainer, self).__init__()
 
-        self.ctx = self.get_style_context()
-
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
-        self._load_widgets()
 
         self.show()
 
 
     def _setup_styling(self):
-        self.set_orientation(Gtk.Orientation.HORIZONTAL)
+        self.ctx = self.get_style_context()
         self.ctx.add_class("body-container")
-        self.set_homogeneous(True)
+
+        self.set_orientation(Gtk.Orientation.HORIZONTAL)
 
     def _setup_signals(self):
-        ...
+        self.connect("show", self._handle_show)
 
     def _subscribe_to_events(self):
         ...
 
+    def _handle_show(self, widget):
+        self.disconnect_by_func( self._handle_show )
+        self._load_widgets()
 
     def _load_widgets(self):
-        self.add(LeftContainer())
-        self.add(CenterContainer())
-        self.add(RightContainer())
+        widget_registery.expose_object("body-container", self)
+
+        self.add( LeftContainer() )
+        self.add( CenterContainer() )
+        self.add( RightContainer() )

@@ -1,0 +1,54 @@
+# Python imports
+
+# Lib imports
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+
+# Application imports
+from ...widgets.code.code_base import CodeBase
+
+from ...widgets.separator_widget import Separator
+
+from .editors_container import EditorsContainer
+
+
+
+class CodeContainer(Gtk.Box):
+    def __init__(self):
+        super(CodeContainer, self).__init__()
+
+        self._setup_styling()
+        self._setup_signals()
+        self._subscribe_to_events()
+        self._load_widgets()
+
+        self.show_all()
+
+
+    def _setup_styling(self):
+        self.set_orientation(Gtk.Orientation.VERTICAL)
+
+    def _setup_signals(self):
+        ...
+
+    def _subscribe_to_events(self):
+        ...
+
+    def _load_widgets(self):
+        widget_registery.expose_object("code-container", self)
+
+        code_base = CodeBase()
+
+        self.add( self._create_editor_widget(code_base) )
+
+    def _create_editor_widget(self, code_base: CodeBase):
+        editors_container = Gtk.Box()
+
+        widget_registery.expose_object("editors-container", editors_container)
+
+        editors_container.add( Separator("separator_left") )
+        editors_container.add( EditorsContainer(code_base) )
+        editors_container.add( Separator("separator_right") )
+
+        return editors_container

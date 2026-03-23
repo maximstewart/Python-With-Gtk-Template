@@ -8,11 +8,11 @@ import sys
 
 # Application imports
 # from libs.db import DB
-from libs.event_system import EventSystem
-from libs.endpoint_registry import EndpointRegistry
-from libs.keybindings import Keybindings
 from libs.logger import Logger
+from libs.event_system import EventSystem
+from libs.keybindings import Keybindings
 from libs.settings.manager import SettingsManager
+from libs.widget_registery import WidgetRegisteryController
 
 
 
@@ -34,12 +34,8 @@ def daemon_threaded_wrapper(fn):
 
 def call_chain_wrapper(fn):
     def wrapper(*args, **kwargs):
-        print()
-        print()
         for line in traceback.format_stack():
             print( line.strip() )
-        print()
-        print()
 
         return fn(*args, **kwargs)
     return wrapper
@@ -47,21 +43,20 @@ def call_chain_wrapper(fn):
 
 # NOTE: Just reminding myself we can add to builtins two different ways...
 # __builtins__.update({"event_system": Builtins()})
-builtins.APP_NAME          = "<change_me>"
+builtins.APP_NAME          = "<change_me>".replace("<","").replace(">","")
 
 builtins.keybindings       = Keybindings()
 builtins.event_system      = EventSystem()
-builtins.endpoint_registry = EndpointRegistry()
 builtins.settings_manager  = SettingsManager()
+builtins.widget_registery  = WidgetRegisteryController()
 # builtins.db                = DB()
 
 settings_manager.load_settings()
 
-builtins.settings          = settings_manager.settings
 builtins.logger            = Logger(
-                                settings_manager.get_home_config_path(), \
-                                _ch_log_lvl = settings.debugging.ch_log_lvl, \
-                                _fh_log_lvl = settings.debugging.fh_log_lvl
+                                settings_manager.path_manager.get_home_config_path(), \
+                                _ch_log_lvl = settings_manager.settings.debugging.ch_log_lvl, \
+                                _fh_log_lvl = settings_manager.settings.debugging.fh_log_lvl
                             ).get_logger()
 
 builtins.threaded          = threaded_wrapper

@@ -1,5 +1,5 @@
 """
-    Dasta Class Package
+    Libs DTO(s) Package
 """
 
-from .event import Event
+from .base_event import BaseEvent

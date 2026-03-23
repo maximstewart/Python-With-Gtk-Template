@@ -2,6 +2,7 @@
 import os
 import threading
 import time
+from contextlib import suppress
 from multiprocessing.connection import Client
 from multiprocessing.connection import Listener
 
@@ -40,8 +41,9 @@ class IPCServer(Singleton):
 
     def create_ipc_listener(self) -> None:
         if self._conn_type == "socket":
-            if os.path.exists(self._ipc_address) and settings_manager.is_dirty_start():
-                os.unlink(self._ipc_address)
+            if settings_manager.is_dirty_start():
+                with suppress(FileNotFoundError, PermissionError):
+                    os.unlink(self._ipc_address)
 
             listener = Listener(address=self._ipc_address, family="AF_UNIX", authkey=self._ipc_authkey)
         elif "unsecured" not in self._conn_type:
@@ -61,8 +63,14 @@ class IPCServer(Singleton):
                 conn       = listener.accept()
                 start_time = time.perf_counter()
                 self._handle_ipc_message(conn, start_time)
-            except Exception as e:
+            except EOFError as e:
                 logger.debug( repr(e) )
+            except (OSError, ConnectionError, BrokenPipeError) as e:
+                logger.debug( f"IPC connection error: {e}" )
+            except Exception as e:
+                logger.debug( f"Unexpected IPC error: {e}" )
+            finally:
+                conn.close()
 
         listener.close()
 
@@ -79,6 +87,16 @@ class IPCServer(Singleton):
                 conn.close()
                 break
 
+            if "FILES|" in msg:
+                import json
+                data  = msg.split("FILES|")[1].strip()
+                files = json.loads(data)
+                if files:
+                    event_system.emit("handle-files-from-ipc", (files,))
+
+                conn.close()
+                break
+
             if "DIR|" in msg:
                 file = msg.split("DIR|")[1].strip()
                 if file:
@@ -88,7 +106,7 @@ class IPCServer(Singleton):
                 break
 
 
-            if msg in ['close connection', 'close server']:
+            if msg in ['close connection', 'close server', 'Empty Data...']:
                 conn.close()
                 break
 
@@ -112,8 +130,10 @@ class IPCServer(Singleton):
             conn.close()
         except ConnectionRefusedError as e:
             logger.error("Connection refused...")
+        except (OSError, ConnectionError, BrokenPipeError) as e:
+            logger.error( f"IPC connection error: {e}" )
         except Exception as e:
-            logger.error( repr(e) )
+            logger.error( f"Unexpected IPC error: {e}" )
 
 
     def send_test_ipc_message(self, message: str = "Empty Data...") -> None:
@@ -130,6 +150,9 @@ class IPCServer(Singleton):
         except ConnectionRefusedError as e:
             if self._conn_type == "socket":
                 logger.error("IPC Socket no longer valid.... Removing.")
-                os.unlink(self._ipc_address)
+                with suppress(FileNotFoundError, PermissionError):
+                    os.unlink(self._ipc_address)
+        except (OSError, ConnectionError, BrokenPipeError) as e:
+            logger.error( f"IPC connection error: {e}" )
         except Exception as e:
-            logger.error( repr(e) )
+            logger.error( f"Unexpected IPC error: {e}" )

@@ -38,11 +38,11 @@ class TransparencyScale(Gtk.Scale):
         adjust = self.get_adjustment()
         adjust.set_lower(0)
         adjust.set_upper(100)
-        adjust.set_value(settings.theming.transparency)
+        adjust.set_value(settings_manager.settings.theming.transparency)
         adjust.set_step_increment(1.0)
 
     def _update_transparency(self, range):
         event_system.emit("remove-transparency")
         tp = int(range.get_value())
-        settings.theming.transparency = tp
+        settings_manager.settings.theming.transparency = tp
         event_system.emit("update-transparency")

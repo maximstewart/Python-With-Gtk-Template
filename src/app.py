@@ -2,6 +2,7 @@
 from contextlib import suppress
 import signal
 import os
+import json
 
 # Lib imports
 
@@ -23,13 +24,14 @@ class Application:
     def __init__(self):
         super(Application, self).__init__()
 
-        if not settings_manager.is_trace_debug():
-            self.load_ipc()
-
         self.setup_debug_hook()
 
 
     def run(self):
+        if not settings_manager.is_trace_debug():
+            if not self.load_ipc():
+                return
+
         win = Window()
         win.start()
 
@@ -39,22 +41,30 @@ class Application:
         ipc_server  = IPCServer()
 
         self.ipc_realization_check(ipc_server)
-        if not ipc_server.is_ipc_alive:
-            for arg in unknownargs + [args.new_tab,]:
-                if os.path.isfile(arg):
-                    message = f"FILE|{arg}"
-                    ipc_server.send_ipc_message(message)
+        if ipc_server.is_ipc_alive:
+            return True
 
-            raise AppLaunchException(f"{APP_NAME} IPC Server Exists: Have sent path(s) to it and closing...")
+        logger.warning(f"{APP_NAME} IPC Server Exists: Have sent path(s) to it and closing...")
+        files: list = []
+        for arg in unknownargs + [args.new_tab,]:
+            if os.path.isfile(arg):
+                files.append(f"file://{arg}")
+
+            if os.path.isdir(arg):
+                message = f"DIR|{arg}"
+                ipc_server.send_ipc_message(message)
+
+        if files:
+            message = f"FILES|{json.dumps(files)}"
+            ipc_server.send_ipc_message(message)
+
+        return False
 
     def ipc_realization_check(self, ipc_server):
         try:
             ipc_server.create_ipc_listener()
         except Exception:
             ipc_server.send_test_ipc_message()
-
-        with suppress(Exception):
-            ipc_server.create_ipc_listener()
 
     def setup_debug_hook(self):
         # Typically: ValueError: signal only works in main thread

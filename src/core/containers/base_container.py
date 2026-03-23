@@ -16,34 +16,40 @@ class BaseContainer(Gtk.Box):
     def __init__(self):
         super(BaseContainer, self).__init__()
 
-        self.ctx = self.get_style_context()
-
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
-        self._load_widgets()
 
         self.show()
 
 
     def _setup_styling(self):
-        self.set_orientation(Gtk.Orientation.VERTICAL)
+        self.ctx = self.get_style_context()
         self.ctx.add_class("base-container")
 
+        self.set_orientation(Gtk.Orientation.VERTICAL)
+        self._update_transparency()
+
     def _setup_signals(self):
-        ...
+        self.connect("show", self._handle_show)
 
     def _subscribe_to_events(self):
         event_system.subscribe("update-transparency", self._update_transparency)
         event_system.subscribe("remove-transparency", self._remove_transparency)
 
+    def _handle_show(self, widget):
+        self.disconnect_by_func( self._handle_show )
+        self._load_widgets()
+
     def _load_widgets(self):
-        self.add(HeaderContainer())
-        self.add(BodyContainer())
-        self.add(FooterContainer())
+        widget_registery.expose_object("base-container", self)
+
+        self.add( HeaderContainer() )
+        self.add( BodyContainer() )
+        self.add( FooterContainer() )
 
     def _update_transparency(self):
-        self.ctx.add_class(f"mw_transparency_{settings.theming.transparency}")
+        self.ctx.add_class(f"mw_transparency_{settings_manager.settings.theming.transparency}")
 
     def _remove_transparency(self):
-        self.ctx.remove_class(f"mw_transparency_{settings.theming.transparency}")
+        self.ctx.remove_class(f"mw_transparency_{settings_manager.settings.theming.transparency}")

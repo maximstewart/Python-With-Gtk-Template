@@ -6,6 +6,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
+from ..widgets.separator_widget import Separator
 from ..widgets.vte_widget import VteWidget
 
 
@@ -17,25 +18,31 @@ class RightContainer(Gtk.Box):
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
-        self._load_widgets()
 
         self.show()
 
 
     def _setup_styling(self):
-        self.set_orientation(Gtk.Orientation.VERTICAL)
+        self.ctx = self.get_style_context()
+        self.ctx.add_class("right-container")
 
+        self.set_orientation(Gtk.Orientation.HORIZONTAL)
         self.set_vexpand(True)
 
-        ctx = self.get_style_context()
-        ctx.add_class("right-container")
-
     def _setup_signals(self):
-        ...
+        self.connect("show", self._handle_show)
 
     def _subscribe_to_events(self):
         ...
 
+    def _handle_show(self, widget):
+        self.disconnect_by_func( self._handle_show )
+        self._load_widgets()
+
     def _load_widgets(self):
+        widget_registery.expose_object("right-container", self)
+
         vte_widget = VteWidget()
         self.add( vte_widget )
+
+        self.add( Separator("separator-right", 1) )

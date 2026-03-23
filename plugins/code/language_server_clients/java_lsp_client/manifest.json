@@ -1,0 +1,8 @@
+{
+    "name": "Java LSP Client",
+    "author": "ITDominator",
+    "version": "0.0.1",
+    "support": "",
+    "autoload": false,
+    "requests": {}
+}

@@ -12,7 +12,6 @@ from gi.repository import GLib
 from gi.repository import Vte
 
 # Application imports
-from libs.dto.event import Event
 
 
 
@@ -46,6 +45,7 @@ class VteWidget(Vte.Terminal):
         ctx.add_class("vte-widget")
 
         self.set_clear_background(False)
+        self.set_hexpand(True)
         self.set_enable_sixel(True)
         self.set_cursor_shape( Vte.CursorShape.IBEAM )
 
@@ -59,27 +59,29 @@ class VteWidget(Vte.Terminal):
         ...
 
     def _do_session_spawn(self):
+        env = [
+            "DISPLAY=:0",
+            "LC_ALL=C",
+            "TERM='xterm-256color'",
+            f"HOME='{settings_manager.path_manager.get_home_path()}'",
+            "XDG_RUNTIME_DIR='/run/user/1000'",
+            f"XAUTHORITY='{settings_manager.path_manager.get_home_path()}/.Xauthority'",
+            "HISTFILE=/dev/null",
+            "HISTSIZE=0",
+            "HISTFILESIZE=0",
+            "PS1=\\h@\\u \\W -->: ",
+        ]
+
         self.spawn_sync(
             Vte.PtyFlags.DEFAULT,
-            settings_manager.get_home_path(),
+            settings_manager.path_manager.get_home_path(),
             ["/bin/bash"],
-            [],
+            env,
             GLib.SpawnFlags.DEFAULT,
             None, None,
         )
 
-        # Note:  '-->:' is used as a delimiter to split on to get command actual.
-        #              !!!  DO NOT REMOVE UNLESS CODE UPDATED ACCORDINGLY  !!!
         startup_cmds = [
-            "env -i /bin/bash --noprofile --norc\n",
-            "export TERM='xterm-256color'\n",
-            "export LC_ALL=C\n",
-            "export XDG_RUNTIME_DIR='/run/user/1000'\n",
-            "export DISPLAY=:0\n",
-            f"export XAUTHORITY='{settings_manager.get_home_path()}/.Xauthority'\n",
-            f"\nexport HOME='{settings_manager.get_home_path()}'\n",
-            "export PS1='\\h@\\u \\W -->: '\n",
-            "clear\n"
         ]
 
         for i in startup_cmds:
@@ -93,6 +95,9 @@ class VteWidget(Vte.Terminal):
         if not text.encode() == "\r".encode(): return
 
         text, attributes = self.get_text()
+
+        if not text: return
+
         lines            = text.strip().splitlines()
         command_ran      = None
 

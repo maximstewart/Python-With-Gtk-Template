@@ -1,0 +1,9 @@
+{
+    "name": "Example Plugin",
+    "author": "John Doe",
+    "version": "0.0.1",
+    "support": "",
+    "requests": {
+        "bind_keys": ["Example Plugin||send_message:<Control>f"]
+    }
+}

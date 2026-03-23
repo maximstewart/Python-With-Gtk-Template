@@ -21,7 +21,7 @@ from core.controllers.base_controller import BaseController
 
 
 
-class ControllerStartExceptiom(Exception):
+class ControllerStartException(Exception):
     ...
 
 
@@ -42,7 +42,6 @@ class Window(Gtk.ApplicationWindow):
         self._setup_styling()
         self._setup_signals()
         self._subscribe_to_events()
-        self._load_widgets()
 
         self._set_window_data()
         self._set_size_constraints()
@@ -53,7 +52,7 @@ class Window(Gtk.ApplicationWindow):
 
     def _setup_styling(self):
         self.set_title(f"{APP_NAME}")
-        self.set_icon_from_file( settings_manager.get_window_icon() )
+        self.set_icon_from_file( settings_manager.path_manager.get_window_icon() )
         self.set_decorated(True)
         self.set_skip_pager_hint(False)
         self.set_skip_taskbar_hint(False)
@@ -62,11 +61,12 @@ class Window(Gtk.ApplicationWindow):
 
         ctx = self.get_style_context()
         ctx.add_class("main-window")
-        ctx.add_class(f"mw_transparency_{settings.theming.transparency}")
+        ctx.add_class(f"mw_transparency_{settings_manager.settings.theming.transparency}")
 
     def _setup_signals(self):
         self.connect("focus-in-event", self._on_focus_in_event)
         self.connect("focus-out-event", self._on_focus_out_event)
+        self.connect("show", self._handle_show)
 
         self.connect("delete-event", self.stop)
         GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, self.stop)
@@ -75,7 +75,13 @@ class Window(Gtk.ApplicationWindow):
         event_system.subscribe("tear-down", self.stop)
         event_system.subscribe("load-interactive-debug", self._load_interactive_debug)
 
+    def _handle_show(self, widget):
+        self.disconnect_by_func( self._handle_show )
+        self._load_widgets()
+
     def _load_widgets(self):
+        widget_registery.expose_object("main-window", self)
+
         if settings_manager.is_debug():
             self.set_interactive_debugging(True)
 
@@ -96,12 +102,12 @@ class Window(Gtk.ApplicationWindow):
         return 'X11'
 
     def _set_size_constraints(self):
-        _window_x   = settings.config.main_window_x
-        _window_y   = settings.config.main_window_y
-        _min_width  = settings.config.main_window_min_width
-        _min_height = settings.config.main_window_min_height
-        _width      = settings.config.main_window_width
-        _height     = settings.config.main_window_height
+        _window_x   = settings_manager.settings.config.main_window_x
+        _window_y   = settings_manager.settings.config.main_window_y
+        _min_width  = settings_manager.settings.config.main_window_min_width
+        _min_height = settings_manager.settings.config.main_window_min_height
+        _width      = settings_manager.settings.config.main_window_width
+        _height     = settings_manager.settings.config.main_window_height
 
         self.move(_window_x, _window_y - 28)
         self.set_size_request(_min_width, _min_height)
@@ -111,16 +117,15 @@ class Window(Gtk.ApplicationWindow):
         screen = self.get_screen()
         visual = screen.get_rgba_visual()
 
-        if visual and screen.is_composited() and settings.config.make_transparent == 0:
+        if visual and screen.is_composited() and settings_manager.settings.config.make_transparent == 0:
             self.set_visual(visual)
             self.set_app_paintable(True)
             # self.connect("draw", self._area_draw)
 
         # bind css file
         cssProvider  = Gtk.CssProvider()
-        cssProvider.load_from_path( settings_manager.get_css_file() )
-        screen       = Gdk.Screen.get_default()
         styleContext = Gtk.StyleContext()
+        cssProvider.load_from_path( settings_manager.path_manager.get_css_file() )
         styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     def _area_draw(self, widget: Gtk.ApplicationWindow, cr: cairo.Context) -> None:
