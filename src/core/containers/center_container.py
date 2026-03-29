@@ -28,6 +28,7 @@ class CenterContainer(Gtk.Box):
         self.set_orientation(Gtk.Orientation.VERTICAL)
         self.set_hexpand(True)
         self.set_vexpand(True)
+        self.set_size_request(320, -1)
 
     def _setup_signals(self):
         self.connect("show", self._handle_show)

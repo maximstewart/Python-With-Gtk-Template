@@ -24,6 +24,7 @@ class Plugin(PluginCode):
         self.emit_to("files", event)
 
         file = event.response
+        if not file: return
         if file.ftype == "buffer": return
 
         file.check_file_on_disk()

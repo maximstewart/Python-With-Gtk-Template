@@ -29,6 +29,7 @@ class EditorsContainer(Gtk.Paned):
         self.set_hexpand(True)
         self.set_vexpand(True)
         self.set_wide_handle(True)
+        self.set_size_request(320, -1)
 
     def _setup_signals(self):
         self.connect("map", self._init_map)
