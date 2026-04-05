@@ -6,9 +6,9 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
-from ..widgets.separator_widget import Separator
-from ..widgets.controls.open_files_button import OpenFilesButton
-from ..widgets.controls.transparency_scale import TransparencyScale
+from core.widgets.separator_widget import Separator
+from core.widgets.controls.open_files_button import OpenFilesButton
+from core.widgets.controls.transparency_scale import TransparencyScale
 
 
 
