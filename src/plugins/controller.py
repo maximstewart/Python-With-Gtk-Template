@@ -13,7 +13,7 @@ from gi.repository import Gtk
 from gi.repository import GLib
 
 # Application imports
-from libs.event_factory import Event_Factory, Code_Event_Types
+from libs.event_factory import Event_Factory, App_Event_Types, Code_Event_Types
 from libs.controllers.controller_base import ControllerBase
 from libs.dto.plugins.manifest_meta import ManifestMeta
 from libs.dto.base_event import BaseEvent
@@ -58,7 +58,7 @@ class PluginsController(ControllerBase, PluginsControllerMixin, PluginReloadMixi
             item = Gtk.MenuItem(label = "Plugins")
             item.connect("activate", self.toggle_plugins_ui)
             event.menu.append(item)
-        elif isinstance(event, Code_Event_Types.TogglePluginsUiEvent):
+        elif isinstance(event, App_Event_Types.TogglePluginsUiEvent):
             self.toggle_plugins_ui()
 
     def _collect_search_locations(self, path: str, locations: list):

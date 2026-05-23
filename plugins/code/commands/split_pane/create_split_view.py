@@ -47,6 +47,8 @@ def execute(
 
     pane.set_hexpand(True)
     pane.set_vexpand(True)
+    scrolled_win1.set_hexpand(True)
+    scrolled_win2.set_vexpand(True)
     pane.set_wide_handle(True)
 
     container.remove(scrolled_win1)
@@ -54,21 +56,9 @@ def execute(
     pane.pack2( scrolled_win2, True, True )
     container.add(pane)
 
-    def _show(pane, alloc, is_vertical: bool):
-        if is_vertical:
-            pane.set_position(alloc.width  / 2)
-        else:
-            pane.set_position(alloc.height / 2)
-
-        pane.disconnect(pane.show_id)
-
-    is_control, is_shift, is_alt = modkeys_states
-    alloc = container.get_allocation()
     if char_str == "|":
-        pane.show_id = pane.connect("show", _show, alloc, True)
         pane.set_orientation(Gtk.Orientation.VERTICAL)
     elif char_str == "\\":
-        pane.show_id = pane.connect("show", _show, alloc, False)
         pane.set_orientation(Gtk.Orientation.HORIZONTAL)
 
     pane.show_all()

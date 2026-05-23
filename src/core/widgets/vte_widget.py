@@ -88,7 +88,7 @@ class VteWidget(Vte.Terminal):
         self.spawn_async(
             Vte.PtyFlags.DEFAULT,
             settings_manager.path_manager.get_home_path(),
-            ["/bin/bash"],
+            ["/bin/bash", "--rcfile", f"{settings_manager.path_manager.get_home_path()}/.bashrc", "-i"],
             env,
             GLib.SpawnFlags.DEFAULT,
             None, None, -1, None, None,

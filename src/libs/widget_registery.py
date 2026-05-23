@@ -30,6 +30,7 @@ class WidgetRegisteryController(ControllerBase):
 
         widgets = self._builder.get_objects()
         for widget in widgets:
+            if not hasattr(widget, "get_name"): continue
             self.builder_keys.append( widget.get_name() )
 
     def _controller_message(self, event: BaseEvent):

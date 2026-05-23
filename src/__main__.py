@@ -4,12 +4,12 @@
 import argparse
 import faulthandler
 import traceback
-from setproctitle import setproctitle
 
 import tracemalloc
 tracemalloc.start()
 
 # Lib imports
+from setproctitle import setproctitle
 
 # Application imports
 from __builtins__ import *

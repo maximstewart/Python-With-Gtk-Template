@@ -81,7 +81,7 @@ class BaseController(IPCSignalsMixin, KeyboardSignalsMixin, BaseControllerMixin)
 
     def _load_files(self):
         for file in settings_manager.get_starting_files():
-            event_system.emit("post-file-to-ipc", file)
+            event_system.emit("post-file-to-ipc", f"FILE|{file}")
 
     def _tggl_top_main_menubar(self):
         logger.debug("_tggl_top_main_menubar > stub...")

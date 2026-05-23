@@ -31,7 +31,7 @@ class EventFactory(Singleton):
             event_type = self._class_name_to_event_type(name)
 
             self._event_classes[event_type] = obj
-            Code_Event_Types.add_event_class(name, obj)
+            App_Event_Types.add_event_class(name, obj)
             i += 1
 
         logger.debug(f"Registered {i} event types:")
@@ -44,7 +44,7 @@ class EventFactory(Singleton):
             event_type = self._class_name_to_event_type(name)
 
             del self._event_classes[event_type]
-            Code_Event_Types.remove_event_class(name)
+            App_Event_Types.remove_event_class(name)
             i += 1
 
         logger.debug(f"Unregistered {i} event types:")
@@ -98,6 +98,7 @@ class EventNamespace:
 
 
 
-Code_Event_Types = EventNamespace()
+App_Event_Types  = EventNamespace()
+Code_Event_Types = App_Event_Types
 Event_Factory    = EventFactory()
 

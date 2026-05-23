@@ -4,7 +4,6 @@
 import gi
 gi.require_version('GtkSource', '4')
 
-from gi.repository import GLib
 from gi.repository import GtkSource
 
 # Application imports

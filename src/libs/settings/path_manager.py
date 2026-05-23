@@ -88,6 +88,7 @@ class PathManager:
     def get_ui_widgets_path(self)  -> str: return self._UI_WIDGETS_PATH
     def get_context_path(self)     -> str: return self._CONTEXT_PATH
     def get_plugins_path(self)     -> str: return self._PLUGINS_PATH
+    def get_icons_path(self)       -> str: return self._DEFAULT_ICONS
     def get_css_file(self)         -> str: return self._CSS_FILE
     def get_home_config_path(self) -> str: return self._HOME_CONFIG_PATH
     def get_window_icon(self)      -> str: return self._WINDOW_ICON
