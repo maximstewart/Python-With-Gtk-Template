@@ -36,6 +36,8 @@ class WebkitUI(WebKit2.WebView):
 
     def _setup_signals(self):
         self.connect("context-menu", self._on_context_menu)
+        # Note: If you want to change/handle/ignore TLS issues. Not secure to ignore!
+        # self.connect("load-failed-with-tls-errors", self._on_tls_errors)
 
     def _subscribe_to_events(self):
         event_system.subscribe(f"ui-message", self.ui_message)
@@ -47,6 +49,19 @@ class WebkitUI(WebKit2.WebView):
         content_manager = self.get_user_content_manager()
         content_manager.connect("script-message-received", self._process_js_message)
         content_manager.register_script_message_handler("backend")
+
+    def _on_tls_errors(self, webview, uri, certificate, errors):
+        print("TLS error:", uri)
+        print("Errors:", errors)
+
+        webview.get_website_data_manager().get_tls_errors_policy()
+        webview.get_context().allow_tls_certificate_for_host(
+            certificate,
+            uri.split("/")[2]
+        )
+
+        webview.load_url(uri)
+        return True
 
     def _process_js_message(self, user_content_manager, js_result):
         js_value = js_result.get_js_value()
