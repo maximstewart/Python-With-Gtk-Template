@@ -23,3 +23,6 @@ There are a "\<change_me\>" strings and files that need to be set according to y
 
 For the user_config, after changing names and files, copy all content to their respective destinations.
 The logic follows Debian Dpkg packaging and its placement logic.
+
+# Images
+![1 Displaying template project and example widgets. ](images/pic1.png)
