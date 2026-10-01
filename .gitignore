@@ -1,4 +1,5 @@
 database.db
+autoimport.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
