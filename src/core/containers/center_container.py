@@ -6,6 +6,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # Application imports
+from .quad.quad_container import QuadContainer 
 from core.widgets.webkit.webkit_ui import WebkitUI
 
 
@@ -43,20 +44,24 @@ class CenterContainer(Gtk.Box):
     def _load_widgets(self):
         widget_registery.expose_object("center-container", self)
 
-        glade_box = widget_registery.get_object("glade_box")
-        button    = Gtk.Button(label = "Click Me!")
-        webkit_ui = WebkitUI()
-
-        webkit_ui.load_context_base_path()
+        quad_container = QuadContainer()
+        webkit_ui      = WebkitUI()
+        button         = Gtk.Button(label = "Click Me!")
+        label          = Gtk.Label(label = "bright")
+        glade_box      = widget_registery.get_object("glade_box")
 
         button.connect("clicked", self._hello_world)
-
+        webkit_ui.load_context_base_path()
         button.show()
+        label.show()
         glade_box.show()
 
-        self.add(button)
-        self.add(glade_box)
-        self.add(webkit_ui)
+        quad_container.top_container.pack1(button, True, True)
+        quad_container.top_container.pack2(glade_box, True, True)
+        quad_container.bottom_container.pack1(webkit_ui, True, True)
+        quad_container.bottom_container.pack2(label, True, True)
+
+        self.add(quad_container)
 
     def _hello_world(self, widget = None, eve = None):
         logger.debug("Hello, World!")

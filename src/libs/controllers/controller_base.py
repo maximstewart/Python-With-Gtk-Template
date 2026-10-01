@@ -37,8 +37,10 @@ class ControllerBase(Singleton, EmitDispatcher):
         return self.controller_message_bus.message_to(name, event)
 
     def message_to_selected(self, names: list[str], event: BaseEvent):
-        for name in names:
+        return [
             self.controller_message_bus.message_to_selected(name, event)
+            for name in names
+        ]
 
     def register_controller(self, name: str, controller):
         self.controller_message_bus.register_controller(name, controller)

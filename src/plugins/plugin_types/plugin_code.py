@@ -41,10 +41,10 @@ class PluginCode(PluginBase):
         return self.plugin_context.request_ui_element(element_id)
 
     def emit(self, event: BaseEvent):
-        return self.plugin_context.emit(event)
+        self.plugin_context.emit(event)
 
     def emit_to(self, name: str, event: BaseEvent):
-        return self.plugin_context.emit_to(name, event)
+        self.plugin_context.emit_to(name, event)
 
     def emit_to_selected(self, names: list[str], event: BaseEvent):
-        return self.plugin_context.emit_to_selected(names, event)
+        self.plugin_context.emit_to_selected(names, event)
