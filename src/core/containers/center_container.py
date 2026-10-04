@@ -8,6 +8,7 @@ from gi.repository import Gtk
 # Application imports
 from .quad.quad_container import QuadContainer 
 from core.widgets.webkit.webkit_ui import WebkitUI
+from core.widgets.files.files_base import FilesBase
 
 
 
@@ -45,21 +46,29 @@ class CenterContainer(Gtk.Box):
         widget_registery.expose_object("center-container", self)
 
         quad_container = QuadContainer()
+        files_base     = FilesBase()
         webkit_ui      = WebkitUI()
+
         button         = Gtk.Button(label = "Click Me!")
-        label          = Gtk.Label(label = "bright")
         glade_box      = widget_registery.get_object("glade_box")
+        files_widget   = files_base.create_tabs_view()
 
         button.connect("clicked", self._hello_world)
         webkit_ui.load_context_base_path()
+
+        files_widget.create_new_tab("test")
+        files_widget.create_new_tab("test2")
+        files_widget.create_new_tab("test3")
+        files_widget.create_new_tab("test4")
+        files_widget.create_new_tab("test5")
+
         button.show()
-        label.show()
         glade_box.show()
 
         quad_container.top_container.pack1(button, True, True)
         quad_container.top_container.pack2(glade_box, True, True)
         quad_container.bottom_container.pack1(webkit_ui, True, True)
-        quad_container.bottom_container.pack2(label, True, True)
+        quad_container.bottom_container.pack2(files_widget, True, True)
 
         self.add(quad_container)
 

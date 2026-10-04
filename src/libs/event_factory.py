@@ -10,6 +10,7 @@ from .singleton import Singleton
 
 from .dto.base_event import BaseEvent
 from .dto.code import events as code
+from .dto.files import events as files
 
 
 
@@ -18,6 +19,7 @@ class EventFactory(Singleton):
 
         self._event_classes: Dict[str, Type[BaseEvent]] = {}
 
+        self._auto_register_events( files.__dict__.items() )
         self._auto_register_events( code.__dict__.items() )
 
     def register_event(self, event_type: str, event_class: Type[BaseEvent]):
@@ -98,7 +100,8 @@ class EventNamespace:
 
 
 
-App_Event_Types  = EventNamespace()
-Code_Event_Types = App_Event_Types
-Event_Factory    = EventFactory()
+App_Event_Types   = EventNamespace()
+Code_Event_Types  = App_Event_Types
+Files_Event_Types = App_Event_Types
+Event_Factory     = EventFactory()
 
