@@ -47,7 +47,10 @@ class WebkitUI(WebKit2.WebView):
 
     def _setup_content_manager(self):
         content_manager = self.get_user_content_manager()
-        content_manager.connect("script-message-received", self._process_js_message)
+        # content_manager.connect("script-message-received",  self._process_js_message) # If generic no sub group target
+        content_manager.connect("script-message-received::logger",  self._process_logger_js_message)
+        content_manager.connect("script-message-received::backend", self._process_backend_js_message)
+        content_manager.register_script_message_handler("logger")
         content_manager.register_script_message_handler("backend")
 
     def _on_tls_errors(self, webview, uri, certificate, errors):
@@ -63,7 +66,12 @@ class WebkitUI(WebKit2.WebView):
         webview.load_url(uri)
         return True
 
-    def _process_js_message(self, user_content_manager, js_result):
+    def _process_logger_js_message(self, user_content_manager, js_result):
+        js_value = js_result.get_js_value()
+        message  = js_value.to_string()
+        logger.info(message)
+
+    def _process_backend_js_message(self, user_content_manager, js_result):
         js_value = js_result.get_js_value()
         message  = js_value.to_string()
 
@@ -94,6 +102,9 @@ class WebkitUI(WebKit2.WebView):
     def load_context_base_path(self, path: str = ""):
         if not path:
             path   = settings_manager.path_manager.get_context_path()
+
+        if not path:
+            path = str( Path(__file__).parent )
 
         base_path  = Path(path)
         index_file = base_path / "index.html"

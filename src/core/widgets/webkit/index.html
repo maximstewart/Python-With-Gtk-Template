@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>Example</title>
+    <link rel="shortcut icon" href="fave_icon.png">
+    <!-- <link rel="stylesheet" href="resources/css/base.css">-->
+    <!-- <link rel="stylesheet" href="resources/css/main.css">-->
+    <style>
+        html, body {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+
+    <h1>Hello, World!</h1>
+
+
+    <!-- <script src="resources/js/.js" charset="utf-8"></script>-->
+    <script>
+        function sayHelloWorld() {
+            console.log("Hello, World!");
+        }
+
+        window.addEventListener("load", () => {
+            window.webkit.messageHandlers.logger.postMessage("Hello, World!");
+
+            // const message = '{"topic": "alert", "content": "' + btoa("Hello, World!") + '"}';
+            // window.webkit.messageHandlers.backend.postMessage(message);
+        });
+    </script>
+</body>
+</html>
