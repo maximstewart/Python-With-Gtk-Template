@@ -9,6 +9,7 @@ import re
 from .singleton import Singleton
 
 from .dto.base_event import BaseEvent
+from .dto.common import events as common
 from .dto.code import events as code
 from .dto.files import events as files
 
@@ -19,6 +20,7 @@ class EventFactory(Singleton):
 
         self._event_classes: Dict[str, Type[BaseEvent]] = {}
 
+        self._auto_register_events( common.__dict__.items() )
         self._auto_register_events( files.__dict__.items() )
         self._auto_register_events( code.__dict__.items() )
 
@@ -51,7 +53,7 @@ class EventFactory(Singleton):
 
         logger.debug(f"Unregistered {i} event types:")
 
-    def create_event(self, event_type: str, **kwargs) -> BaseEvent:
+    def create_event(self, event_type: str = "generic", **kwargs) -> BaseEvent:
         if event_type not in self._event_classes:
             raise ValueError(f"Unknown event type: {event_type}")
 

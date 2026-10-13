@@ -1,6 +1,5 @@
 # Python imports
 from pathlib import Path
-import json
 
 # Lib imports
 import gi
@@ -13,7 +12,7 @@ from gi.repository import WebKit2
 
 # Application imports
 from libs.settings.webkit.webkit_ui_settings import WebkitUISettings
-from libs.dto.base_event import BaseEvent
+
 
 
 class WebkitUI(WebKit2.WebView):
@@ -54,8 +53,8 @@ class WebkitUI(WebKit2.WebView):
         content_manager.register_script_message_handler("backend")
 
     def _on_tls_errors(self, webview, uri, certificate, errors):
-        print("TLS error:", uri)
-        print("Errors:", errors)
+        logger.info("TLS error:", uri)
+        logger.info("Errors:", errors)
 
         webview.get_website_data_manager().get_tls_errors_policy()
         webview.get_context().allow_tls_certificate_for_host(
@@ -76,8 +75,7 @@ class WebkitUI(WebKit2.WebView):
         message  = js_value.to_string()
 
         try:
-            event = BaseEvent( **json.loads(message) )
-            event_system.emit("handle-bridge-event", (event,))
+            event_system.emit("handle-bridge-event", (message,))
         except Exception as e:
             logger.info(e)
 

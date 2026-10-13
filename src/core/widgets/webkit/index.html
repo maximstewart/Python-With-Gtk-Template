@@ -28,8 +28,11 @@
         window.addEventListener("load", () => {
             window.webkit.messageHandlers.logger.postMessage("Hello, World!");
 
-            // const message = '{"topic": "alert", "content": "' + btoa("Hello, World!") + '"}';
-            // window.webkit.messageHandlers.backend.postMessage(message);
+            // Note: Events can be generic which means that without 'event_type'
+            // it's mapped to GenericEvent which is just BaseEvent under the hood.
+            // const message = '{"action": "alert", "content": "' + btoa("Hello, World!") + '"}';
+            const message = '{"event_type": "display_message", "topic": "alert", "message": "' + btoa("Hello, World!") + '"}';
+            window.webkit.messageHandlers.backend.postMessage(message);
         });
     </script>
 </body>
